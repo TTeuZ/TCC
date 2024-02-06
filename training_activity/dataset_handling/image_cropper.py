@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     cropped = crop_rect(image, rotaded_rect)
 
-    cv.imshow("Display window", cropped)
+    cv.imshow("Croped Image", cropped)
     cv.waitKey(0)
     cv.destroyAllWindows()
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     cropped = crop_rect(image, rotaded_rect)
 
-    cv.imshow("Display window", cropped)
+    cv.imshow("Croped Image", cropped)
     cv.waitKey(0)
     cv.destroyAllWindows()
 

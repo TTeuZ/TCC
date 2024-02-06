@@ -12,7 +12,7 @@ def crop_rect(image, rect):
     print(center, size, angle)
 
     rotation_matrix = cv.getRotationMatrix2D(center, angle, 1)
-    center, size = tuple(map(int, center)), tuple(map(int, size))
+    # center, size = tuple(map(int, center)), tuple(map(int, size))
 
     image_rot = cv.warpAffine(image, rotation_matrix, (width, height))
     image_crop = cv.getRectSubPix(image_rot, size, center)

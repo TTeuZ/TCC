@@ -17,7 +17,6 @@ def get_lbp_histogram(image):
 if __name__ == "__main__":
     images = [f for f in listdir("../images") if isfile(join("../images", f))]
 
-    # metadata = pd.DataFrame(columns=["dataset", "weather", "date", "parking_space"])
     metadatas = []
     features = []
 

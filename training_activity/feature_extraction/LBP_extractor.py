@@ -36,4 +36,4 @@ if __name__ == "__main__":
     pd_features = pd.DataFrame(features)
 
     final_features = pd.concat([pd_metadata, pd_features], axis=1)
-    final_features.to_csv("../features.csv", index=False)
+    final_features.to_csv("../features/features.csv", index=False)

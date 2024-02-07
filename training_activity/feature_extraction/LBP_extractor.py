@@ -32,7 +32,7 @@ if __name__ == "__main__":
         hist = np.insert(hist, len(hist), 1 if status == "Occupied" else 0)
         features.append(hist)
 
-    pd_metadata = pd.DataFrame(columns=["dataset", "weather", "date", "parking_space"], data=metadatas)
+    pd_metadata = pd.DataFrame(columns=["dataset", "weather", "date", "hour", "parking_space"], data=metadatas)
     pd_features = pd.DataFrame(features)
 
     final_features = pd.concat([pd_metadata, pd_features], axis=1)

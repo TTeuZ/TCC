@@ -14,6 +14,7 @@ def get_lbp_and_histogram(image):
 
 
 if __name__ == "__main__":
+    #TODO change this path
     image = cv.imread("../images/UFPR05#Cloudy#Occupied#2013-02-22_17_10_11#001.jpg")
     lbp, hist = get_lbp_and_histogram(image)
 

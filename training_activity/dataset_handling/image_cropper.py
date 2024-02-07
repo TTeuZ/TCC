@@ -1,6 +1,7 @@
-import cv2 as cv
-import numpy as np
 import xml.etree.ElementTree as et
+from os import listdir
+import numpy as np
+import cv2 as cv
 
 #TODO Using the XML file, cropp the image in each parking space and save it in one directory
 #TODO Validate the cropped image. Use the images available in the dataset
@@ -9,10 +10,8 @@ def crop_rect(image, rect):
     center, size, angle = rect[0:3]
     height, width = image.shape[0:2]
 
-    print(center, size, angle)
-
     rotation_matrix = cv.getRotationMatrix2D(center, angle, 1)
-    # center, size = tuple(map(int, center)), tuple(map(int, size))
+    center, size = tuple(map(int, center)), tuple(map(int, size))
 
     image_rot = cv.warpAffine(image, rotation_matrix, (width, height))
     image_crop = cv.getRectSubPix(image_rot, size, center)
@@ -21,38 +20,30 @@ def crop_rect(image, rect):
 
 
 if __name__ == "__main__":
-    image = cv.imread("../PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.jpg")
+    root_dir = "../../PKLot/PKLot"
 
-    tree = et.parse("../PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.xml")
-    root = tree.getroot()
+    subsets = listdir(root_dir)
+    for subset in subsets:
+        climatic_condition = listdir(f"{root_dir}/{subset}")
+        for weather in climatic_condition:
+            dates = listdir(f"{root_dir}/{subset}/{weather}")
+            for date in dates:
+                xmls = [file for file in listdir(f"{root_dir}/{subset}/{weather}/{date}") if ".xml" in file]
+                for xml in xmls:
+                    jpg = f"{root_dir}/{subset}/{weather}/{date}/{xml.split(".xml")[0]}.jpg"
+                    full_xml = f"{root_dir}/{subset}/{weather}/{date}/{xml}"
+                    hour = xml.split(".")[0].split("-")[2][3:]
 
-    # cnt = np.array([[[608, 613]], [[741, 654]], [[775, 582]], [[608, 526]]])
-    # rotaded_rect = cv.minAreaRect(cnt)
-    rotaded_rect = (tuple(map(int, root[0][0][0].attrib.values())), tuple(map(int, root[0][0][1].attrib.values())), int(root[0][0][2].attrib["d"]))
+                    image =  cv.imread(jpg)
+                    tree = et.parse(full_xml)
+                    root = tree.getroot()
 
-    cropped = crop_rect(image, rotaded_rect)
+                    for child in root:
+                        if "occupied" in child.attrib.keys():
+                            rotaded_rect = (tuple(map(int, child[0][0].attrib.values())), tuple(map(int, child[0][1].attrib.values())), int(child[0][2].attrib["d"]))
+                            cropped_lot_space = crop_rect(image, rotaded_rect)
 
-    cv.imshow("Croped Image", cropped)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+                            image_name = f"{subset}#{weather}#{"Occupied" if int(child.attrib["occupied"]) == 1 else "Empty"}#{date}#{hour}#{child.attrib["id"]}.jpg"
+                            print(f"Saving image: {image_name}")
 
-
-    # cnt = np.array([[[945, 223]], [[1013, 236]], [[1005, 307]], [[935, 294]]])
-    # rotaded_rect = cv.minAreaRect(cnt)
-    rotaded_rect = (tuple(map(int, root[22][0][0].attrib.values())), tuple(map(int, root[22][0][1].attrib.values())), int(root[22][0][2].attrib["d"]))
-
-    cropped = crop_rect(image, rotaded_rect)
-
-    cv.imshow("Croped Image", cropped)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-
-
-
-    # for child in root:
-    #     rotaded_rect = (tuple(map(int, child[0][0].attrib.values())), tuple(map(int, child[0][1].attrib.values())), int(child[0][2].attrib["d"]))
-    #     cropped = crop_rect(image, rotaded_rect)
-
-    #     cv.imshow("Display window", cropped)
-    #     cv.waitKey(0)
-    #     cv.destroyAllWindows()
+                            cv.imwrite(f"../images/{image_name}", cropped_lot_space)

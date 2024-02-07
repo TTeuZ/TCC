@@ -8,13 +8,13 @@ def get_lbp_and_histogram(image):
     gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
     lbp = local_binary_pattern(gray_image, 8, 1)
-    (hist, _) = np.histogram(lbp.ravel(), bins=256, range=(0, 255))
+    (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 256), range=(0, 255))
 
     return (lbp, hist)
 
 
 if __name__ == "__main__":
-    image = cv.imread("../images/PUCPR#Cloudy#Empty#2012-09-12#06_05_16#1")
+    image = cv.imread("../images/PUCPR#Rainy#Occupied#2012-10-11#07_58_36#69.jpg")
     lbp, hist = get_lbp_and_histogram(image)
 
     print(hist)

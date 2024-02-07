@@ -35,7 +35,7 @@ def lbp_calculated_pixel(img, x, y):
     return val 
    
 
-path = "../images/UFPR05#Cloudy#Empty#2013-02-22_17_10_11#016.jpg"
+path = "../images/PUCPR#Rainy#Occupied#2012-10-11#07_58_36#69.jpg"
 img_bgr = cv2.imread(path, 1) 
    
 height, width, _ = img_bgr.shape 

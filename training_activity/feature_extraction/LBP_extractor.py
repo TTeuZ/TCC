@@ -9,7 +9,7 @@ def get_lbp_histogram(image):
     gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
     lbp = local_binary_pattern(gray_image, 8, 1)
-    (hist, _) = np.histogram(lbp.ravel(), bins=256, range=(0, 255))
+    (hist, _) = np.histogram(lbp.ravel(), bins=np.arange(0, 256), range=(0, 255))
 
     return hist
 

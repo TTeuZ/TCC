@@ -1,4 +1,5 @@
 import numpy as np
+import heapq
 
 class KNearestNeighbors:
     def __init__(self):
@@ -16,12 +17,19 @@ class KNearestNeighbors:
         self.y_data = y_data
 
 
-    def predict(self, x_pred):
+    def predict(self, features):
         preds = []
 
-        point1 = self.x_data[0]
-        point2 = x_pred[0]
+        for feature in features:
+            distances = []
+            for index, x in enumerate(self.x_data):
+                heapq.heappush(distances, (self.__euclidian_dist(x, feature), index))
+            
+            k_nearest = heapq.nsmallest(self.k, distances)
+            classes = np.array([self.y_data[nearest[1]] for nearest in k_nearest])
 
-        print(self.__euclidian_dist(point1, point2))
+            ones_qtd = np.count_nonzero(classes)
+            zeros_qtd = len(classes) - ones_qtd
+            preds.append(1 if ones_qtd >= zeros_qtd else 0)
 
         return preds

@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as et
 from os import listdir
+import numpy as np
 import cv2 as cv
 
 #TODO Using the XML file, cropp the image in each parking space and save it in one directory
@@ -8,6 +9,11 @@ import cv2 as cv
 def crop_rect(image, rect):
     center, size, angle = rect[0:3]
     height, width = image.shape[0:2]
+
+    if int(angle) >= 45:
+        angle = angle - 90
+        temp = size
+        size = (temp[1], temp[0])
 
     rotation_matrix = cv.getRotationMatrix2D(center, angle, 1)
     center, size = tuple(map(int, center)), tuple(map(int, size))
@@ -39,7 +45,14 @@ if __name__ == "__main__":
 
                     for child in root:
                         if "occupied" in child.attrib.keys():
-                            rotaded_rect = (tuple(map(int, child[0][0].attrib.values())), tuple(map(int, child[0][1].attrib.values())), int(child[0][2].attrib["d"]))
+                            contors = []
+                            for contor in child[1]:
+                                contors.append([[int(contor.attrib["x"]), int(contor.attrib["y"])]])
+
+                            contors = np.array(contors)
+                            rotaded_rect = cv.minAreaRect(contors)
+
+                            # rotaded_rect = (tuple(map(int, child[0][0].attrib.values())), tuple(map(int, child[0][1].attrib.values())), int(child[0][2].attrib["d"]))
                             cropped_lot_space = crop_rect(image, rotaded_rect)
 
                             image_name = f"{subset}#{weather}#{"Occupied" if int(child.attrib["occupied"]) == 1 else "Empty"}#{date}#{hour}#{child.attrib["id"]}.jpg"

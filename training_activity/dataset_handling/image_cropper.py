@@ -3,9 +3,6 @@ from os import listdir
 import numpy as np
 import cv2 as cv
 
-#TODO Using the XML file, cropp the image in each parking space and save it in one directory
-#TODO Validate the cropped image. Use the images available in the dataset
-
 def crop_rect(image, rect):
     center, size, angle = rect[0:3]
     height, width = image.shape[0:2]

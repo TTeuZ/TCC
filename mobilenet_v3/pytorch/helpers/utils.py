@@ -5,4 +5,3 @@ def print_confusion_matrix(cm):
         for j in reversed(range(2)):
             print(cm[i][j], end=' ')
         print('\n', end='')
-    print("----------------------------------------------------------------------")

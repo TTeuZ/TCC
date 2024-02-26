@@ -21,8 +21,8 @@ def crop_rect(image, rect):
 
 
 if __name__ == "__main__":
-    image = cv.imread("../../PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.jpg")
-    tree = et.parse("../../PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.xml")
+    image = cv.imread("~/Desktop/Datasets/PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.jpg")
+    tree = et.parse("~/Desktop/Datasets/PKLot/PKLot/UFPR05/Cloudy/2013-02-22/2013-02-22_17_10_11.xml")
     root = tree.getroot()
 
     for child in root:

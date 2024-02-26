@@ -22,7 +22,7 @@ def crop_rect(image, rect):
 
 
 if __name__ == "__main__":
-    root_dir = "../../PKLot/PKLot"
+    root_dir = "~/Desktop/Datasets/PKLot/PKLot"
 
     subsets = listdir(root_dir)
     for subset in subsets:

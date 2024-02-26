@@ -16,7 +16,7 @@ def generate_pytorch_dataset(dates, transform):
 
 
 def get_train_val_datasets(transform):
-    root_dir = "../../PKLot/PKLotSegmented"
+    root_dir = "~/Desktop/Datasets/PKLot/PKLotSegmented"
     subsets = ["UFPR04", "UFPR05"]
 
     all_dates = []
@@ -41,7 +41,7 @@ def get_train_val_datasets(transform):
 
 
 def get_test_dataset(transform):
-    root_dir = "../../PKLot/PKLotSegmented/PUC"
+    root_dir = "~/Desktop/Datasets/PKLot/PKLotSegmented/PUC"
 
     test_ds = []
     climatic_condition = os.listdir(f"{root_dir}")

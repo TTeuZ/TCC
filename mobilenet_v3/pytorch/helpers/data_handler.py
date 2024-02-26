@@ -59,7 +59,7 @@ def get_datasets():
     transform = transforms.Compose([
         transforms.Resize((128, 128)),
         # transforms.ToTensor(), # To slow
-        # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # To slow
     ])
 
     final_train, final_validation = get_train_val_datasets(transform)

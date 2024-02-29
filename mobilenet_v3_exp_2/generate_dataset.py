@@ -103,13 +103,13 @@ def main(args):
         os.mkdir(f"{args.dest}/{args.name}")
 
     jsons = [file for file in os.listdir(args.root) if ".json" in file]
-    for json in jsons:
-        print(f"Cropping subset {json}...")
+    for file in jsons:
+        print(f"Cropping subset {file}...")
 
-        artifacts = get_crop_artifacts(f"{args.root}/{json}")
+        artifacts = get_crop_artifacts(f"{args.root}/{file}")
         failed_images.extend(get_images(artifacts, args.root, f"{args.dest}/{args.name}"))
     
-    with open(f"outputs/{args.name}_failed_images.json", "w") as output:
+    with open(f"outputs/{args.name}_failed_images.json", "x") as output:
         json.dump(failed_images, output, indent=2)
 
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
 
 # Generate PKLotSegmented dataset: 
-# python3 dataset/generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLot -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n PKLotSegmented
+# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLot -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n PKLotSegmented
 
 # Generate CNRPark-EXT Segmented dataset: 
-# python3 dataset/generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRPark-EXT -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n CNRPartEXTSegmented
+# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRPark-EXT -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n CNRPartEXTSegmented

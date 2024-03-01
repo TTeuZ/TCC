@@ -44,7 +44,7 @@ class data_loader():
 
 
     def load_dataset(self, ds_path="", t_size=1):
-        assert(os.path.exists(ds_path))
+        assert os.path.exists(ds_path), "Invalid dataset"
 
         if t_size == 1:
             return self.__get_full_dataset(ds_path)

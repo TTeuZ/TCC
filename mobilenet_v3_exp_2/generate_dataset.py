@@ -65,8 +65,8 @@ def get_images(artifacts, root_path, save_path):
             date = [str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["date"]]
             time = [str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["time"]]
 
-            date = '-'.join(str(info) for info in date)
-            time = '_'.join(str(info) for info in time)
+            date = '-'.join(date)
+            time = '_'.join(time)
             subset = image["subset"]
             image_annotations = annotations[image["id"]]
 

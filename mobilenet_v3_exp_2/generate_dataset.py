@@ -62,8 +62,11 @@ def get_images(artifacts, root_path, save_path):
         cv_image = cv.imread(f"{root_path}/{image['file_name']}")
 
         if cv_image is not None and is_complete(image, ["id", "date", "time", "subset"]):
-            date = '-'.join(str(info) for info in image["date"])
-            time = '_'.join(str(info) for info in image["time"])
+            date = [str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["date"]]
+            time = [str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["time"]]
+
+            date = '-'.join(str(info) for info in date)
+            time = '_'.join(str(info) for info in time)
             subset = image["subset"]
             image_annotations = annotations[image["id"]]
 

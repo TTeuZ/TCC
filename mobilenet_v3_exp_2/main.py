@@ -1,6 +1,11 @@
+from model.mobilenet_v3 import mobilenet_v3
 from dataset.data_loader import data_loader
+import model.utils as utils
 import argparse
+import torch
 import json
+import math
+import copy
 import os
 
 # Fixed num epochs for training for now
@@ -15,16 +20,54 @@ def execute(args):
     test = ds_loader.load_dataset(args.test)
 
     for index in range(args.repeat):
+        print(f"[REPEAT {index + 1}] Initializing process")
+        output_name = f"train_{train_dataset_name}_test_{test_dataset_name}_{index}"
         output_json = {}
+        output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
         output_json["dataset"] = {"train": train_dataset_name, "test": test_dataset_name, "train_val_split": args.split}
 
+        collate_fn = lambda batch: utils.fast_collate(batch)
+        train_loader = torch.utils.data.DataLoader(train, batch_size=32, shuffle=True, num_workers=6, collate_fn=collate_fn, pin_memory=True)
+        val_loader = torch.utils.data.DataLoader(val, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
+        test_loader = torch.utils.data.DataLoader(test, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
 
+        model = mobilenet_v3()
+        output_json["model"] = model.info()
 
-        with open(f"_results/train_{train_dataset_name}_test_{test_dataset_name}_{index}.json", "w") as output:
+        best_state_dict, best_loss, epoch_id = None, math.inf, -1
+
+        output_json["epochs"] = []
+        for epoch in range(NUM_EPOCHS):
+            print(f"[REPEAT {index + 1}] Epoch [{epoch + 1}/{NUM_EPOCHS}] Initializing training epoch")
+            epoch_output = {}
+
+            train_loss = model.train(train_loader)
+            val_loss, accuracy, cm = model.validate(val_loader)
+
+            if (best_loss - val_loss) > 0.0:
+                best_state_dict = copy.deepcopy(model.get_state_dict())
+                best_loss = val_loss
+                epoch_id = epoch
+            
+            epoch_output["train_loss"] = train_loss
+            epoch_output["val_loss"] = val_loss
+            epoch_output["val_accuracy"] = accuracy
+            epoch_output["val_cm"] = str(cm)
+            output_json["epochs"].append(epoch_output)
+            
+        output_json["best_model"] = {"loss": best_loss, "epoch_id": epoch_id, "model_path": f"_models/{output_name}.pt"}
+        
+        print(f"[REPEAT {index + 1}] Saving best model")
+        torch.save(model.get_state_dict(), f"_models/{output_name}.pt")
+
+        
+
+        with open(f"_results/{output_name}.json", "w") as output:
             json.dump(output_json, output, indent=2)
 
 
 def main(args):
+    assert torch.cuda.is_available(), "Cuda unavailable"
     assert os.path.exists(args.train), "Invalid train/val dataset"
     assert os.path.exists(args.test), "Invalid test dataset"
     assert 0 < args.split < 1, "Split may be between 0 and 1"

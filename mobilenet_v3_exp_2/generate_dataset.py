@@ -4,6 +4,21 @@ import argparse
 import json
 import os
 
+def treat_empty_folders(path):
+    folders = os.listdir(path)
+
+    for folder in folders:
+        empty = len(os.listdir(f"{path}/{folder}/empty"))
+        occupied = len(os.listdir(f"{path}/{folder}/occupied"))    
+
+        if empty == 0:
+            os.rmdir(f"{path}/{folder}/empty")
+            print(f"removing {path}/{folder}/empty")
+
+        if occupied == 0:
+            os.rmdir(f"{path}/{folder}/occupied")
+            print(f"removing {path}/{folder}/occupied")
+
 
 def is_complete(obj, keys):
     results = [key in obj for key in keys]
@@ -98,9 +113,12 @@ def get_crop_artifacts(json_path):
 
 
 def main(args):
+    assert(os.path.exists(args.root), "invalid source dataset")
     print(f"Generating dataset {args.name} in {args.dest}/{args.name}")
 
     failed_images = []
+    if not os.path.exists("_failed"):
+        os.mkdir("_failed")
 
     if not os.path.exists(f"{args.dest}/{args.name}"):
         os.mkdir(f"{args.dest}/{args.name}")
@@ -112,15 +130,17 @@ def main(args):
         artifacts = get_crop_artifacts(f"{args.root}/{file}")
         failed_images.extend(get_images(artifacts, args.root, f"{args.dest}/{args.name}"))
     
-    with open(f"outputs/{args.name}_failed_images.json", "x") as output:
+    with open(f"_failed/{args.name}_failed_images.json", "x") as output:
         json.dump(failed_images, output, indent=2)
+
+    treat_empty_folders(f"{args.dest}/{args.name}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--root", "-r", type=str)
-    parser.add_argument("--dest", "-d", type=str)
-    parser.add_argument("--name", "-n", type=str)
+    parser.add_argument("--root", "-r", type=str, required=True)
+    parser.add_argument("--dest", "-d", type=str, required=True)
+    parser.add_argument("--name", "-n", type=str, required=True)
 
     main(parser.parse_args())
 

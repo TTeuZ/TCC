@@ -112,16 +112,10 @@ def get_crop_artifacts(json_path):
     return (data["images"], annotations, data["categories"])
 
 
-def main(args):
-    assert(os.path.exists(args.root), "invalid source dataset")
+def execute(args):
     print(f"Generating dataset {args.name} in {args.dest}/{args.name}")
 
     failed_images = []
-    if not os.path.exists("_failed"):
-        os.mkdir("_failed")
-
-    if not os.path.exists(f"{args.dest}/{args.name}"):
-        os.mkdir(f"{args.dest}/{args.name}")
 
     jsons = [file for file in os.listdir(args.root) if ".json" in file]
     for file in jsons:
@@ -134,6 +128,18 @@ def main(args):
         json.dump(failed_images, output, indent=2)
 
     treat_empty_folders(f"{args.dest}/{args.name}")
+
+
+def main(args):
+    assert os.path.exists(args.root), "invalid source dataset"
+
+    if not os.path.exists("_failed"):
+        os.mkdir("_failed")
+
+    if not os.path.exists(f"{args.dest}/{args.name}"):
+        os.mkdir(f"{args.dest}/{args.name}")
+
+    execute(args)
 
 
 if __name__ == "__main__":

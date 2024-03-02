@@ -1,6 +1,6 @@
 from model.mobilenet_v3 import mobilenet_v3
 from dataset.data_loader import data_loader
-import model.utils as utils
+import numpy as np
 import argparse
 import torch
 import json
@@ -11,8 +11,27 @@ import os
 # Fixed num epochs for training for now
 NUM_EPOCHS = 10
 
+def fast_collate(batch):
+    images = [image[0] for image in batch]
+    targets = torch.tensor([target[1] for target in batch], dtype=torch.float32)
+
+    width, height = 128, 128
+    tensor = torch.zeros((len(images), 3, height, width), dtype=torch.float32).contiguous()
+
+    for index, image in enumerate(images):
+        nump_array = np.asarray(image, dtype=np.float32)
+
+        if(nump_array.ndim < 3):
+            nump_array = np.expand_dims(nump_array, axis=-1)
+
+        nump_array = np.rollaxis(nump_array, 2)
+        tensor[index] += torch.from_numpy(nump_array)
+
+    return tensor, targets
+
+
 def training(model, train_ds, val_ds, output_json, output_name, index):
-    collate_fn = lambda batch: utils.fast_collate(batch)
+    collate_fn = lambda batch: fast_collate(batch)
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=32, shuffle=True, num_workers=6, collate_fn=collate_fn, pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
     
@@ -40,13 +59,13 @@ def training(model, train_ds, val_ds, output_json, output_name, index):
     output_json["best_model"] = {"loss": best_loss, "epoch_id": epoch_id, "model_path": f"_models/{output_name}.pt"}
     
     print(f"[REPEAT {index + 1}] Saving best model")
-    torch.save(model.get_state_dict(), f"_models/{output_name}.pt")
+    torch.save(best_state_dict, f"_models/{output_name}.pt")
 
     return best_state_dict
 
 
 def testing(model, test_ds, output_json, index):
-    collate_fn = lambda batch: utils.fast_collate(batch)
+    collate_fn = lambda batch: fast_collate(batch)
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
 
     print(f"[REPEAT {index + 1}] Testing model")
@@ -65,8 +84,9 @@ def execute(args):
 
     for index in range(args.repeat):
         print(f"[REPEAT {index + 1}] Initializing process")
-        output_name = f"train_{train_dataset_name}_test_{test_dataset_name}_{index}"
         output_json = {}
+
+        output_name = f"train_{train_dataset_name}_test_{test_dataset_name}_{index}"
         output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
         output_json["dataset"] = {"train": train_dataset_name, "test": test_dataset_name, "train_val_split": args.split}
 

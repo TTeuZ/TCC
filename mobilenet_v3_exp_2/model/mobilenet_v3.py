@@ -28,21 +28,20 @@ class mobilenet_v3():
 
     def get_state_dict(self):
         return self.model.state_dict()
+
+
+    def load_state_dict(self, state_dict):
+        self.model.load_state_dict(state_dict)
+        self.model.to(DEVICE)
     
 
     def train(self, train_loader):
         self.model.train()
         running_loss = 0.0
 
-        max_iters = 10
-        count = 0
-
         prefetcher = data_prefetcher(train_loader)
         inputs, labels = prefetcher.next()
         while inputs is not None:
-            if count == max_iters:
-                break
-
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
             self.optmizer.zero_grad()
 
@@ -54,43 +53,33 @@ class mobilenet_v3():
 
             running_loss += loss.item() * inputs.size(0)
             inputs, labels = prefetcher.next()
-
-            count += 1
         
         return running_loss / len(train_loader.dataset)
     
 
-    def validate(self, val_loader):
+    def predict(self, loader):
         self.model.eval()
 
-        val_labels, val_preds, val_loss = [], [], 0.0
+        final_labels, final_preds, final_loss = [], [], 0.0
         bce_loss = torch.nn.BCEWithLogitsLoss()
 
-        max_iters = 5
-        count = 0
-
-        prefetcher = data_prefetcher(val_loader)
+        prefetcher = data_prefetcher(loader)
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                if count == max_iters:
-                    break
-
                 inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
                 preds = self.model(inputs)
 
                 loss = bce_loss(preds.squeeze(1), labels.float())
-                val_loss += loss.item() * inputs.size(0)
+                final_loss += loss.item() * inputs.size(0)
 
-                val_labels.extend(labels.cpu().numpy())
-                val_preds.extend((torch.sigmoid(preds).cpu().numpy() > 0.5).astype(int))
+                final_labels.extend(labels.cpu().numpy())
+                final_preds.extend((torch.sigmoid(preds).cpu().numpy() > 0.5).astype(int))
 
                 inputs, labels = prefetcher.next()
-
-                count += 1
         
-        val_loss = val_loss / len(val_loader.dataset)
-        accuracy = accuracy_score(val_labels, val_preds)
-        cm = confusion_matrix(val_labels, val_preds)
+        final_loss = final_loss / len(loader.dataset)
+        accuracy = accuracy_score(final_labels, final_preds)
+        cm = confusion_matrix(final_labels, final_preds)
 
-        return (val_loss, accuracy, cm)
+        return (final_loss, accuracy, cm)

@@ -32,8 +32,8 @@ def fast_collate(batch):
 
 def training(model, train_ds, val_ds, output_json, output_name, index):
     collate_fn = lambda batch: fast_collate(batch)
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=32, shuffle=True, num_workers=6, collate_fn=collate_fn, pin_memory=True)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=320, shuffle=True, num_workers=6, collate_fn=collate_fn)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn)
     
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
@@ -66,7 +66,7 @@ def training(model, train_ds, val_ds, output_json, output_name, index):
 
 def testing(model, test_ds, output_json, index):
     collate_fn = lambda batch: fast_collate(batch)
-    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn, pin_memory=True)
+    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn)
 
     print(f"[REPEAT {index + 1}] Testing model")
     loss, accuracy, cm = model.predict(test_loader)

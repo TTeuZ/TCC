@@ -2,9 +2,9 @@
 This activity is a study guide for Machine Learning basics. The processes covered here goes from feature extraction to machine learning models development.
 
 ## Dataset
-The PKLot dataset was chosed to run the experiments. You can found details in this paper (Put the link later).
+The PKLot dataset was used.
 
-## Activity steps & goal
+## Activity steps
 The steps to complete the activity are:
 
 1° Crop all parking lot images by hand to obtain all parking spaces;
@@ -17,5 +17,5 @@ The steps to complete the activity are:
 7° Compute accuracy, confusion matrix by hand;
     7.1° Use the already develop methos do compute those infos to verify your code;
 
-### Observations
+### Notes
 All the details about the activity aren't described here, only the main info was reported.

@@ -1,8 +1,8 @@
 # TCC Scripts and Files
+This repo contains all files and scripts used to build my TCC. Each folder is an individual project. 
 
-Look into each folder to more details
+## Datasets
+The datasets used aren't storage in this Repo, you will need a copy of PKLot and PKLot2.0 to reproduce the experiments.
 
 ## Structure
-- training_activity: Folder with first activities to learn about ML and image processing
-- mobile_net_v3_exp_1: Folder with first attempts to finetune a MobileNet V3, using Pytorch and Keras -> PyTorch selected
-- mobile_net_v3_exp_2: Folder with an more robust process of finetune, looking for a beter finetuned model with PyTorch
+As said before, each folder is an individual project, so, contains all related files and also a README.md that briefly explains the files and the project goal.

@@ -1,13 +1,9 @@
+from utils import create_folder
 import numpy as np
 import cv2 as cv
 import argparse
 import json
 import os
-
-def create_folder(folder):
-    if not os.path.exists(folder):
-        os.mkdir(folder)
-
 
 def treat_empty_folders(path):
     folders = os.listdir(path)

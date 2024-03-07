@@ -161,4 +161,4 @@ if __name__ == "__main__":
 # python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLot -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n PKLotSegmented
 
 # Generate CNRPark-EXT Segmented dataset: 
-# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRPark-EXT -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n CNRPartEXTSegmented
+# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRPark-EXT -d /home/tteuz/Desktop/TCC/datasets/PKLot2.0 -n CNRParkEXTSegmented

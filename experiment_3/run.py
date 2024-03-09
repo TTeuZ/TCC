@@ -13,19 +13,6 @@ os.system("python3 main.py -m models.mobilenet_bcewithlogisticloss -tr /home/tte
 os.system("python3 main.py -m models.mobilenet_bcewithlogisticloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
 os.system("python3 main.py -m models.mobilenet_bcewithlogisticloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
 
-print("Running with BCELoss")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
-
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
-os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
-
 print("Running with CrossEntropyLoss")
 os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
 os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
@@ -38,3 +25,16 @@ os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/
 os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
 os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
 os.system("python3 main.py -m models.mobilenet_crossentropyloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
+
+print("Running with BCELoss")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -s 0.7 -e 10")
+
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")
+os.system("python3 main.py -m models.mobilenet_bceloss -tr /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRParkEXTSegmented -te /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLotSegmented -s 0.7 -e 10")

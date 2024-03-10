@@ -35,19 +35,12 @@ class mobilenet_v3():
     
 
     def train(self, loader):
-        max_itters = 50
-        count = 0
-
         self.model.train()
         running_loss = 0.0
 
         prefetcher = data_prefetcher(loader)
         inputs, labels = prefetcher.next()
         while inputs is not None:
-            if count == max_itters:
-                break
-            count += 1
-
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
             self.optmizer.zero_grad()
 
@@ -64,9 +57,6 @@ class mobilenet_v3():
     
 
     def predict(self, loader):
-        max_itters = 5
-        count = 0
-
         self.model.eval()
 
         final_labels, final_preds, final_loss = [], [], 0.0
@@ -76,10 +66,6 @@ class mobilenet_v3():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                if count == max_itters:
-                    break
-                count += 1
-
                 inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
                 preds = self.model(inputs)
 

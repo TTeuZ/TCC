@@ -7,3 +7,13 @@ Each experiment has its own README.md file that gives a brief introduction about
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
+
+## Branchs
+A branching strategy was chosen to allow reproducibility of each result.
+
+Basically, if any modification is introduced into the main script that could make the result irreproducible, a “checkpoint branch” is created, keeping the script in the old state, where it is possible to reproduce the same experiment.
+
+Long story short, the main branch can reproduce the **latest version of the results** and each checkpoint branch can reproduce a certain result in the timeline.
+
+### Checkpoints
+- old_structure: Here you can reproduce any of the testing experiments that helped shape the main script

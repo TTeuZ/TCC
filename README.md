@@ -11,7 +11,7 @@ The datasets used aren't stored in this repository, you will need a copy of PKLo
 ## Branchs
 A branching strategy was chosen to allow reproducibility of each result.
 
-Basically, if any modification is introduced into the main script that could make the result irreproducible, a “checkpoint branch” is created, keeping the script in the old state, where it is possible to reproduce the same experiment.
+Basically, if any modification was introduced in the main script that could make the result irreproducible, a “checkpoint branch” was created, keeping the script in the old state, where it is possible to reproduce the same experiment.
 
 Long story short, the main branch can reproduce the **latest version of the results** and each checkpoint branch can reproduce a certain result in the timeline.
 

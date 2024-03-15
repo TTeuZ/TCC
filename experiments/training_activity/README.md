@@ -15,7 +15,8 @@ The steps to complete the activity are:
 5. Normalize the date using the min/max rule;
 6. Create an K-NN by hand with an fixed K = 3;
 7. Compute accuracy, confusion matrix by hand;
-    - Use the already develop methos do compute those infos to verify your code;
+    - Use the already develop methods do compute those infos to verify your code;
 
 ### Notes
 All the details about the activity aren't described here, only the main info was reported.
+

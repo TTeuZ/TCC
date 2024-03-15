@@ -1,5 +1,5 @@
 # Activity
-This activity ains to correct finetune an MobileNet_v3 with the PKLot dataset.
+This activity aims to correct finetune an MobileNet_v3 with the PKLot dataset.
 
 ## Dataset
 The PKLot dataset was used.
@@ -28,3 +28,6 @@ Paths may be changed in the code.
     - helpers/data_handler.py: Python script to generate the pytorch dataset
     - helpers/data_prefetcher: Python class used to faster GPU image loading, thus, faster training
     - helpers/utils.py: Python script for utils
+
+
+

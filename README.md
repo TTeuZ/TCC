@@ -16,4 +16,4 @@ Basically, if any modification was introduced in the main script that could make
 Long story short, the main branch can reproduce the **latest version of the results** and each checkpoint branch can reproduce a certain result in the timeline.
 
 ### Checkpoints
-- old_structure: Here you can reproduce any of the testing experiments that helped shape the main script
+- old_structure: Here you can reproduce any of the testing experiments that helped shape the main script.

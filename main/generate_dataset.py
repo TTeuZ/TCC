@@ -1,4 +1,4 @@
-from utils import create_folder
+from utils.utils import create_folder
 import numpy as np
 import cv2 as cv
 import argparse

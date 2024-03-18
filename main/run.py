@@ -7,7 +7,7 @@ MODEL = "models.mobilenet_v3"
 LOSS = "CrossEntropyLoss"
 TRAIN_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented"
 TEST_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented"
-EPOCHS = 5
+EPOCHS = 15
 SPLIT = 0.7
 
 EXP_UUID = uuid.uuid4()

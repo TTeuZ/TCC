@@ -18,10 +18,14 @@ def print_results(results, file):
     best_subsets = best_result["test"]["subsets"]
 
     avg_losses = [result["test"]["average"]["loss"] for result in results]
+    val_losses = [result["best_model"]["loss"] for result in results]
+    epochs = [result["best_model"]["epoch_id"] for result in results]
     avg_accuracy = [result["test"]["average"]["accuracy"] for result in results]
 
     file.write("-------------------------[ALL RESULTS]-------------------------\n")
     file.write(" - ".join(f"{loss:.4f}" for loss in avg_losses) + " [LOSS]\n")
+    file.write(" - ".join(f"{loss:.4f}" for loss in val_losses) + " [VAL LOSS]\n")
+    file.write(" - ".join(f"{(epoch + 1):6d}" for epoch in epochs) + " [EPOCHS]\n")
     file.write(" - ".join(f"{acc:.4f}" for acc in avg_accuracy) + " [ACCURACY]\n")
 
     file.write("\n-------------------------[BEST RESULT]-------------------------\n")
@@ -50,7 +54,7 @@ def print_results(results, file):
 
 
 if __name__ == "__main__":
-    results_path = "/home/tteuz/Desktop/TCC/experiment_3/_results"
+    results_path = "/home/tteuz/Desktop/TCC/experiments/experiment_3/_results"
     results = [(file, json.load(open(f"{results_path}/{file}", "r"))) for file in os.listdir(results_path)]
     splited_results = {"bcewithlogisticloss": {"exp_1": [], "exp_2": []}, "crossentropyloss": {"exp_1": [], "exp_2": []}, "bceloss": {"exp_1": [], "exp_2": []}}
 

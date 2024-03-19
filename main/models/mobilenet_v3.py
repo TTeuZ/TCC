@@ -53,6 +53,8 @@ class model():
 
                 loss = local_loss(preds, labels)
                 final_loss += loss.item() * inputs.size(0)
+
+                inputs, labels = prefetcher.next()
             
         return final_loss / len(loader.dataset)
 

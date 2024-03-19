@@ -12,6 +12,7 @@ def print_results(results, file):
     aucs = [result["metrics"]["auc"] for result in results]
     eers = [result["metrics"]["eer"] for result in results]
     thresholds = [result["metrics"]["threshold"] for result in results]
+    val_loss = [result["best_model"]["loss"] for result in results]
     epochs = [result["best_model"]["epoch_id"] for result in results]
     accuracies = [result["test"]["average"]["accuracy"] for result in results]
     cms = [get_cm(result["test"]["average"]["cm"]) for result in results]
@@ -19,6 +20,7 @@ def print_results(results, file):
     avg_auc = sum(aucs) / len(aucs)
     avg_eer = sum(eers) / len(eers)
     avg_threshold = sum(thresholds) / len(thresholds)
+    avg_val_loss = sum(val_loss) / len(val_loss)
     avg_epoch = int(sum(epochs) / len(epochs))
     avg_accuracy = sum(accuracies) / len(accuracies)
     avg_cm = np.round(sum(cms) / len(cms))
@@ -28,6 +30,7 @@ def print_results(results, file):
     file.write(" - ".join(f"{auc:.4f}" for auc in aucs) + " [AUCS]\n")
     file.write(" - ".join(f"{eer:.4f}" for eer in eers) + " [EERS]\n")
     file.write(" - ".join(f"{threshold:.4f}" for threshold in thresholds) + " [THRESHOLDS]\n")
+    file.write(" - ".join(f"{val_loss:.4f}" for val_loss in val_loss) + " [VAL LOSS]\n")
     file.write(" - ".join(f"{epoch:6d}" for epoch in epochs) + " [EPOCHS]\n")
     file.write(" - ".join(f"{acc:.4f}" for acc in accuracies) + " [ACCURACY]\n")
 
@@ -35,6 +38,7 @@ def print_results(results, file):
     file.write(f"{avg_auc:.4f} [AUC] \t\t\t\t\t  Confusion matrix - Rounded\n")
     file.write(f"{avg_eer:.4f} [EER] \t\t\t\t\t\t\t  {avg_cm[1][1]:6.0f} \t  {avg_cm[1][0]:6.0f}\n")
     file.write(f"{avg_threshold:.4f} [THRESHOLD] \t\t\t\t\t\t  {avg_cm[0][1]:6.0f} \t  {avg_cm[0][0]:6.0f}\n")
+    file.write(f"{avg_val_loss:.4f} [VAL LOSS]\n")
     file.write(f"{avg_epoch:6d} [EPOCH]\n")
     file.write(f"{avg_accuracy:.4f} [ACCURACY]\n")
 

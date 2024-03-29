@@ -1,14 +1,21 @@
 # Latest Checkpoint
-TBD
+This chekopoint contains both the **cross testing** script and the first version of the **labeling pipeline**.
 
-### How to reproduce
-TBD
+The cross testing performs a cross testing process with both PKlot2.0 and CNRPark-EXT and summarizes the results to get a clear view.
+
+The labeling pipeline aims to be a full automatic process to classify images and use this previous classified images to train other models.
 
 ## Datasets
-TBD
+The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
 
 ## Structure
-TDB
+- acr: Folder with architecture diagrams and helper files;
+- cross_testing: Folder with cross testing script. More details in the readme within;
+- labeling_pipeline: Folder with labeling pipeline script. More details in the readme within;
+- tool: Folder with tool classes and scripts such as:
+	- dataset: Script and classes that deal with datasets;
+	- models: Wrappers classes for models;
+	- utils: Utilities classes.
 
 ## Branchs
 A branching strategy was chosen to allow reproducibility of each result.

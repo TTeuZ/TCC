@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 1
 This checkpoint contains the experiments results concatenation in the form of a **main** cross testing script.
 
 This script performs a cross testing process with both PKlot2.0 and CNRPark-EXT and summarizes the results to get a clear view.

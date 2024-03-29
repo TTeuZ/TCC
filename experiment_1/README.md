@@ -1,5 +1,5 @@
 # Activity
-This activity ains to correct finetune an MobileNet_v3 with the PKLot dataset.
+This activity aims to correct finetune an MobileNet_v3 with the PKLot dataset.
 
 ## Dataset
 The PKLot dataset was used.

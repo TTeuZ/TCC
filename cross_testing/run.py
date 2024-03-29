@@ -12,14 +12,14 @@ EPOCHS = 15
 SPLIT = 0.7
 
 EXP_UUID = uuid.uuid4()
-SAVE_LOCATION = f"exp_{EXP_UUID}"
+EXP_NAME = f"exp_{EXP_UUID}"
 
 
 create_folder("_summaries")
 create_folder("_models")
 create_folder("_results")
-create_folder(f"_models/{SAVE_LOCATION }")
-create_folder(f"_results/{SAVE_LOCATION }")
+create_folder(f"_models/{EXP_NAME}")
+create_folder(f"_results/{EXP_NAME}")
 
 
 # Writing experiment README
@@ -36,19 +36,19 @@ with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
 
 # Running experiments (Cross testing -> 5 times training with TRAIN_DATASET and testing with TEST_DATASET and 5 time inverting datasets)
 print("\nExecuting experiment")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TRAIN_DATASET} -te {TEST_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
-os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {SAVE_LOCATION}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{SAVE_LOCATION} -m {MODEL} -l {LOSS} -s {SPLIT}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -m {MODEL} -l {LOSS} -s {SPLIT}")

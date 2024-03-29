@@ -1,7 +1,9 @@
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from sklearn.metrics import confusion_matrix, accuracy_score
-from utils.metrics import get_roc_auc, get_eer
-from dataset.data_prefetcher import fast_collate
-from dataset.data_loader import data_loader
+from tools.utils.metrics import get_roc_auc, get_eer
+from tools.dataset.data_prefetcher import fast_collate
+from tools.dataset.data_loader import data_loader
 import numpy as np
 import importlib
 import argparse
@@ -10,7 +12,6 @@ import uuid
 import json
 import math
 import copy
-import os
 
 def test(model, test_ds, threshold, output_json):
     collate_fn = lambda batch: fast_collate(batch)

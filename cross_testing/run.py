@@ -1,9 +1,10 @@
-from utils.utils import create_folder
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from tools.utils.utils import create_folder
 import uuid
-import os
 
 # Experiment variables
-MODEL = "models.mobilenet_v3"
+MODEL = "tools.models.mobilenet_v3"
 LOSS = "CrossEntropyLoss"
 TRAIN_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented"
 TEST_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented"

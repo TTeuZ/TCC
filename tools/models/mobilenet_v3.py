@@ -1,3 +1,5 @@
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from torchvision.models import MobileNet_V3_Large_Weights as pre_weights
 from torchvision.models import mobilenet_v3_large as mobilenet
 from dataset.data_prefetcher import data_prefetcher

@@ -1,8 +1,9 @@
-from utils.utils import get_cm
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from tools.utils.utils import get_cm
 import numpy as np
 import argparse
 import json
-import os
 
 def print_results(results, file):
     train_ds = results[0]["dataset"]["train"]

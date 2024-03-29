@@ -26,12 +26,12 @@ create_folder(f"_results/{SAVE_LOCATION }")
 print("Writing experiment README")
 with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
     file.write("## Experiment infos\n")
-    file.write(f"Model: {MODEL}\n")
-    file.write(f"Train dataset: {TRAIN_DATASET}\n")
-    file.write(f"Test dataset: {TEST_DATASET}\n")
-    file.write(f"Training epocs: {EPOCHS}\n")
-    file.write(f"Train/Val split: {SPLIT}\n")
-    file.write(f"Sumary: _summaries/summary_{EXP_UUID}\n")
+    file.write(f"- Model: {MODEL}\n")
+    file.write(f"- Train dataset: {TRAIN_DATASET}\n")
+    file.write(f"- Test dataset: {TEST_DATASET}\n")
+    file.write(f"- Training epocs: {EPOCHS}\n")
+    file.write(f"- Train/Val split: {SPLIT}\n")
+    file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
 
 
 # Running experiments (Cross testing -> 5 times training with TRAIN_DATASET and testing with TEST_DATASET and 5 time inverting datasets)

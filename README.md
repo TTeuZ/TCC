@@ -4,13 +4,13 @@ This checkpoint contains the experiments results concatenation in the form of a 
 This script performs a cross testing process with both PKlot2.0 and CNRPark-EXT and summarizes the results to get a clear view.
 
 ### How to reproduce
-If necessary, crop all images from the new dataset (PKLot2.0 and CNRPark-EXT)
-In order to do that, run the script generate_dataset.py, look into the code for more details.
-Run the script run.py
+- If necessary, crop all images from the new dataset (PKLot2.0 and CNRPark-EXT)
+    - In order to do that, run the script generate_dataset.py, look into the code for more details.
+- Run the script run.py
 
 #### Notes
-Paths may be changed in the code.
-In order to test different models, you only need to create a wrapper class inside the models folder (follow the MobileNetV3.py class as example) and send it as the model in the run.py.
+- Paths may be changed in the code.
+- In order to test different models, you only need to create a wrapper class inside the models folder (follow the MobileNetV3.py class as example) and send it as the model in the run.py.
 
 The folder structure to correct crop the images should be like this:
 

@@ -19,4 +19,4 @@ Long story short, the main branch can reproduce the **latest version of the resu
 
 ### Checkpoints
 - checkpoint_0: There you can find the first experiments performed that helped shape the scripts;
-- checkpoint_1: THere you can find the first version of the cross testing script.
+- checkpoint_1: There you can find the first version of the cross testing script.

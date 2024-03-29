@@ -24,7 +24,7 @@ class data_loader():
         return [(datetime.strptime(date, '%Y-%m-%d').date(), f"{ds_path}/{date}") for date in dates]
     
 
-    def load_dataset_as_train(self, ds_path="", t_size=1):
+    def load_dataset_by_split(self, ds_path="", t_size=1):
         assert os.path.exists(ds_path), "Invalid dataset"
 
         all_dates = []
@@ -51,7 +51,7 @@ class data_loader():
             return (self.__get_pytorch_dataset(train_ds), self.__get_pytorch_dataset(val_ds))
 
     
-    def load_dataset_as_test(self, ds_path=""):
+    def load_dataset_by_subset(self, ds_path=""):
         assert os.path.exists(ds_path), "Invalid dataset"
 
         datasets = {}

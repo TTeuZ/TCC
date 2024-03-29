@@ -86,8 +86,8 @@ def execute(model_module, args):
     print(f"Starting experiment [MODEL: {args.model}][TRAIN: {train_ds_name}][TEST: {test_ds_name}]")
 
     ds_loader = data_loader()
-    train_ds, val_ds = ds_loader.load_dataset_as_train(args.train, args.split)
-    test_ds = ds_loader.load_dataset_as_test(args.test)
+    train_ds, val_ds = ds_loader.load_dataset_by_split(args.train, args.split)
+    test_ds = ds_loader.load_dataset_by_subset(args.test)
 
     train_model = model_module.model(loss=args.loss)
 

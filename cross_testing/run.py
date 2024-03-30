@@ -31,7 +31,7 @@ with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
     file.write(f"- Test dataset: {TEST_DATASET}\n")
     file.write(f"- Training epocs: {EPOCHS}\n")
     file.write(f"- Train/Val split: {SPLIT}\n")
-    file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
+    file.write(f"- Summary: _summaries/summary_{EXP_UUID}\n")
 
 
 # Running experiments (Cross testing -> 5 times training with TRAIN_DATASET and testing with TEST_DATASET and 5 time inverting datasets)

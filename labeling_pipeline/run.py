@@ -51,7 +51,7 @@ for index, father in enumerate(FATHERS):
     create_folder(f"_models/{EXP_NAME}/{father[:-3]}")
     create_folder(f"_results/{EXP_NAME}/{father[:-3]}")
     for subset in SUBSETS:
-        print(f"python3 main.py -f {FATHERS_PATH}/{father} -t {THRESHOLDS[index]} -m {MODEL} -l {LOSS} -d {DATASET} -su {subset} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+        os.system(f"python3 main.py -f {FATHERS_PATH}/{father} -t {THRESHOLDS[index]} -m {MODEL} -l {LOSS} -d {DATASET} -su {subset} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 
 
 # Writing summary

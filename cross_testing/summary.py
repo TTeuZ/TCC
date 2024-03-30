@@ -43,9 +43,9 @@ def print_results(results, file):
     file.write(" - ".join(f"{acc:.4f}" for acc in accuracies) + " [ACCURACY]\n")
 
     file.write("\n-------------------------[AVG RESULT]--------------------------\n")
-    file.write(" [AVG]  [STD] \t\t\t\t\t  Confusion matrix - Rounded\n")
-    file.write(f"{avg_auc:.4f} {std_auc:.4f} [AUC] \t\t\t\t\t  {avg_cm[1][1]:6.0f} \t  {avg_cm[1][0]:6.0f}\n")
-    file.write(f"{avg_eer:.4f} {std_eer:.4f} [EER] \t\t\t\t\t  {avg_cm[0][1]:6.0f} \t  {avg_cm[0][0]:6.0f}\n")
+    file.write(" [AVG]  [STD]".ljust(37) + "Confusion matrix - Rounded\n")
+    file.write(f"{avg_auc:.4f} {std_auc:.4f} [AUC]".ljust(47) + f"{avg_cm[1][1]:6.0f}".ljust(10) + f"{avg_cm[1][0]:6.0f}\n")
+    file.write(f"{avg_eer:.4f} {std_eer:.4f} [EER]".ljust(47) + f"{avg_cm[0][1]:6.0f}".ljust(10) + f"{avg_cm[0][0]:6.0f}\n")
     file.write(f"{avg_threshold:.4f} {std_threshold:.4f} [THRESHOLD]\n")
     file.write(f"{avg_val_loss:.4f} {std_val_loss:.4f} [VAL LOSS]\n")
     file.write(f"{avg_epoch:6d} {std_epoch:.4f} [EPOCH]\n")

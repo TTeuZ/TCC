@@ -79,9 +79,9 @@ def print_results(results, file):
         file.write("Confusion matrix - Rounded\n")
 
         file.write(f"{accuracy:.4f} [ACCURACY]".ljust(47))
-        file.write(f"{cm[1][1]:6.0f} \t  {cm[1][0]:6.0f}\n")
+        file.write(f"{cm[1][1]:6.0f}".ljust(10) + f"{cm[1][0]:6.0f}\n")
         file.write(f"{std_accuracy:.4f} [STD_ACCURACY]".ljust(47))
-        file.write(f"{cm[0][1]:6.0f} \t  {cm[0][0]:6.0f}\n")
+        file.write(f"{cm[0][1]:6.0f}".ljust(10) + f"{cm[0][0]:6.0f}\n")
         file.write("\n")
 
 

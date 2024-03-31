@@ -12,7 +12,7 @@ The datasets used aren't stored in this repository, you will need a copy of PKLo
 - acr: Folder with architecture diagrams and helper files;
 - cross_testing: Folder with cross testing script. More details in the readme within;
 - labeling_pipeline: Folder with labeling pipeline script. More details in the readme within;
-- tool: Folder with tool classes and scripts such as:
+- tools: Folder with tool classes and scripts such as:
 	- dataset: Script and classes that deal with datasets;
 	- models: Wrappers classes for models;
 	- utils: Utilities classes.

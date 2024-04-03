@@ -1,6 +1,7 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from tools.utils.utils import create_folder
+import datetime
 import uuid
 
 # Experiment variables
@@ -19,6 +20,8 @@ SPLIT = 0.7
 
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
+EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
+
 
 create_folder("_summaries")
 create_folder("_models")
@@ -26,9 +29,11 @@ create_folder("_results")
 create_folder(f"_models/{EXP_NAME}")
 create_folder(f"_results/{EXP_NAME}")
 
+
 # Writing experiment README
 print("Writing experiment README")
 with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
+    file.write(f"Date: {EXP_DATETIME}\n\n")
     file.write("## Experiment infos\n")
     file.write("- Fathers models used:\n")
     for father in FATHERS:
@@ -46,6 +51,7 @@ with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
     file.write(f"- Train/Val split: {SPLIT}\n")
     file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
 
+
 # Running pipeline
 for index, father in enumerate(FATHERS):
     create_folder(f"_models/{EXP_NAME}/{father[:-3]}")
@@ -56,4 +62,4 @@ for index, father in enumerate(FATHERS):
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -m {MODEL} -da {DATASET.split('/')[-1]}")

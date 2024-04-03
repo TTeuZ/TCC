@@ -1,6 +1,7 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from tools.utils.utils import create_folder
+import datetime
 import uuid
 
 # Experiment variables
@@ -13,6 +14,7 @@ SPLIT = 0.7
 
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
+EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
 
 create_folder("_summaries")
@@ -51,4 +53,4 @@ os.system(f"python3 main.py -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_D
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -m {MODEL} -l {LOSS} -s {SPLIT}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -m {MODEL} -l {LOSS} -s {SPLIT}")

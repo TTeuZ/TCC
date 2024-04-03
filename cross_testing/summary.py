@@ -107,6 +107,11 @@ def main(args):
     summary_name = args.files.split("/")[1]
 
     with open(f"_summaries/{summary_name}.txt", "w") as file:
+        file.write(f"Date: {args.date}\n\n")
+
+        file.write(f"More details in {args.files}")
+        file.write("\n---------------------------------------------------------------\n\n")
+
         file.write(f"Model: {args.model} \n")
         file.write(f"Loss: {args.loss} \n")
         file.write(f"Split: {args.split} \n\n")
@@ -120,6 +125,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--files", "-f", type=str, required=True)
+    parser.add_argument("--date", "-d", type=str, required=True)
     parser.add_argument("--model", "-m", type=str, required=True)
     parser.add_argument("--loss", "-l", type=str, required=True)
     parser.add_argument("--split", "-s", type=float, required=True)

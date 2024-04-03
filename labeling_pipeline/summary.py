@@ -67,6 +67,44 @@ def print_results(subset, results, file):
     file.write(f"{father_avg_cm[1][1]:6.0f}".ljust(10) + f"{father_avg_cm[1][0]:6.0f}\n")
     file.write("".ljust(47) + f"{father_avg_cm[0][1]:6.0f}".ljust(10) + f"{father_avg_cm[0][0]:6.0f}\n\n")
 
+
+def print_avg_results(results_by_subset, file):
+    accuracies = []
+    cms = []
+    father_accuracies = []
+    father_cms = []
+    
+    for subset in results_by_subset:
+        for result in results_by_subset[subset]:
+            accuracies.append(result["model"]["test"]["accuracy"])
+            cms.append(get_cm(result["model"]["test"]["cm"]))
+            father_accuracies.append(result["father_model"]["test"]["accuracy"])
+            father_cms.append(get_cm(result["father_model"]["test"]["cm"]))
+    
+    avg_accuracy = sum(accuracies) / len(accuracies)
+    avg_cm = sum(cms) / len(cms)
+    std_accuracy = np.std(accuracies)
+
+    father_avg_accuracy = sum(father_accuracies) / len(father_accuracies)
+    father_avg_cm = sum(father_cms) / len(father_cms)
+    father_std_accuracy = np.std(father_accuracies)
+    
+    file.write(f"AVG of all results:\n")
+    file.write("\n---------------------------[MODEL]-----------------------------\n")
+    file.write(" [AVG]  [STD]".ljust(37) + "Confusion matrix - Rounded\n")
+    file.write(f"{avg_accuracy:.4f} {std_accuracy:.4f} [ACCURACY]".ljust(47))
+
+    file.write(f"{avg_cm[1][1]:6.0f}".ljust(10) + f"{avg_cm[1][0]:6.0f}\n")
+    file.write("".ljust(47) + f"{avg_cm[0][1]:6.0f}".ljust(10) + f"{avg_cm[0][0]:6.0f}\n\n")
+
+    file.write("\n------------------------[FATHER MODEL]-------------------------\n")
+    file.write(" [AVG]  [STD]".ljust(37) + "Confusion matrix - Rounded\n")
+    file.write(f"{father_avg_accuracy:.4f} {father_std_accuracy:.4f} [ACCURACY]".ljust(47))
+
+    file.write(f"{father_avg_cm[1][1]:6.0f}".ljust(10) + f"{father_avg_cm[1][0]:6.0f}\n")
+    file.write("".ljust(47) + f"{father_avg_cm[0][1]:6.0f}".ljust(10) + f"{father_avg_cm[0][0]:6.0f}\n")
+
+
 def get_results_by_subset(path):
     models_results = [folder for folder in os.listdir(path) if "model" in folder]
 
@@ -92,8 +130,19 @@ def main(args):
 
     summary_name = args.files.split("/")[1]
     with open(f"_summaries/{summary_name}.txt", "w") as file:
-        file.write("###############################################################\n\n")
+        file.write(f"Date: {args.date}\n\n")
+        
+        file.write(f"Details in {args.files}")
+        file.write("\n---------------------------------------------------------------\n\n")
 
+        file.write(f"Models generated: {args.model}\n")
+        file.write(f"Dataset Used: {args.dataset}\n")
+
+        file.write("\n###############################################################\n\n")
+
+        print_avg_results(results_by_subset, file)
+
+        file.write("\n###############################################################\n\n")
         for subset in results_by_subset:
             print_results(subset, results_by_subset[subset], file)
             file.write("###############################################################\n\n")
@@ -102,5 +151,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--files", "-f", type=str, required=True)
+    parser.add_argument("--date", "-d", type=str, required=True)
+    parser.add_argument("--model", "-m", type=str, required=True)
+    parser.add_argument("--dataset", "-da", type=str, required=True)
     
     main(parser.parse_args())

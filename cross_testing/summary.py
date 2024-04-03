@@ -109,7 +109,7 @@ def main(args):
     with open(f"_summaries/{summary_name}.txt", "w") as file:
         file.write(f"Date: {args.date}\n\n")
 
-        file.write(f"More details in {args.files}")
+        file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
 
         file.write(f"Model: {args.model} \n")

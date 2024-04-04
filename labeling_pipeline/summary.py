@@ -135,6 +135,7 @@ def main(args):
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
 
+        file.write(f"Father models trained with: {args.model_dateset}\n")
         file.write(f"Models generated: {args.model}\n")
         file.write(f"Dataset Used: {args.dataset}\n")
 
@@ -153,6 +154,7 @@ if __name__ == "__main__":
     parser.add_argument("--files", "-f", type=str, required=True)
     parser.add_argument("--date", "-d", type=str, required=True)
     parser.add_argument("--model", "-m", type=str, required=True)
+    parser.add_argument("--model_dataset", "-md", type=str, required=True)
     parser.add_argument("--dataset", "-da", type=str, required=True)
     
     main(parser.parse_args())

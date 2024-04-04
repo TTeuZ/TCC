@@ -97,17 +97,34 @@ def train(model, train_ds, val_ds, output_json, output_name, epochs):
     return best_state_dict
 
 
-def classify(father_model, threshold, first_half):
+def classify(father_model, first_half, output_json):
     collate_fn = lambda batch: fast_collate(batch)
 
     print("Classifing images")
 
-    all_preds = []
+    all_preds, all_images, used_images = [], 0, 0
     for date in first_half:
         classify_loader = torch.utils.data.DataLoader(date[1], batch_size=1000, shuffle=False, num_workers=6, collate_fn=collate_fn)
-        preds, _ = father_model.predict(classify_loader, threshold)
+        probs, _ = father_model.get_probs(classify_loader)
+
+        preds = []
+        index_to_remove = []
+        for index, prob in enumerate(probs):
+            if prob[0] > 0.9 or prob[1] > 0.9:
+                preds.append(np.argmax(prob))
+            else:
+                index_to_remove.append(index)
+        
+        for index in sorted(index_to_remove, reverse=True):
+            del date[1].imgs[index]
+        date[1].samples = date[1].imgs
+
+        all_images += len(probs)
+        used_images += len(preds)
         all_preds.append((date[0], preds))
-    
+
+    output_json["dataset"]["classify"] = {"all_images": all_images, "used_images": used_images}
+
     return all_preds
 
 
@@ -131,7 +148,7 @@ def execute(model_module, args):
     output_json["father_model"]["name"] = father_model_name
     output_json["father_model"]["threshold"] = args.threshold
 
-    new_labels = classify(father_model, args.threshold, first_half)
+    new_labels = classify(father_model, first_half, output_json)
     train_ds, val_ds = get_train_val_datasets(ds_loader, first_half, new_labels, args.split)
     test_ds = get_test_dataset(ds_loader, second_half)
 

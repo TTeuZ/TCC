@@ -61,4 +61,4 @@ for father in FATHERS_CONSTRUCT_JSON["models"]:
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -m {MODEL} -da {DATASET.split('/')[-1]}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -m {MODEL} -md {FATHERS_CONSTRUCT_JSON['trained_at'].split('/')[-1]} -da {DATASET.split('/')[-1]}")

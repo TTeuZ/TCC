@@ -7,6 +7,7 @@ The pipeline itself is coded in the main.py file, the run.py and summary.py are 
 - Given one father model (can be any model that classify slots as empty our occupied);
 - For each subset (camera pos/parking slot);
     - Classify the first half of the images with the father model;
+        - Select only the ones that the model in more than 90% sure that the label is correct.
     - Use this images to train a new model;
         - Uses the same structure as the cross testing.
     - Use this new model to classify the second half;

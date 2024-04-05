@@ -31,7 +31,16 @@ def print_results(subset, results, file):
     std_epoch = np.std(epochs)
     std_accuracy = np.std(accuracies)
 
+    all_images = results[0]["dataset"]["classify"]["all_images"]
+    used_images = [result["dataset"]["classify"]["used_images"] for result in results]
+    avg_used_images = int(np.round(sum(used_images) / len(used_images)))
+    std_used_images = np.std(used_images)
+    pct_used_images = avg_used_images / all_images
+
     file.write(f"Subset: {subset.split('_')[1]}\n")
+    file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
+    file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {std_used_images:.2f}[STD] - {pct_used_images:.2f}[%]\n")
+
     file.write("\n-------------------------[ALL RESULTS]-------------------------\n")
     file.write(" - ".join(f"{auc:.4f}" for auc in aucs) + " [AUCS]\n")
     file.write(" - ".join(f"{eer:.4f}" for eer in eers) + " [EERS]\n")
@@ -50,8 +59,6 @@ def print_results(subset, results, file):
     file.write(f"{avg_accuracy:.4f} {std_accuracy:.4f} [ACCURACY]\n")
 
     file.write("\n------------------------[FATHER MODEL]-------------------------\n")
-    results.sort(key=lambda result: result["father_model"]["test"]["accuracy"])
-
     father_accuracies = [result["father_model"]["test"]["accuracy"] for result in results]
     father_cms = [get_cm(result["father_model"]["test"]["cm"]) for result in results]
 
@@ -69,27 +76,48 @@ def print_results(subset, results, file):
 
 
 def print_avg_results(results_by_subset, file):
-    accuracies = []
-    cms = []
-    father_accuracies = []
-    father_cms = []
+    accuracies, cms, father_accuracies, father_cms = [], [], [], []
+    all_images, used_images = 0, []
     
     for subset in results_by_subset:
+        subset_cms, subset_father_cms = [], []
+
+        all_images += results_by_subset[subset][0]["dataset"]["classify"]["all_images"]
+        subset_used_images = []
+
         for result in results_by_subset[subset]:
             accuracies.append(result["model"]["test"]["accuracy"])
-            cms.append(get_cm(result["model"]["test"]["cm"]))
+            subset_cms.append(get_cm(result["model"]["test"]["cm"]))
             father_accuracies.append(result["father_model"]["test"]["accuracy"])
-            father_cms.append(get_cm(result["father_model"]["test"]["cm"]))
+            subset_father_cms.append(get_cm(result["father_model"]["test"]["cm"]))
+
+            subset_used_images.append(result["dataset"]["classify"]["used_images"])
+        
+        subset_cms = np.round(sum(subset_cms) / len(subset_cms))
+        cms.append(subset_cms)
+
+        subset_father_cms = np.round(sum(subset_father_cms) / len(subset_father_cms))
+        father_cms.append(subset_father_cms)
+
+        subset_used_images = int(np.round(sum(subset_used_images) / len(subset_used_images)))
+        used_images.append(subset_used_images)
     
     avg_accuracy = sum(accuracies) / len(accuracies)
-    avg_cm = sum(cms) / len(cms)
+    avg_cm = sum(cms)
     std_accuracy = np.std(accuracies)
 
     father_avg_accuracy = sum(father_accuracies) / len(father_accuracies)
-    father_avg_cm = sum(father_cms) / len(father_cms)
+    father_avg_cm = sum(father_cms)
     father_std_accuracy = np.std(father_accuracies)
+
+    avg_used_images = sum(used_images)
+    pct_used_images = avg_used_images / all_images
     
     file.write(f"AVG of all results:\n")
+
+    file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
+    file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {pct_used_images:.2f}[%]\n")
+
     file.write("\n---------------------------[MODEL]-----------------------------\n")
     file.write(" [AVG]  [STD]".ljust(37) + "Confusion matrix - Rounded\n")
     file.write(f"{avg_accuracy:.4f} {std_accuracy:.4f} [ACCURACY]".ljust(47))
@@ -135,7 +163,7 @@ def main(args):
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
 
-        file.write(f"Father models trained with: {args.model_dateset}\n")
+        file.write(f"Father models trained with: {args.model_dataset}\n")
         file.write(f"Models generated: {args.model}\n")
         file.write(f"Dataset Used: {args.dataset}\n")
 

@@ -1,13 +1,5 @@
 # Latest Checkpoint
-This chekpoint contains both the **cross testing** script and the second version of the **labeling pipeline**.
-
-The cross testing performs a cross testing process with both PKlot2.0 and CNRPark-EXT and summarizes the results to get a clear view.
-
-The labeling pipeline aims to be a full automatic process to classify images and use this previous classified images to train other models.
-
-## Diferences between the first and second labeling pipeline version
-
-In this second version we are considering only the images that the father model is more than 90% sure that the classification is occupied or empty to train the second model.
+**WIP**
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
@@ -30,5 +22,6 @@ Long story short, the main branch can reproduce the **latest version of the resu
 
 ### Checkpoints
 - checkpoint_0: There you can find the first experiments performed that helped shape the scripts;
-- checkpoint_1: There you can find the first version of the cross testing script.
-- checkpoint_2: There you can find the first version of the labeling pipeline script. The cross testing script stays the same.
+- checkpoint_1: There you can find the cross testing V1 script.
+- checkpoint_2: There you can find the labeling pipeline V1 script. The cross testing script stays the same.
+- checkpoint_3: There you can dinf the labeling pipeling V2 script. The cross testing script stays the same.

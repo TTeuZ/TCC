@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 3
 This chekpoint contains both the **cross testing** script and the second version of the **labeling pipeline**.
 
 The cross testing performs a cross testing process with both PKlot2.0 and CNRPark-EXT and summarizes the results to get a clear view.

@@ -21,7 +21,9 @@ class data_loader():
 
     def __get_dates(self, ds_path):
         dates = os.listdir(ds_path)
-        return [(datetime.strptime(date, '%Y-%m-%d').date(), f"{ds_path}/{date}") for date in dates]
+        formated_dates = [(datetime.strptime(date, '%Y-%m-%d').date(), f"{ds_path}/{date}") for date in dates]
+        
+        return sorted(formated_dates, key=lambda x: x[0])
     
 
     def load_dataset_by_split(self, ds_path="", t_size=1):
@@ -32,7 +34,6 @@ class data_loader():
         subsets = [os.path.join(ds_path, subset) for subset in os.listdir(ds_path)]
         for subset in subsets:
             dates = self.__get_dates(subset)
-            dates = sorted(dates, key=lambda x: x[0])
 
             divisor = math.ceil(len(dates) * t_size)
             first_half.extend(dates[:divisor])

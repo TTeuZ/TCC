@@ -15,19 +15,18 @@ class data_loader():
         return datasets.ImageFolder(path, self.transform)
 
 
-    def __format_dates(self, path, dates):
+    def __get_dates(self, path):
+        dates = os.listdir(path)
         formated_dates = [(datetime.strptime(date, '%Y-%m-%d').date(), date, f"{path}/{date}") for date in dates]
-        formated_dates.sort(key=lambda x: x[0])
         
-        return formated_dates
+        return sorted(formated_dates, key=lambda x: x[0])
 
     
     def get_subset_from_dataset(self, ds_path="", subset=""):
         assert os.path.exists(ds_path), "Invalid dataset"
 
         path = f"{ds_path}/{subset}"
-        dates = os.listdir(path)
-        dates = self.__format_dates(path, dates)
+        dates = self.__get_dates(path)
 
         datasets = {}
         for date in dates:

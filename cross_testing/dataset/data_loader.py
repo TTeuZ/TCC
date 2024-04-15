@@ -27,28 +27,21 @@ class data_loader():
     def load_dataset_by_split(self, ds_path="", t_size=1):
         assert os.path.exists(ds_path), "Invalid dataset"
 
-        all_dates = []
+        first_half, second_half = [], []
+
         subsets = [os.path.join(ds_path, subset) for subset in os.listdir(ds_path)]
         for subset in subsets:
-            all_dates.extend(self.__get_dates(subset))
+            dates = self.__get_dates(subset)
+            dates = sorted(dates, key=lambda x: x[0])
 
-        dates_set = sorted(set(all_dates), key=lambda x: x[0])
-        final_dates = {date[0]: [] for date in dates_set}
-        for date in all_dates:
-            final_dates[date[0]].append(date)
-
-        train_ds, val_ds = [], []
-        divisor = math.ceil(len(final_dates) * t_size)
-        for index, date in enumerate(final_dates.values()):
-            if index < divisor:
-                train_ds.extend(date)
-            else:
-                val_ds.extend(date)
+            divisor = math.ceil(len(dates) * t_size)
+            first_half.extend(dates[:divisor])
+            second_half.extend(dates[divisor:])
         
-        if len(val_ds) == 0:
-            return self.__get_pytorch_dataset(train_ds)
+        if len(second_half) == 0:
+            return self.__get_pytorch_dataset(first_half)
         else:
-            return (self.__get_pytorch_dataset(train_ds), self.__get_pytorch_dataset(val_ds))
+            return (self.__get_pytorch_dataset(first_half), self.__get_pytorch_dataset(second_half))
 
     
     def load_dataset_by_subset(self, ds_path=""):

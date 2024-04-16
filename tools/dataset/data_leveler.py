@@ -3,6 +3,8 @@ import random
 import torch
 import copy
 
+FLATTEN_LINIAR = 5
+
 # Works only with Pytorch ConcatDatasets
 class data_leveler():
     def __remove_images_from_dataset(self, dataset, indexes_to_remove):
@@ -38,6 +40,13 @@ class data_leveler():
         return indexes
 
 
+    def __flatten_dataset(self, dataset, flatter_object):
+        indexes = self.__get_fewer_class_indexes(dataset, flatter_object[1])
+        indexes_to_remove = random.sample(indexes, flatter_object[0])
+
+        return self.__remove_images_from_dataset(dataset, indexes_to_remove)
+
+
     def __get_flatter_object(self, dataset):
         class_0, class_1 = 0, 0
 
@@ -52,14 +61,7 @@ class data_leveler():
         return (diff, 0, diff_perc) if class_0 > class_1 else (diff, 1, diff_perc)
 
 
-    def __flatten_dataset(self, dataset, flatter_object):
-        indexes = self.__get_fewer_class_indexes(dataset, flatter_object[1])
-        indexes_to_remove = random.sample(indexes, flatter_object[0])
-
-        return self.__remove_images_from_dataset(dataset, indexes_to_remove)
-
-
     def flatten_dataset(self, dataset):
         flatter_object = self.__get_flatter_object(dataset)
 
-        return dataset if flatter_object[2] < 5 else self.__flatten_dataset(dataset, flatter_object)
+        return dataset if flatter_object[2] < FLATTEN_LINIAR else self.__flatten_dataset(dataset, flatter_object)

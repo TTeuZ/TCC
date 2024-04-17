@@ -1,8 +1,9 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score
-from tools.utils.metrics import get_roc_auc, get_eer
 from tools.dataset.data_prefetcher import fast_collate
+from tools.utils.metrics import get_roc_auc, get_eer
+from tools.dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
 import numpy as np
 import importlib
@@ -81,6 +82,7 @@ def train(model, train_ds, val_ds, output_json, output_name, epochs):
 
 def execute(model_module, args):
     train_ds_name, test_ds_name  = args.train.split("/")[-1], args.test.split("/")[-1]
+    output_name = f"model_{uuid.uuid4()}"
     output_json = {}
 
     print(f"Starting experiment [MODEL: {args.model}][TRAIN: {train_ds_name}][TEST: {test_ds_name}]")
@@ -89,20 +91,23 @@ def execute(model_module, args):
     train_ds, val_ds = ds_loader.load_dataset_by_split(args.train, args.split)
     test_ds = ds_loader.load_dataset_by_subset(args.test)
 
+    ds_leveler = data_leveler()
+    flattened_train_ds = ds_leveler.flatten_dataset(train_ds)
+    flattened_val_ds = ds_leveler.flatten_dataset(val_ds)
+
     train_model = model_module.model(loss=args.loss)
 
-    output_name = f"model_{uuid.uuid4()}"
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": args.split}
     output_json["model"] = train_model.info()
     output_json["model"]["loss"] = args.loss
 
-    best_state_dict = train(train_model, train_ds, val_ds, output_json, output_name, args.epochs)
+    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, output_json, output_name, args.epochs)
 
     test_model = model_module.model(pre_trained=False, loss=args.loss)
     test_model.load_state_dict(best_state_dict)
 
-    threshold = get_threshold(test_model, val_ds, output_json)
+    threshold = get_threshold(test_model, flattened_val_ds, output_json)
     test(test_model, test_ds, threshold, output_json)
 
     print("Saving best model")

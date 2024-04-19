@@ -1,11 +1,11 @@
 import numpy as np
 import torch
 
-def fast_collate(batch):
+def fast_collate(batch, config):
     images = [image[0] for image in batch]
     targets = torch.tensor([target[1] for target in batch], dtype=torch.float32)
 
-    width, height = 128, 128
+    width, height = config["img_size"]
     tensor = torch.zeros((len(images), 3, height, width), dtype=torch.float32).contiguous()
 
     for index, image in enumerate(images):
@@ -21,11 +21,17 @@ def fast_collate(batch):
 
 
 class data_prefetcher():
-    def __init__(self, loader):
+    def __init__(self, loader, normalize_data):
         self.loader = iter(loader)
         self.stream = torch.cuda.Stream()
-        self.mean = torch.tensor([0.485, 0.456, 0.406]).cuda().view(1,3,1,1)
-        self.std = torch.tensor([0.229, 0.224, 0.225]).cuda().view(1,3,1,1)
+        self.normalize_date = normalize_data
+
+        if self.normalize_date:
+            self.mean = torch.tensor([0.485, 0.456, 0.406]).cuda().view(1,3,1,1)
+            self.std = torch.tensor([0.229, 0.224, 0.225]).cuda().view(1,3,1,1)
+        else:
+            self.mean = torch.tensor([0.0, 0.0, 0.0]).cuda().view(1,3,1,1)
+            self.std = torch.tensor([1.0, 1.0, 1.0]).cuda().view(1,3,1,1)
 
         self.preload()
 

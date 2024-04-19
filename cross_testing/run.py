@@ -56,4 +56,4 @@ os.system(f"python3 main.py -t {TYPE} -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -t
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -m {MODEL} -l {LOSS} -s {SPLIT}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -t {TYPE} -m {MODEL} -l {LOSS} -s {SPLIT}")

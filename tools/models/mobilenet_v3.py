@@ -10,7 +10,7 @@ NUM_CLASSES = 2
 DEVICE = "cuda"
 
 class model():
-    def __init__(self, pre_trained=True, loss="CrossEntropyLoss"):
+    def __init__(self, pre_trained=True, loss="CrossEntropyLoss", config=None):
         self.model = mobilenet(weights=pre_weights.IMAGENET1K_V2) if pre_trained else mobilenet()
         self.model.classifier[-1] = torch.nn.Linear(1280, NUM_CLASSES)
         self.model = self.model.to(DEVICE)
@@ -18,6 +18,8 @@ class model():
         loss_module = importlib.import_module("torch.nn")
         self.loss = getattr(loss_module, loss)()
         self.loss_name = loss
+
+        self.config = config
 
         self.optmizer = torch.optim.Adam(self.model.parameters())
 
@@ -46,7 +48,7 @@ class model():
         local_loss = getattr(loss_module, self.loss_name)()
         final_loss = 0.0
 
-        prefetcher = data_prefetcher(loader)
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -65,7 +67,7 @@ class model():
         self.model.eval()
         final_probs, final_labels = [], []
 
-        prefetcher = data_prefetcher(loader)
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -80,29 +82,11 @@ class model():
         return (final_probs, final_labels)  
 
 
-    def train(self, loader):
-        self.model.train()
-
-        prefetcher = data_prefetcher(loader)
-        inputs, labels = prefetcher.next()
-        while inputs is not None:
-            inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
-            self.optmizer.zero_grad()
-
-            preds = self.model(inputs)
-            loss = self.loss(preds, labels)
-
-            loss.backward()
-            self.optmizer.step()
-
-            inputs, labels = prefetcher.next()
-
-
     def predict(self, loader, threshold=0.5):
         self.model.eval()
         final_preds, final_labels = [], []
 
-        prefetcher = data_prefetcher(loader)
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -117,3 +101,26 @@ class model():
                 inputs, labels = prefetcher.next()
         
         return (final_preds, final_labels)  
+    
+
+    def train(self, loader):
+        self.model.train()
+
+        if self.config["training_mode"] == "transfer":
+            for name, param in self.model.named_parameters():
+                if "classifier.3" not in name:
+                    param.requires_grad = False
+
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
+        inputs, labels = prefetcher.next()
+        while inputs is not None:
+            inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
+            self.optmizer.zero_grad()
+
+            preds = self.model(inputs)
+            loss = self.loss(preds, labels)
+
+            loss.backward()
+            self.optmizer.step()
+
+            inputs, labels = prefetcher.next()

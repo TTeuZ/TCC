@@ -15,11 +15,15 @@ class model():
         self.model.classifier[-1] = torch.nn.Linear(1280, NUM_CLASSES)
         self.model = self.model.to(DEVICE)
 
+        self.config = config
+        if self.config["training_mode"] == "transfer":
+            for name, param in self.model.named_parameters():
+                if "classifier.3" not in name:
+                    param.requires_grad = False
+
         loss_module = importlib.import_module("torch.nn")
         self.loss = getattr(loss_module, loss)()
         self.loss_name = loss
-
-        self.config = config
 
         self.optmizer = torch.optim.Adam(self.model.parameters())
 
@@ -105,11 +109,6 @@ class model():
 
     def train(self, loader):
         self.model.train()
-
-        if self.config["training_mode"] == "transfer":
-            for name, param in self.model.named_parameters():
-                if "classifier.3" not in name:
-                    param.requires_grad = False
 
         prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()

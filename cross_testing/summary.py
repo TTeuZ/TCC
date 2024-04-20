@@ -1,6 +1,7 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from tools.utils.utils import get_cm
+from datetime import datetime
 import numpy as np
 import argparse
 import json
@@ -106,8 +107,12 @@ def main(args):
     experiments = get_experiments(args.files)
     summary_name = args.files.split("/")[1]
 
+    begin_date = datetime.strptime(args.begin_date, '%Y-%m-%d--%H:%M:%S')
+    end_date = datetime.strptime(args.end_date, '%Y-%m-%d--%H:%M:%S')
+    time_spent = end_date - begin_date
+
     with open(f"_summaries/{summary_name}.txt", "w") as file:
-        file.write(f"Date: {args.date}\n\n")
+        file.write(f"Begin: {args.begin_date} End: {args.end_date}\n\n -- Time spent: {time_spent}")
 
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
@@ -126,7 +131,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--files", "-f", type=str, required=True)
-    parser.add_argument("--date", "-d", type=str, required=True)
+    parser.add_argument("--begin_date", "-bd", type=str, required=True)
+    parser.add_argument("--end_date", "-ed", type=str, required=True)
     parser.add_argument("--type", "-t", type=str, required=True)
     parser.add_argument("--model", "-m", type=str, required=True)
     parser.add_argument("--loss", "-l", type=str, required=True)

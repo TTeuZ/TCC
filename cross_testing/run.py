@@ -16,8 +16,7 @@ TYPE = "fine_tunning"
 
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
-EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
-
+BEGIN_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
 create_folder("_summaries")
 create_folder("_models")
@@ -25,10 +24,9 @@ create_folder("_results")
 create_folder(f"_models/{EXP_NAME}")
 create_folder(f"_results/{EXP_NAME}")
 
-
 # Writing experiment README
 print("Writing experiment README")
-with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
+with open(f"_results/{EXP_NAME}/README.md", "w") as file:
     file.write("## Experiment infos\n")
     file.write(f"- Cross testing type: {TYPE}\n")
     file.write(f"- Model: {MODEL}\n")
@@ -37,7 +35,6 @@ with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
     file.write(f"- Training epocs: {EPOCHS}\n")
     file.write(f"- Train/Val split: {SPLIT}\n")
     file.write(f"- Summary: _summaries/summary_{EXP_UUID}\n")
-
 
 # Running experiments (Cross testing -> 5 times training with TRAIN_DATASET and testing with TEST_DATASET and 5 time inverting datasets)
 print("\nExecuting experiment")
@@ -53,7 +50,8 @@ os.system(f"python3 main.py -t {TYPE} -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -t
 os.system(f"python3 main.py -t {TYPE} -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 os.system(f"python3 main.py -t {TYPE} -m {MODEL} -l {LOSS} -tr {TEST_DATASET} -te {TRAIN_DATASET} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 
+END_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -d {EXP_DATETIME} -t {TYPE} -m {MODEL} -l {LOSS} -s {SPLIT}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {BEGIN_EXP_DATETIME} -ed {END_EXP_DATETIME} -t {TYPE} -m {MODEL} -l {LOSS} -s {SPLIT}")

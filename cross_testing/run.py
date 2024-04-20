@@ -32,7 +32,7 @@ with open(f"_results/{EXP_NAME}/README.md", "w") as file:
     file.write(f"- Model: {MODEL}\n")
     file.write(f"- Train dataset: {TRAIN_DATASET}\n")
     file.write(f"- Test dataset: {TEST_DATASET}\n")
-    file.write(f"- Training epocs: {EPOCHS}\n")
+    file.write(f"- Training epochs: {EPOCHS}\n")
     file.write(f"- Train/Val split: {SPLIT}\n")
     file.write(f"- Summary: _summaries/summary_{EXP_UUID}\n")
 

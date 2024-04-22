@@ -112,7 +112,7 @@ def main(args):
     time_spent = end_date - begin_date
 
     with open(f"_summaries/{summary_name}.txt", "w") as file:
-        file.write(f"Begin: {args.begin_date} End: {args.end_date}\n\n -- Time spent: {time_spent}")
+        file.write(f"Begin: {args.begin_date} End: {args.end_date} -- Time spent: {time_spent} \n\n")
 
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")

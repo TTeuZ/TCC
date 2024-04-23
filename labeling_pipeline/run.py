@@ -16,6 +16,8 @@ MODEL = "tools.models.mobilenet_v3"
 LOSS = "CrossEntropyLoss"
 EPOCHS = 15
 SPLIT = 0.7
+TYPE = "fine_tunning"
+# TYPE = "transfer_learning"
 
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
@@ -52,7 +54,7 @@ for father in FATHERS_CONSTRUCT_JSON["models"]:
     create_folder(f"_models/{EXP_NAME}/{father['name'][:-3]}")
     create_folder(f"_results/{EXP_NAME}/{father['name'][:-3]}")
     for subset in SUBSETS:
-        os.system(f"python3 main.py -f {FATHERS_PATH}/{father['name']} -t {father['threshold']} -m {MODEL} -l {LOSS} -d {DATASET} -su {subset} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+        print(f"python3 main.py -f {FATHERS_PATH}/{father['name']} -t {father['threshold']} -t {TYPE} -m {MODEL} -l {LOSS} -d {DATASET} -su {subset} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
 
 END_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 

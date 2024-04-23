@@ -6,8 +6,8 @@ import torch
 import os
 
 class data_loader():
-    def __init__(self):
-        self.transform = transforms.Compose([transforms.Resize((128, 128))])
+    def __init__(self, config):
+        self.transform = transforms.Compose([transforms.Resize(config["img_size"])])
 
 
     def __get_pytorch_dataset(self, date):

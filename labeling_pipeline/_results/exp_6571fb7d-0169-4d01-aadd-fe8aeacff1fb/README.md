@@ -1,0 +1,23 @@
+## Experiment infos
+- Fathers models used:
+    - model_117b3149-37f9-4310-bf3b-52fdb7aeaa69.pt
+    - model_543ffa81-8873-4ae7-bbf3-666709444c71.pt
+    - model_796a29fd-0fbb-42a6-a228-6ccc39e6aa47.pt
+    - model_494766d3-ecce-4b96-8a47-84111eb02099.pt
+    - model_f28a1ba9-d16c-4c19-9fc6-06f809328cf1.pt
+- Model generated: tools.models.mobilenet_v3
+- Loss: CrossEntropyLoss
+- Dataset: /media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented
+- Subsets used:
+    - CNR-CAMERA-1
+    - CNR-CAMERA-2
+    - CNR-CAMERA-3
+    - CNR-CAMERA-4
+    - CNR-CAMERA-5
+    - CNR-CAMERA-6
+    - CNR-CAMERA-7
+    - CNR-CAMERA-8
+    - CNR-CAMERA-9
+- Training epocs: 15
+- Train/Val split: 0.7
+- Sumary: _summaries/summary_6571fb7d-0169-4d01-aadd-fe8aeacff1fb

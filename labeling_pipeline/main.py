@@ -2,8 +2,9 @@ import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score
 from tools.dataset.data_prefetcher import fast_collate
+from dataset.pipeline_dataset import pipeline_dataset
 from tools.utils.metrics import get_roc_auc, get_eer
-from tools.dataset.data_leveler import data_leveler
+from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
 import numpy as np
 import importlib
@@ -20,7 +21,7 @@ def divide_dataset(dataset, split=0.5):
     return (list(dataset.items())[:divisor], list(dataset.items())[divisor:])
 
 
-def get_train_val_datasets(ds_loader, first_half, new_labels, split=0.7):
+def get_train_val_datasets(first_half, new_labels, split=0.7):
     divisor = math.ceil(len(first_half) * split)
 
     train_ds, train_labels = first_half[:divisor], new_labels[:divisor]
@@ -29,15 +30,19 @@ def get_train_val_datasets(ds_loader, first_half, new_labels, split=0.7):
     train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
     val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
 
-    train = ds_loader.concat_dataset_with_new_labels(train_ds, train_labels)
-    val = ds_loader.concat_dataset_with_new_labels(val_ds, val_labels)
+    train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
+    val_ds, val_labels = torch.utils.data.ConcatDataset(val_ds), np.concatenate(val_labels)
 
-    return train, val
+    ds_leveler = data_leveler()
+    train_ds, train_labels = ds_leveler.flatten_dataset(train_ds, train_labels)
+    val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
+
+    return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
-def get_test_dataset(ds_loader, second_half):
+def get_test_dataset(second_half):
     test_ds = [date[1] for date in second_half]
-    return ds_loader.concat_dataset(test_ds)
+    return torch.utils.data.ConcatDataset(test_ds)
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
@@ -45,6 +50,7 @@ def test(model, test_ds, fc_config, threshold, output_json, output_model):
     collate_fn = lambda batch: fast_collate(batch, fc_config)
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=6, collate_fn=collate_fn)
 
+    print(f"Testing model")
     preds, labels = model.predict(test_loader, threshold)
     accuracy = accuracy_score(labels, preds)
     cm = confusion_matrix(labels, preds)
@@ -151,12 +157,8 @@ def execute(model_module, config, args):
     output_json["father_model"]["threshold"] = args.threshold
 
     new_labels = classify(father_model, fc_config, first_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(ds_loader, first_half, new_labels, args.split)
-    test_ds = get_test_dataset(ds_loader, second_half)
-
-    ds_leveler = data_leveler()
-    flattened_train_ds = ds_leveler.flatten_dataset(train_ds)
-    flattened_val_ds = ds_leveler.flatten_dataset(val_ds)
+    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, args.split)
+    test_ds = get_test_dataset(second_half)
 
     train_model = model_module.model(loss=args.loss, config=model_config)
 
@@ -165,12 +167,12 @@ def execute(model_module, config, args):
     output_json["model"]["details"]["loss"] = args.loss
     output_json["model"]["details"]["training_type"] = args.type
 
-    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, output_json, args.epochs, fc_config, output_name)
+    best_state_dict = train(train_model, train_ds, val_ds, output_json, args.epochs, fc_config, output_name)
 
     test_model = model_module.model(pre_trained=False, loss=args.loss, config=model_config)
     test_model.load_state_dict(best_state_dict)
 
-    test_threshold = get_threshold(test_model, flattened_val_ds, fc_config, output_json)
+    test_threshold = get_threshold(test_model, val_ds, fc_config, output_json)
     test(test_model, test_ds, fc_config, test_threshold, output_json, "model")
     test(father_model, test_ds, fc_config, args.threshold, output_json, "father_model")
 
@@ -185,6 +187,7 @@ def execute(model_module, config, args):
 def main(args):
     assert torch.cuda.is_available(), "Cuda unavailable"
     assert os.path.exists(args.dataset), "Invalid dataset"
+    assert args.type in ["fine_tunning", "transfer_learning"]
     assert 0 < args.split < 1, "Split may be between 0 and 1"
     assert args.epochs > 0, "Invalid epochs count"
 
@@ -208,7 +211,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--father", "-f", type=str, required=True)
     parser.add_argument("--threshold", "-t", type=float, required=True)
-    parser.add_argument("--type", "-t", type=str, required=True)
+    parser.add_argument("--type", "-ty", type=str, required=True)
     parser.add_argument("--model", "-m", type=str, required=True)
     parser.add_argument("--loss", "-l", type=str, required=True)
     parser.add_argument("--dataset", "-d", type=str, required=True)

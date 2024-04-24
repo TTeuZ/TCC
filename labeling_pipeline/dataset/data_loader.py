@@ -1,4 +1,3 @@
-from dataset.pipeline_dataset import pipeline_dataset
 from torchvision import transforms, datasets
 from datetime import datetime
 import numpy as np
@@ -33,14 +32,3 @@ class data_loader():
             datasets[date[1]] = self.__get_pytorch_dataset(date)
 
         return datasets
-
-
-    def concat_dataset_with_new_labels(self, datasets, new_labels):
-        concat_dataset = torch.utils.data.ConcatDataset(datasets)
-        concat_labels = np.concatenate(new_labels)
-
-        return pipeline_dataset(concat_dataset, concat_labels)
-    
-
-    def concat_dataset(self, datasets):
-        return torch.utils.data.ConcatDataset(datasets)

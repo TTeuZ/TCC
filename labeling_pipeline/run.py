@@ -61,4 +61,4 @@ END_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S
 
 # Writing summary
 print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {BEGIN_EXP_DATETIME} -ed {END_EXP_DATETIME} -m {MODEL} -md {FATHERS_CONSTRUCT_JSON['trained_at'].split('/')[-1]} -da {DATASET.split('/')[-1]}")
+os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {BEGIN_EXP_DATETIME} -ed {END_EXP_DATETIME} -t {TYPE} -m {MODEL} -md {FATHERS_CONSTRUCT_JSON['trained_at'].split('/')[-1]} -da {DATASET.split('/')[-1]}")

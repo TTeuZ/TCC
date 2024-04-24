@@ -3,7 +3,7 @@ import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from sklearn.metrics import confusion_matrix, accuracy_score
 from tools.dataset.data_prefetcher import fast_collate
 from tools.utils.metrics import get_roc_auc, get_eer
-from tools.dataset.data_leveler import data_leveler
+from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
 import numpy as np
 import importlib

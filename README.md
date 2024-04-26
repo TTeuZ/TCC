@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 4
 ## Diferences between the second and third checkpoint
 Here an data leveling was applied in both **cross testing** and **labeling pipeline**, leveling through the class with lowest amount.
 

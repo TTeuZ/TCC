@@ -1,5 +1,8 @@
 # Latest Checkpoint
-**WIP**
+## Diferences between the second and third checkpoint
+Here an data leveling was applied in both **cross testing** and **labeling pipeline**, leveling through the class with lowest amount.
+
+Also, the data protocol was slightly corrected, making the split between train and val to be 70% of the first days in **each subset** and the rest (30%) to val.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

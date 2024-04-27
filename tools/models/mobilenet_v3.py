@@ -28,7 +28,7 @@ class model():
         self.loss = getattr(loss_module, loss)()
         self.loss_name = loss
 
-        self.optmizer = torch.optim.Adam(self.model.parameters())
+        self.optmizer = torch.optim.AdamW(self.model.parameters())
 
     
     def info(self):

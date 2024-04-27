@@ -29,6 +29,7 @@ class model():
         self.loss_name = loss
 
         self.optmizer = torch.optim.AdamW(self.model.parameters())
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optmizer, gamma=0.96)
 
     
     def info(self):
@@ -126,3 +127,5 @@ class model():
             self.optmizer.step()
 
             inputs, labels = prefetcher.next()
+        
+        self.scheduler.step()

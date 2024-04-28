@@ -1,3 +1,4 @@
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score

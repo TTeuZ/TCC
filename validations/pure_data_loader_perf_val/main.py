@@ -23,7 +23,7 @@ def test(model, test_ds, fc_config, threshold, output_json):
 
     print(f"Testing model")
     for test in test_ds:
-        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"])
         preds, labels = model.predict(test_loader, threshold)
 
         accuracy = accuracy_score(labels, preds)
@@ -39,7 +39,7 @@ def test(model, test_ds, fc_config, threshold, output_json):
 
 def get_threshold(model, val_ds, fc_config, output_json):
     collate_fn = lambda batch: fast_collate(batch, fc_config)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"])
 
     probs, labels = model.get_probs(val_loader)
     probs = np.array([prob[1] for prob in probs])
@@ -57,8 +57,8 @@ def get_threshold(model, val_ds, fc_config, output_json):
 
 def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
     collate_fn = lambda batch: fast_collate(batch, fc_config)
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"])
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"])
 
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 

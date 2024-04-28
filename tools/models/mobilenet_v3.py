@@ -60,7 +60,7 @@ class model():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
+                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 preds = self.model(inputs)
 
                 loss = local_loss(preds, labels)
@@ -79,7 +79,7 @@ class model():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
+                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 probs = torch.sigmoid(self.model(inputs))
 
                 final_probs.extend(probs.cpu().numpy())
@@ -98,7 +98,7 @@ class model():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
+                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 probs = torch.sigmoid(self.model(inputs))
                 class_1_probs = probs[:, 1]
 
@@ -117,7 +117,7 @@ class model():
         prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         while inputs is not None:
-            inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
+            # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
             self.optmizer.zero_grad()
 
             preds = self.model(inputs)

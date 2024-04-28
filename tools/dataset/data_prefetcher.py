@@ -3,7 +3,7 @@ import torch
 
 def fast_collate(batch, config):
     images = [image[0] for image in batch]
-    targets = torch.tensor([target[1] for target in batch], dtype=torch.float32)
+    targets = torch.tensor([target[1] for target in batch], dtype=torch.long)
 
     width, height = config["img_size"]
     tensor = torch.zeros((len(images), 3, height, width), dtype=torch.float32).contiguous()

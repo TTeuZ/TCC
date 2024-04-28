@@ -5,10 +5,13 @@ import datetime
 import uuid
 
 # Experiment variables
+# TRAIN_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented" # Local path
+# TEST_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented" # Local path
+TRAIN_DATASET = "/home/pmla20/datasets/PKLotSegmented" # Server path
+TEST_DATASET = "/home/pmla20/datasets/CNRParkEXTSegmented" # Server path
+
 MODEL = "tools.models.mobilenet_v3"
 LOSS = "CrossEntropyLoss"
-TRAIN_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented"
-TEST_DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented"
 EPOCHS = 15
 SPLIT = 0.7
 TYPE = "fine_tunning"

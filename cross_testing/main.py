@@ -22,7 +22,7 @@ def test(model, test_ds, fc_config, threshold, output_json):
 
     print(f"Testing model")
     for test in test_ds:
-        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=6, collate_fn=collate_fn)
+        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
         preds, labels = model.predict(test_loader, threshold)
 
         accuracy = accuracy_score(labels, preds)
@@ -38,7 +38,7 @@ def test(model, test_ds, fc_config, threshold, output_json):
 
 def get_threshold(model, val_ds, fc_config, output_json):
     collate_fn = lambda batch: fast_collate(batch, fc_config)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=6, collate_fn=collate_fn)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
 
     probs, labels = model.get_probs(val_loader)
     probs = np.array([prob[1] for prob in probs])
@@ -56,8 +56,8 @@ def get_threshold(model, val_ds, fc_config, output_json):
 
 def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
     collate_fn = lambda batch: fast_collate(batch, fc_config)
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=6, collate_fn=collate_fn)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=6, collate_fn=collate_fn)
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
 
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
@@ -129,18 +129,28 @@ def main(args):
     assert 0 < args.split < 1, "Split may be between 0 and 1"
     assert args.epochs > 0, "Invalid epochs count"
 
-    model_module = importlib.import_module(args.model)
-
+    # Local Config
+    # if args.type == "fine_tunning":
+    #     dl_config = { "img_size": (128, 128) }
+    #     fc_config = { "img_size": (128, 128), "batch_size": 1000, "num_workers": 6 }
+    #     model_config = { "training_mode": "normal", "normalize_data": True }
+    # else:
+    #     dl_config = { "img_size": (224, 224) }
+    #     fc_config = { "img_size": (224, 224), "batch_size": 400 }
+    #     model_config = { "training_mode": "transfer", "normalize_data": True }
+    
+    # Server Config
     if args.type == "fine_tunning":
         dl_config = { "img_size": (128, 128) }
-        fc_config = { "img_size": (128, 128), "batch_size": 1000 }
-        model_config = { "training_mode": "normal", "normalize_data": False }
+        fc_config = { "img_size": (128, 128), "batch_size": 3500, "num_workers": 48 }
+        model_config = { "training_mode": "normal", "normalize_data": True }
     else:
         dl_config = { "img_size": (224, 224) }
-        fc_config = { "img_size": (224, 224), "batch_size": 400 }
+        fc_config = { "img_size": (224, 224), "batch_size": 1400 }
         model_config = { "training_mode": "transfer", "normalize_data": True }
     
     config = (dl_config, fc_config, model_config)
+    model_module = importlib.import_module(args.model)
 
     execute(model_module, config, args)
 

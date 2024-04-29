@@ -1,0 +1,84 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 48
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "model": {
+    "cuda": true,
+    "classifier_classes": 2,
+    "loss": "CrossEntropyLoss"
+  },
+  "epochs": {
+    "epoch_1": 0.08341831122442797,
+    "epoch_2": 0.043982828643591314,
+    "epoch_3": 0.04051831883453739,
+    "epoch_4": 0.07276803001349308,
+    "epoch_5": 0.07414338445078032,
+    "epoch_6": 0.04254244722895168,
+    "epoch_7": 0.03966300605036882,
+    "epoch_8": 0.08932637366143784,
+    "epoch_9": 0.1647536213693148,
+    "epoch_10": 0.06042046146638014,
+    "epoch_11": 0.10899554667525771,
+    "epoch_12": 0.03882619514313465,
+    "epoch_13": 0.07701712152469123,
+    "epoch_14": 0.0799990543203105,
+    "epoch_15": 0.07442836742817124
+  },
+  "best_model": {
+    "loss": 0.03882619514313465,
+    "epoch_id": 12,
+    "model": "model_b4d9fb21-26c0-4117-b29c-82c35db3e6f6.pt"
+  },
+  "metrics": {
+    "auc": 0.4697516400453431,
+    "eer": 6.664445184934031e-05,
+    "threshold": 0.006732459180057049
+  },
+  "test": {
+    "subsets": {
+      "UFPR05": {
+        "accuracy": 0.42295799915576193,
+        "cm": "[[  372 79779]\n [29582 79787]]"
+      },
+      "UFPR04": {
+        "accuracy": 0.4012644955813605,
+        "cm": "[[  878 65331]\n [10618 50022]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.4896537546300676,
+        "cm": "[[ 14540 266045]\n [ 14476 254607]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.43795874978906335,
+      "cm": "[[ 15790 411155]\n [ 54676 384416]]"
+    }
+  }
+}

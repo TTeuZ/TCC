@@ -1,0 +1,84 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 48
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "model": {
+    "cuda": true,
+    "classifier_classes": 2,
+    "loss": "CrossEntropyLoss"
+  },
+  "epochs": {
+    "epoch_1": 0.09019177173218085,
+    "epoch_2": 0.06935073619522837,
+    "epoch_3": 0.12268166549898553,
+    "epoch_4": 0.326686727428627,
+    "epoch_5": 0.06214221746787076,
+    "epoch_6": 0.06267527799019314,
+    "epoch_7": 0.04535716208103288,
+    "epoch_8": 0.046124311310190416,
+    "epoch_9": 0.057337413755484776,
+    "epoch_10": 0.05634361464326648,
+    "epoch_11": 0.14274572078988915,
+    "epoch_12": 0.09452618382156133,
+    "epoch_13": 0.13499543550667892,
+    "epoch_14": 0.14128672426814132,
+    "epoch_15": 0.07774847790149501
+  },
+  "best_model": {
+    "loss": 0.04535716208103288,
+    "epoch_id": 7,
+    "model": "model_9a0c5e9b-9888-405f-be3a-c946d5dc511a.pt"
+  },
+  "metrics": {
+    "auc": 0.9985376350724366,
+    "eer": 0.00019993335554814237,
+    "threshold": 0.5823472142219543
+  },
+  "test": {
+    "subsets": {
+      "UFPR05": {
+        "accuracy": 0.861075348248206,
+        "cm": "[[ 55212  24939]\n [  1390 107979]]"
+      },
+      "UFPR04": {
+        "accuracy": 0.7991076003752493,
+        "cm": "[[41079 25130]\n [  353 60287]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.9587314524403822,
+        "cm": "[[266745  13840]\n [  8844 260239]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.8729714670212791,
+      "cm": "[[363036  63909]\n [ 10587 428505]]"
+    }
+  }
+}

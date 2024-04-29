@@ -1,0 +1,84 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 48
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "model": {
+    "cuda": true,
+    "classifier_classes": 2,
+    "loss": "CrossEntropyLoss"
+  },
+  "epochs": {
+    "epoch_1": 0.039490587099137824,
+    "epoch_2": 0.050250559688354283,
+    "epoch_3": 0.06202679514755848,
+    "epoch_4": 0.1920155717065556,
+    "epoch_5": 0.06615162129606711,
+    "epoch_6": 0.07943331396101078,
+    "epoch_7": 0.06693064299235489,
+    "epoch_8": 0.07296328500914985,
+    "epoch_9": 0.06507741380172574,
+    "epoch_10": 0.050812197305598494,
+    "epoch_11": 0.057803829331838544,
+    "epoch_12": 0.10168475706114129,
+    "epoch_13": 0.12301262359388399,
+    "epoch_14": 0.08625465567803749,
+    "epoch_15": 0.11689005478327769
+  },
+  "best_model": {
+    "loss": 0.039490587099137824,
+    "epoch_id": 1,
+    "model": "model_eebcfafa-692a-4f1b-bfd5-f23857fb21dc.pt"
+  },
+  "metrics": {
+    "auc": 0.9987164225276013,
+    "eer": 2.2551405187698492e-17,
+    "threshold": 0.38156425952911377
+  },
+  "test": {
+    "subsets": {
+      "UFPR05": {
+        "accuracy": 0.8907503165892782,
+        "cm": "[[ 60606  19545]\n [  1160 108209]]"
+      },
+      "UFPR04": {
+        "accuracy": 0.8100733943507635,
+        "cm": "[[42425 23784]\n [  308 60332]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.9644476302058698,
+        "cm": "[[266407  14178]\n [  5364 263719]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.8884237803819705,
+      "cm": "[[369438  57507]\n [  6832 432260]]"
+    }
+  }
+}

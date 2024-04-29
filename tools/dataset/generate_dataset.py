@@ -74,7 +74,7 @@ def crop_rect(image, rect):
 
 
 def crop_image(cv_image, categories, subset, crop_info, save_path):
-    date, time, annotations_rectangle, annotations = crop_info
+    date, time, annotations_rectangle, annotations, offset = crop_info
     bounding_rect = get_bounding_rect(annotations_rectangle)
 
     for crop in annotations:
@@ -87,7 +87,7 @@ def crop_image(cv_image, categories, subset, crop_info, save_path):
             poly = np.array(crop["segmentation"]).reshape((-1, 2)).astype(np.int64)
             rotated_rect = cv.minAreaRect(poly)
 
-            if not is_inside(rotated_rect, bounding_rect, 15):
+            if not is_inside(rotated_rect, bounding_rect, offset):
                 raise Exception("Spot out of boundings or occluded")
             
             cropped = crop_rect(cv_image, rotated_rect)
@@ -98,7 +98,7 @@ def crop_image(cv_image, categories, subset, crop_info, save_path):
             print(f"Failed to save image {image_name} into {save_path}/{subfolder}: {e}")
 
 
-def get_images(artifacts, root_path, save_path, subset):
+def get_images(artifacts, root_path, save_path, subset, offset):
     images, annotations, categories = artifacts
     failed_images = []
 
@@ -116,7 +116,7 @@ def get_images(artifacts, root_path, save_path, subset):
                 os.mkdir(f"{save_path}/{date}/empty")
                 os.mkdir(f"{save_path}/{date}/occupied")
 
-            crop_info = (date, time, annotations_rectangle, image_annotations)
+            crop_info = (date, time, annotations_rectangle, image_annotations, offset)
             crop_image(cv_image, categories, subset, crop_info, save_path)
         else:
             failed_images.append(image)
@@ -139,7 +139,7 @@ def get_crop_artifacts(json_path):
     return (data["images"], annotations, data["categories"])
 
 
-def execute(args):
+def execute(args, offsets):
     print(f"Generating dataset {args.name} in {args.dest}/{args.name}")
 
     failed_images = []
@@ -153,7 +153,7 @@ def execute(args):
         create_folder(dest_folder)
 
         artifacts = get_crop_artifacts(f"{args.root}/{file}")
-        failed_images.extend(get_images(artifacts, args.root, dest_folder, subset))
+        failed_images.extend(get_images(artifacts, args.root, dest_folder, subset, offsets[subset]))
 
         treat_empty_folders(dest_folder)
 
@@ -167,7 +167,13 @@ def main(args):
     create_folder("_failed")
     create_folder(f"{args.dest}/{args.name}")
 
-    execute(args)
+    if "PKLot" in args.root:
+        offsets = { "PUCPR": 9, "UFPR04": 15, "UFPR05": 7 }
+    else:
+        offsets = { "CNR-CAMERA-1": 15, "CNR-CAMERA-2": 15, "CNR-CAMERA-3": 15, "CNR-CAMERA-4": 15, "CNR-CAMERA-5": 15, 
+                   "CNR-CAMERA-6": 15, "CNR-CAMERA-7": 15, "CNR-CAMERA-8": 15, "CNR-CAMERA-9": 15 }
+
+    execute(args, offsets)
 
 
 if __name__ == "__main__":
@@ -180,7 +186,7 @@ if __name__ == "__main__":
 
 
 # Generate PKLotSegmented dataset: 
-# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/PKLot -d /media/tteuz/ssd/datasets/PKLot2.0 -n PKLotSegmented
+# python3 generate_dataset.py -r /home/tteuz/Desktop/datasets/Organized/PKLot -d /media/tteuz/ssd/datasets/PKLot2.0 -n PKLotSegmented
 
 # Generate CNRPark-EXT Segmented dataset: 
-# python3 generate_dataset.py -r /home/tteuz/Desktop/TCC/datasets/PKLot2.0/CNRPark-EXT -d /media/tteuz/ssd/datasets/PKLot2.0 -n CNRParkEXTSegmented
+# python3 generate_dataset.py -r /home/tteuz/Desktop/datasets/Organized/CNRPark-EXT -d /media/tteuz/ssd/datasets/PKLot2.0 -n CNRParkEXTSegmented

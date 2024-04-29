@@ -111,9 +111,9 @@ def main(args):
     end_date = datetime.strptime(args.end_date, '%Y-%m-%d--%H:%M:%S')
     time_spent = end_date - begin_date
 
-    for experiment in experiment:
-        input_size = str(experiments[experiment][[0]]["experiment"]["dl_config"]["img_size"])
-        normalize_data = experiments[experiment][[0]]["experiment"]["model_config"]["normalize_data"]
+    for experiment in experiments:
+        input_size = str(experiments[experiment][0]["experiment"]["dl_config"]["img_size"])
+        normalize_data = experiments[experiment][0]["experiment"]["model_config"]["normalize_data"]
 
     with open(f"_summaries/{summary_name}.txt", "w") as file:
         file.write(f"Begin: {args.begin_date} End: {args.end_date} -- Time spent: {time_spent} \n\n")

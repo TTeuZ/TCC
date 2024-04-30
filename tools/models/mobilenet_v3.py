@@ -7,26 +7,24 @@ import importlib
 import torch
 
 NUM_CLASSES = 2
-DEVICE = "cuda"
 
 class model():
-    def __init__(self, pre_trained=True, loss="CrossEntropyLoss", config=None):
+    def __init__(self, pre_trained=True, config=None):
         self.model = mobilenet(weights=pre_weights.IMAGENET1K_V2) if pre_trained else mobilenet()
+        self.config = config
 
         self.model.classifier[-3] = torch.nn.Sequential(torch.nn.Linear(1280, 1024), torch.nn.ReLU(inplace=True))
         self.model.classifier[-2] = torch.nn.Sequential(torch.nn.Linear(1024, 128), torch.nn.ReLU(inplace=True))
         self.model.classifier[-1] = torch.nn.Linear(128, NUM_CLASSES)
-        self.model = self.model.to(DEVICE)
+        self.model = self.model.to(self.config["device"])
 
-        self.config = config
         if self.config["training_mode"] == "transfer":
             for name, param in self.model.named_parameters():
                 if "classifier" not in name:
                     param.requires_grad = False
 
         loss_module = importlib.import_module("torch.nn")
-        self.loss = getattr(loss_module, loss)()
-        self.loss_name = loss
+        self.loss = getattr(loss_module, self.config["loss"])()
 
         self.optmizer = torch.optim.AdamW(self.model.parameters())
         self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optmizer, gamma=0.96)
@@ -46,21 +44,20 @@ class model():
 
     def load_state_dict(self, state_dict):
         self.model.load_state_dict(state_dict)
-        self.model.to(DEVICE)
+        self.model.to(self.config["device"])
 
 
     def get_loss_in_dataset(self, loader):
         self.model.eval()
 
         loss_module = importlib.import_module("torch.nn")
-        local_loss = getattr(loss_module, self.loss_name)()
+        local_loss = getattr(loss_module, self.config["loss"])()
         final_loss = 0.0
 
         prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 preds = self.model(inputs)
 
                 loss = local_loss(preds, labels)
@@ -79,7 +76,6 @@ class model():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 probs = torch.sigmoid(self.model(inputs))
 
                 final_probs.extend(probs.cpu().numpy())
@@ -98,7 +94,6 @@ class model():
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
-                # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
                 probs = torch.sigmoid(self.model(inputs))
                 class_1_probs = probs[:, 1]
 
@@ -117,7 +112,6 @@ class model():
         prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         while inputs is not None:
-            # inputs, labels = inputs.to(DEVICE), labels.type(torch.long).to(DEVICE)
             self.optmizer.zero_grad()
 
             preds = self.model(inputs)

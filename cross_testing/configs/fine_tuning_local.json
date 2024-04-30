@@ -1,0 +1,34 @@
+{
+    "datasets": {
+        "train_dataset": "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented",
+        "test_dataset": "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented",
+        "split": 0.7
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3",
+        "config": {
+            "training_mode": "normal",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "device": "cuda"
+        }
+    },
+    "experiment": {
+        "type": "fine_tunning",
+        "epochs": 15,
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        },
+        "fc_config": {
+            "img_size": [
+                128,
+                128
+            ],
+            "batch_size": 1000,
+            "num_workers": 6
+        }
+    }
+}

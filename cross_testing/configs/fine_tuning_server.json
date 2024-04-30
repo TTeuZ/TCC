@@ -1,0 +1,34 @@
+{
+    "datasets": {
+        "train_dataset": "/home/pmla20/datasets/PKLotSegmented",
+        "test_dataset": "/home/pmla20/datasets/CNRParkEXTSegmented",
+        "split": 0.7
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3",
+        "config": {
+            "training_mode": "normal",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "device": "cuda:0"
+        }
+    },
+    "experiment": {
+        "type": "fine_tunning",
+        "epochs": 15,
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        },
+        "fc_config": {
+            "img_size": [
+                128,
+                128
+            ],
+            "batch_size": 3500,
+            "num_workers": 48
+        }
+    }
+}

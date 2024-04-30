@@ -82,32 +82,35 @@ def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
 
 def execute(model_module, config, args):
     train_ds_name, test_ds_name  = args.train.split("/")[-1], args.test.split("/")[-1]
-    dl_config, fc_config, model_config = config
     output_name = f"model_{uuid.uuid4()}"
+
+    dl_config = config["experiment"]["dl_config"]
+    fc_config = config["experiment"]["fc_config"]
+    model_config = config["model"]["config"]
 
     output_json = {}
 
-    print(f"Starting experiment [MODEL: {args.model}][TRAIN: {train_ds_name}][TEST: {test_ds_name}][TYPE: {args.type}]")
+    print(f"Starting experiment [MODEL: {config['model']['module']}][TRAIN: {train_ds_name}][TEST: {test_ds_name}][TYPE: {config['experiment']['type']}]")
 
     ds_loader = data_loader(dl_config)
-    train_ds, val_ds = ds_loader.load_dataset_by_split(args.train, args.split)
+    train_ds, val_ds = ds_loader.load_dataset_by_split(args.train, config["datasets"]["split"])
     test_ds = ds_loader.load_dataset_by_subset(args.test)
 
     ds_leveler = data_leveler()
     flattened_train_ds = ds_leveler.flatten_dataset(train_ds)
     flattened_val_ds = ds_leveler.flatten_dataset(val_ds)
 
-    train_model = model_module.model(loss=args.loss, config=model_config)
+    train_model = model_module.model(config=model_config)
 
-    output_json["experiment"] = {"type": args.type, "dl_config": dl_config, "fc_config": fc_config, "model_config": model_config}
+    output_json["experiment"] = {"type": config['experiment']['type'], "dl_config": dl_config, "fc_config": fc_config, "model_config": model_config}
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
-    output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": args.split}
+    output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": config["datasets"]["split"]}
     output_json["model"] = train_model.info()
-    output_json["model"]["loss"] = args.loss
+    output_json["model"]["loss"] = model_config["loss"]
 
-    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, args.epochs, fc_config, output_json, output_name)
+    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, config["experiment"]["epochs"], fc_config, output_json, output_name)
 
-    test_model = model_module.model(pre_trained=False, loss=args.loss, config=model_config)
+    test_model = model_module.model(pre_trained=False, config=model_config)
     test_model.load_state_dict(best_state_dict)
 
     threshold = get_threshold(test_model, flattened_val_ds, fc_config, output_json)
@@ -123,47 +126,19 @@ def execute(model_module, config, args):
 
 def main(args):
     assert torch.cuda.is_available(), "Cuda unavailable"
-    assert os.path.exists(args.train), "Invalid train/val dataset"
-    assert os.path.exists(args.test), "Invalid test dataset"
-    assert args.type in ["fine_tunning", "transfer_learning"]
-    assert 0 < args.split < 1, "Split may be between 0 and 1"
-    assert args.epochs > 0, "Invalid epochs count"
+    assert os.path.exists(args.config), "Invalid config"
 
-    # Local Config
-    # if args.type == "fine_tunning":
-    #     dl_config = { "img_size": (128, 128) }
-    #     fc_config = { "img_size": (128, 128), "batch_size": 1000, "num_workers": 6 }
-    #     model_config = { "training_mode": "normal", "normalize_data": True }
-    # else:
-    #     dl_config = { "img_size": (224, 224) }
-    #     fc_config = { "img_size": (224, 224), "batch_size": 400 }
-    #     model_config = { "training_mode": "transfer", "normalize_data": True }
-    
-    # Server Config
-    if args.type == "fine_tunning":
-        dl_config = { "img_size": (128, 128) }
-        fc_config = { "img_size": (128, 128), "batch_size": 3500, "num_workers": 48 }
-        model_config = { "training_mode": "normal", "normalize_data": True }
-    else:
-        dl_config = { "img_size": (224, 224) }
-        fc_config = { "img_size": (224, 224), "batch_size": 1400 }
-        model_config = { "training_mode": "transfer", "normalize_data": True }
-    
-    config = (dl_config, fc_config, model_config)
-    model_module = importlib.import_module(args.model)
+    config = json.load(open(args.config, "r"))
+    model_module = importlib.import_module(config["model"]["module"])
 
     execute(model_module, config, args)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Cross Testing", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--type", "-t", type=str, required=True)
-    parser.add_argument("--model", "-m", type=str, required=True)
-    parser.add_argument("--loss", "-l", type=str, required=True)
     parser.add_argument("--train", "-tr", type=str, required=True)
     parser.add_argument("--test", "-te", type=str, required=True)
-    parser.add_argument("--split", "-s", type=float, required=True)
-    parser.add_argument("--epochs", "-e", type=int, required=True)
-    parser.add_argument("--save", "-sa", type=str, required=True)
+    parser.add_argument("--config", "-c", type=str, required=True)
+    parser.add_argument("--save", "-s", type=str, required=True)
 
     main(parser.parse_args())

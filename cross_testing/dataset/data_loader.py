@@ -16,41 +16,50 @@ class data_loader():
         self.transform = transforms.Compose([transforms.Resize(config["img_size"]), transforms.ToTensor()])
 
 
-    def _load_image(self, image_path):
-        return cv.imread(image_path)
+    def _load_image(self, images):
+        processed_images = []
+
+        for image in images:
+            processed_images.append(cv.imread(image))
+        
+        return processed_images
 
 
     def _process_directory(self, args):
-        path, class_name = args
+        _, path = args
 
-        images = []
-        for image in os.listdir(path):
-            image_path = f"{path}/{image}"
-            images.append((image_path, class_name))
+        images, targets = [], []
+        for class_name in os.listdir(path):
+            full_path = f"{path}/{class_name}"
+
+            for image in os.listdir(full_path):
+                images.append(f"{full_path}/{image}")
+                targets.append(CLASSES[class_name])
         
-        return images
+        return (images, targets)
 
 
     def _get_dataset(self, paths):
-        all_paths, images, targets = [], [], []
-
-        for _, path in paths:
-            for class_name in os.listdir(path):
-                all_paths.append((f"{path}/{class_name}", class_name))
+        images, targets = [], []
 
         pool = Pool()
-        results = pool.map(self._process_directory, all_paths)
+        results = pool.map(self._process_directory, paths)
         pool.close(), pool.join()
 
-        image_paths = [item for sublist in results for item in sublist]
-
+        images_by_day = [item[0] for item in results]
+        targets_by_day = [item[1] for item in results]
+        
         pool = Pool()
-        images = pool.map(self._load_image, [item[0] for item in image_paths])
+        processed_images = pool.map(self._load_image, [item for item in images_by_day])
         pool.close(), pool.join()
 
-        targets = [CLASSES[item[1]] for item in image_paths]
+        for processed in processed_images:
+            images.extend(processed)
 
-        targets =  np.array(targets)
+        for target in targets_by_day:
+            targets.extend(target)
+        targets = np.array(targets)
+
         return memory_dataset(images, targets, self.transform)
 
 

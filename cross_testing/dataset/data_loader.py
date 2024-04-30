@@ -1,5 +1,7 @@
+import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 from torchvision.transforms import ToTensor
-from memory_dataset import memory_dataset
+from tools.dataset.memory_dataset import memory_dataset
 from datetime import datetime
 import numpy as np
 import cv2 as cv

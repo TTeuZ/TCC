@@ -1,6 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from torchvision.transforms import ToTensor
+from torchvision import transforms, datasets
 from tools.dataset.memory_dataset import memory_dataset
 from datetime import datetime
 import numpy as np
@@ -11,9 +11,8 @@ import os
 CLASSES = {"empty": 0, "occupied": 1}
 
 class data_loader():
-    def __init__(self, dl_config):
-        self.toTensor = ToTensor()
-        self.resize = dl_config["img_size"]
+    def __init__(self, config):
+        self.transform = transforms.Compose([transforms.Resize(config["img_size"]), transforms.ToTensor()])
 
 
     def __get_dataset(self, paths):
@@ -24,15 +23,12 @@ class data_loader():
                 full_path = f"{path}/{class_name}"
                 for image in os.listdir(full_path):
                     image_path = f"{full_path}/{image}"
-
                     image = cv.imread(image_path)
-                    image = cv.resize(image, self.resize)
-                    image = self.toTensor(image)
-
+                    
                     images.append(image), targets.append(CLASSES[class_name])
         
         targets = np.array(targets)
-        return memory_dataset(images, targets)
+        return memory_dataset(images, targets, self.transform)
 
 
     def __get_dates(self, ds_path):

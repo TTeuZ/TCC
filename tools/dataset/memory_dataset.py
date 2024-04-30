@@ -1,9 +1,10 @@
 from torch.utils.data import Dataset
 
 class memory_dataset(Dataset):
-    def __init__(self, data, targets):
+    def __init__(self, data, targets, transform):
         self.data = data
         self.targets = targets
+        self.transform = transform
     
 
     def __len__(self):
@@ -11,4 +12,5 @@ class memory_dataset(Dataset):
 
 
     def __getitem__(self, index):
-        return self.data[index], self.targets[index]
+        img, target = self.data[index], self.targets[index]
+        return self.transform(img), target

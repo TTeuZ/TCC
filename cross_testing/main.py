@@ -83,12 +83,13 @@ def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
 def execute(model_module, config, args):
     train_ds_name, test_ds_name  = args.train.split("/")[-1], args.test.split("/")[-1]
     output_name = f"model_{uuid.uuid4()}"
+    output_json = {}
 
     dl_config = config["experiment"]["dl_config"]
     fc_config = config["experiment"]["fc_config"]
     model_config = config["model"]["config"]
 
-    output_json = {}
+    torch.cuda.set_device(model_config["device"])
 
     print(f"Starting experiment [MODEL: {config['model']['module']}][TRAIN: {train_ds_name}][TEST: {test_ds_name}][TYPE: {config['experiment']['type']}]")
 

@@ -21,9 +21,9 @@ def fast_collate(batch, config):
 
 
 class data_prefetcher():
-    def __init__(self, loader, normalize_data, device):
+    def __init__(self, loader, normalize_data):
         self.loader = iter(loader)
-        self.stream = torch.cuda.Stream(device)
+        self.stream = torch.cuda.Stream()
         self.normalize_date = normalize_data
 
         if self.normalize_date:

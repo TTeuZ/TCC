@@ -54,7 +54,7 @@ class model():
         local_loss = getattr(loss_module, self.config["loss"])()
         final_loss = 0.0
 
-        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"], self.config["device"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -72,7 +72,7 @@ class model():
         self.model.eval()
         final_probs, final_labels = [], []
 
-        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"], self.config["device"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -90,7 +90,7 @@ class model():
         self.model.eval()
         final_preds, final_labels = [], []
 
-        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"], self.config["device"])
         inputs, labels = prefetcher.next()
         with torch.no_grad():
             while inputs is not None:
@@ -109,7 +109,7 @@ class model():
     def train(self, loader):
         self.model.train()
 
-        prefetcher = data_prefetcher(loader, self.config["normalize_data"])
+        prefetcher = data_prefetcher(loader, self.config["normalize_data"], self.config["device"])
         inputs, labels = prefetcher.next()
         while inputs is not None:
             self.optmizer.zero_grad()

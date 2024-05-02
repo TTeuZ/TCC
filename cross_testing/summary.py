@@ -126,6 +126,7 @@ def main(args):
         file.write(f"Were normalized: {normalize_data} \n")
         file.write(f"Model: {args.model} \n")
         file.write(f"Loss: {args.loss} \n")
+        file.write(f"Optmizer: {args.optmizer} \n")
         file.write(f"Split: {args.split} \n\n")
         file.write("###############################################################\n\n")
 
@@ -142,6 +143,7 @@ if __name__ == "__main__":
     parser.add_argument("--type", "-t", type=str, required=True)
     parser.add_argument("--model", "-m", type=str, required=True)
     parser.add_argument("--loss", "-l", type=str, required=True)
+    parser.add_argument("--optmizer", "-o", type=str, required=True)
     parser.add_argument("--split", "-s", type=float, required=True)
 
     main(parser.parse_args())

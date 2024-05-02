@@ -103,11 +103,10 @@ def execute(model_module, config, args):
 
     train_model = model_module.model(config=model_config)
 
-    output_json["experiment"] = {"type": config['experiment']['type'], "dl_config": dl_config, "fc_config": fc_config, "model_config": model_config}
+    output_json["experiment"] = {"type": config["experiment"]["type"], "dl_config": dl_config, "fc_config": fc_config, "model_config": model_config}
+    output_json["experiment"]["model_config"]["module"] = config["model"]["module"]
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": config["datasets"]["split"]}
-    output_json["model"] = train_model.info()
-    output_json["model"]["loss"] = model_config["loss"]
 
     best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, config["experiment"]["epochs"], fc_config, output_json, output_name)
 

@@ -26,7 +26,9 @@ class model():
         loss_module = importlib.import_module("torch.nn")
         self.loss = getattr(loss_module, self.config["loss"])()
 
-        self.optmizer = torch.optim.AdamW(self.model.parameters())
+        optimizer_module = importlib.import_module("torch.optim")
+        self.optmizer = getattr(optimizer_module, self.config["optmizer"])(self.model.parameters())
+        
         self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optmizer, gamma=0.96)
 
     

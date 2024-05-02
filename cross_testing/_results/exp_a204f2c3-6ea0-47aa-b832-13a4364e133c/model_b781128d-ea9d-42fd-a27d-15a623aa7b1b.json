@@ -1,0 +1,88 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 1000,
+      "num_workers": 6
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optmizer": "AdamW",
+      "device": "cuda:0"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "model": {
+    "cuda": true,
+    "classifier_classes": 2,
+    "module": "tools.models.mobilenet_v3",
+    "loss": "CrossEntropyLoss"
+  },
+  "epochs": {
+    "epoch_1": 25.45508982454483,
+    "epoch_2": 0.7764098514710045,
+    "epoch_3": 0.06126575841056769,
+    "epoch_4": 0.06744699514587378,
+    "epoch_5": 0.03561400680115921,
+    "epoch_6": 0.04468906947214965,
+    "epoch_7": 0.06633009066992654,
+    "epoch_8": 0.060293228385792055,
+    "epoch_9": 0.06258554687708066,
+    "epoch_10": 0.07965095241575015,
+    "epoch_11": 0.06058987759588651,
+    "epoch_12": 0.06716024213139325,
+    "epoch_13": 0.06433735085152346,
+    "epoch_14": 0.07350476094718962,
+    "epoch_15": 0.10270644726616672
+  },
+  "best_model": {
+    "loss": 0.03561400680115921,
+    "epoch_id": 5,
+    "model": "model_b781128d-ea9d-42fd-a27d-15a623aa7b1b.pt"
+  },
+  "metrics": {
+    "auc": 0.5189537985541027,
+    "eer": 0.0005351886540005957,
+    "threshold": 0.0010300840949639678
+  },
+  "test": {
+    "subsets": {
+      "UFPR04": {
+        "accuracy": 0.42568723442833606,
+        "cm": "[[ 1456 64753]\n [ 8098 52542]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.5486514338903418,
+        "cm": "[[ 64224 213585]\n [ 30804 232851]]"
+      },
+      "UFPR05": {
+        "accuracy": 0.4688133764832794,
+        "cm": "[[ 1451 76953]\n [21529 85467]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.4810506816006524,
+      "cm": "[[ 67131 355291]\n [ 60431 370860]]"
+    }
+  }
+}

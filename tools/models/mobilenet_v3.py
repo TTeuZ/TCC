@@ -27,9 +27,9 @@ class model():
         self.loss = getattr(loss_module, self.config["loss"])()
 
         optimizer_module = importlib.import_module("torch.optim")
-        self.optmizer = getattr(optimizer_module, self.config["optmizer"])(self.model.parameters())
+        self.optimizer = getattr(optimizer_module, self.config["optimizer"])(self.model.parameters())
         
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optmizer, gamma=0.96)
+        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optimizer, gamma=0.96)
 
     
     def info(self):
@@ -114,13 +114,13 @@ class model():
         prefetcher = data_prefetcher(loader, self.config["normalize_data"])
         inputs, labels = prefetcher.next()
         while inputs is not None:
-            self.optmizer.zero_grad()
+            self.optimizer.zero_grad()
 
             preds = self.model(inputs)
             loss = self.loss(preds, labels)
 
             loss.backward()
-            self.optmizer.step()
+            self.optimizer.step()
 
             inputs, labels = prefetcher.next()
         

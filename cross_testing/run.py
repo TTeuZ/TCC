@@ -48,7 +48,7 @@ def main(args):
     end_datetime = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
     print("\nWriting summary")
-    os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {begin_datetime} -ed {end_datetime} -t {config['experiment']['type']} -m {config['model']['config']['module']} -l {config['model']['config']['loss']} -o {config['model']['config']['optmizer']} -s {config['datasets']['split']}")
+    os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {begin_datetime} -ed {end_datetime} -t {config['experiment']['type']} -m {config['model']['module']} -l {config['model']['config']['loss']} -o {config['model']['config']['optimizer']} -s {config['datasets']['split']}")
 
 
 if __name__ == "__main__":

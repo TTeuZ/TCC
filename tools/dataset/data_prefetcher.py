@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 
+# Not used anymore
 def fast_collate(batch, config):
     images = [image[0] for image in batch]
     targets = torch.tensor([target[1] for target in batch], dtype=torch.long)

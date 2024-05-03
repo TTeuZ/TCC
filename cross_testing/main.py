@@ -1,7 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score
-from tools.dataset.data_prefetcher import fast_collate
 from tools.utils.metrics import get_roc_auc, get_eer
 from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
@@ -15,14 +14,13 @@ import math
 import copy
 
 def test(model, test_ds, fc_config, threshold, output_json):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
 
     output_json["test"] = { "subsets": {} }
     average_accuracy, final_cm = 0.0, [[0, 0], [0, 0]]
 
     print(f"Testing model")
     for test in test_ds:
-        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
         preds, labels = model.predict(test_loader, threshold)
 
         accuracy = accuracy_score(labels, preds)
@@ -37,8 +35,7 @@ def test(model, test_ds, fc_config, threshold, output_json):
 
 
 def get_threshold(model, val_ds, fc_config, output_json):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
 
     probs, labels = model.get_probs(val_loader)
     probs = np.array([prob[1] for prob in probs])
@@ -55,9 +52,8 @@ def get_threshold(model, val_ds, fc_config, output_json):
 
 
 def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
 
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 

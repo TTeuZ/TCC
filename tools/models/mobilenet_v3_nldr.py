@@ -13,14 +13,12 @@ class model():
         self.model = mobilenet(weights=pre_weights.IMAGENET1K_V2) if pre_trained else mobilenet()
         self.config = config
 
-        self.model.classifier[-3] = torch.nn.Sequential(torch.nn.Linear(1280, 1024), torch.nn.ReLU(inplace=True))
-        self.model.classifier[-2] = torch.nn.Sequential(torch.nn.Linear(1024, 128), torch.nn.ReLU(inplace=True))
-        self.model.classifier[-1] = torch.nn.Linear(128, NUM_CLASSES)
+        self.model.classifier[-1] = torch.nn.Linear(1280, NUM_CLASSES)
         self.model = self.model.to(self.config["device"])
 
         if self.config["training_mode"] == "transfer":
             for name, param in self.model.named_parameters():
-                if "classifier" not in name:
+                if "classifier" not in name and "features.16" not in name:
                     param.requires_grad = False
 
         loss_module = importlib.import_module("torch.nn")

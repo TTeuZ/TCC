@@ -14,9 +14,8 @@ import math
 import copy
 
 def test(model, test_ds, fc_config, threshold, output_json):
-
-    output_json["test"] = { "subsets": {} }
     average_accuracy, final_cm = 0.0, [[0, 0], [0, 0]]
+    output_json["test"] = { "subsets": {} }
 
     print(f"Testing model")
     for test in test_ds:

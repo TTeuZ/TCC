@@ -1,0 +1,83 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 24
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0",
+      "module": "tools.models.mobilenet_v3_nlrd"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "epochs": {
+    "epoch_1": 0.0667712171022462,
+    "epoch_2": 0.2950338330553485,
+    "epoch_3": 0.04675037865989271,
+    "epoch_4": 0.0663905157520096,
+    "epoch_5": 0.07408354370233,
+    "epoch_6": 0.0513657847799935,
+    "epoch_7": 0.04814762853615331,
+    "epoch_8": 1.1726144856905651,
+    "epoch_9": 0.07315818879704505,
+    "epoch_10": 0.0662043080154277,
+    "epoch_11": 0.05539758436027057,
+    "epoch_12": 0.09347739648711906,
+    "epoch_13": 0.07852743802816951,
+    "epoch_14": 0.05878121196547788,
+    "epoch_15": 0.06281210494880406
+  },
+  "best_model": {
+    "loss": 0.04675037865989271,
+    "epoch_id": 3,
+    "model": "model_620a0df1-b391-4fa0-8f7e-103b396b58d1.pt"
+  },
+  "metrics": {
+    "auc": 0.9987846101253769,
+    "eer": 2.949029909160572e-17,
+    "threshold": 0.3592338562011719
+  },
+  "test": {
+    "subsets": {
+      "UFPR05": {
+        "accuracy": 0.9105933117583603,
+        "cm": "[[ 62358  16046]\n [   530 106466]]"
+      },
+      "UFPR04": {
+        "accuracy": 0.8366955987039708,
+        "cm": "[[46104 20105]\n [  610 60030]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.9655581903875419,
+        "cm": "[[267747  10062]\n [  8587 255068]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.9042823669499577,
+      "cm": "[[376209  46213]\n [  9727 421564]]"
+    }
+  }
+}

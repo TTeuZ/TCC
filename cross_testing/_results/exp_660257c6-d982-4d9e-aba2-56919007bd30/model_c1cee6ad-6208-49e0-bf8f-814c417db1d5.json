@@ -1,0 +1,83 @@
+{
+  "experiment": {
+    "type": "transfer_learning",
+    "dl_config": {
+      "img_size": [
+        224,
+        224
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        224,
+        224
+      ],
+      "batch_size": 400,
+      "num_workers": 3
+    },
+    "model_config": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0",
+      "module": "tools.models.mobilenet_v3_nlrd"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "epochs": {
+    "epoch_1": 0.06923140530700772,
+    "epoch_2": 0.06700372127204254,
+    "epoch_3": 0.08030319988789968,
+    "epoch_4": 0.08822885970879825,
+    "epoch_5": 0.09574966231062793,
+    "epoch_6": 0.0928493974961625,
+    "epoch_7": 0.11011647410475534,
+    "epoch_8": 0.1112894054039283,
+    "epoch_9": 0.13727049191301566,
+    "epoch_10": 0.11054757785495359,
+    "epoch_11": 0.09919473866361392,
+    "epoch_12": 0.09469859504333206,
+    "epoch_13": 0.10449891089195157,
+    "epoch_14": 0.12934219728293414,
+    "epoch_15": 0.10272821180741644
+  },
+  "best_model": {
+    "loss": 0.06700372127204254,
+    "epoch_id": 2,
+    "model": "model_c1cee6ad-6208-49e0-bf8f-814c417db1d5.pt"
+  },
+  "metrics": {
+    "auc": 0.9978875703186978,
+    "eer": 3.122502256758253e-17,
+    "threshold": 0.4598085880279541
+  },
+  "test": {
+    "subsets": {
+      "UFPR04": {
+        "accuracy": 0.8921867732500848,
+        "cm": "[[53550 12659]\n [ 1017 59623]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.9689194480150112,
+        "cm": "[[268213   9596]\n [  7233 256422]]"
+      },
+      "UFPR05": {
+        "accuracy": 0.9052481121898598,
+        "cm": "[[ 61333  17071]\n [   496 106500]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.922118111151652,
+      "cm": "[[383096  39326]\n [  8746 422545]]"
+    }
+  }
+}

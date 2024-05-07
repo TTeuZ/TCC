@@ -1,0 +1,83 @@
+{
+  "experiment": {
+    "type": "fine_tunning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ]
+    },
+    "fc_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 24
+    },
+    "model_config": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "AdamW",
+      "device": "cuda:0",
+      "module": "tools.models.mobilenet_v3_nlrd"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "epochs": {
+    "epoch_1": 0.0910273214575608,
+    "epoch_2": 0.07907600249997436,
+    "epoch_3": 0.11576634919749867,
+    "epoch_4": 0.03457676085531572,
+    "epoch_5": 0.06563050622443983,
+    "epoch_6": 0.048011294805093634,
+    "epoch_7": 0.07117330326178106,
+    "epoch_8": 0.07318552999074626,
+    "epoch_9": 0.05726114520566338,
+    "epoch_10": 0.04602982023676545,
+    "epoch_11": 0.06518295957764936,
+    "epoch_12": 0.05618027997222361,
+    "epoch_13": 0.10279809416027265,
+    "epoch_14": 0.052957890924477016,
+    "epoch_15": 0.09666565113424545
+  },
+  "best_model": {
+    "loss": 0.03457676085531572,
+    "epoch_id": 4,
+    "model": "model_d8442401-eb0b-4c2a-8460-64170eca8d80.pt"
+  },
+  "metrics": {
+    "auc": 0.999130094666237,
+    "eer": 1.734723475976807e-18,
+    "threshold": 0.3849557638168335
+  },
+  "test": {
+    "subsets": {
+      "UFPR05": {
+        "accuracy": 0.910571736785329,
+        "cm": "[[ 63915  14489]\n [  2091 104905]]"
+      },
+      "UFPR04": {
+        "accuracy": 0.8033803971651333,
+        "cm": "[[41679 24530]\n [  411 60229]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.9658518387187329,
+        "cm": "[[266843  10966]\n [  7524 256131]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.8932679908897317,
+      "cm": "[[372437  49985]\n [ 10026 421265]]"
+    }
+  }
+}

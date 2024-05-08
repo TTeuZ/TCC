@@ -168,7 +168,7 @@ def main(args):
     create_folder(f"{args.dest}/{args.name}")
 
     if "PKLot" in args.root:
-        offsets = { "PUCPR": 9, "UFPR04": 15, "UFPR05": 7 }
+        offsets = { "PUCPR": 15, "UFPR04": 15, "UFPR05": 15 }
     else:
         offsets = { "CNR-CAMERA-1": 15, "CNR-CAMERA-2": 15, "CNR-CAMERA-3": 15, "CNR-CAMERA-4": 15, "CNR-CAMERA-5": 15, 
                    "CNR-CAMERA-6": 15, "CNR-CAMERA-7": 15, "CNR-CAMERA-8": 15, "CNR-CAMERA-9": 15 }

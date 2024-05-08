@@ -13,13 +13,13 @@ import json
 import math
 import copy
 
-def test(model, test_ds, fc_config, threshold, output_json):
+def test(model, test_ds, dl_config, threshold, output_json):
     average_accuracy, final_cm = 0.0, [[0, 0], [0, 0]]
     output_json["test"] = { "subsets": {} }
 
     print(f"Testing model")
     for test in test_ds:
-        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
+        test_loader = torch.utils.data.DataLoader(test_ds[test], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
         preds, labels = model.predict(test_loader, threshold)
 
         accuracy = accuracy_score(labels, preds)
@@ -33,8 +33,8 @@ def test(model, test_ds, fc_config, threshold, output_json):
     output_json["test"]["average"] = {"accuracy": (average_accuracy / len(test_ds)), "cm": str(final_cm)}
 
 
-def get_threshold(model, val_ds, fc_config, output_json):
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
+def get_threshold(model, val_ds, dl_config, output_json):
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     probs, labels = model.get_probs(val_loader)
     probs = np.array([prob[1] for prob in probs])
@@ -50,9 +50,9 @@ def get_threshold(model, val_ds, fc_config, output_json):
     return threshold
 
 
-def train(model, train_ds, val_ds, epochs, fc_config, output_json, output_name):
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], pin_memory=True)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], pin_memory=True)
+def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
@@ -81,7 +81,6 @@ def execute(model_module, config, args):
     output_json = {}
 
     dl_config = config["experiment"]["dl_config"]
-    fc_config = config["experiment"]["fc_config"]
     model_config = config["model"]["config"]
 
     torch.cuda.set_device(model_config["device"])
@@ -98,18 +97,18 @@ def execute(model_module, config, args):
 
     train_model = model_module.model(config=model_config)
 
-    output_json["experiment"] = {"type": config["experiment"]["type"], "dl_config": dl_config, "fc_config": fc_config, "model_config": model_config}
+    output_json["experiment"] = {"type": config["experiment"]["type"], "dl_config": dl_config, "model_config": model_config}
     output_json["experiment"]["model_config"]["module"] = config["model"]["module"]
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": config["datasets"]["split"]}
 
-    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, config["experiment"]["epochs"], fc_config, output_json, output_name)
+    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, config["experiment"]["epochs"], dl_config, output_json, output_name)
 
     test_model = model_module.model(pre_trained=False, config=model_config)
     test_model.load_state_dict(best_state_dict)
 
-    threshold = get_threshold(test_model, flattened_val_ds, fc_config, output_json)
-    test(test_model, test_ds, fc_config, threshold, output_json)
+    threshold = get_threshold(test_model, flattened_val_ds, dl_config, output_json)
+    test(test_model, test_ds, dl_config, threshold, output_json)
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.save}/{output_name}.pt")

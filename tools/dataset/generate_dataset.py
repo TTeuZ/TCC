@@ -155,9 +155,11 @@ def execute(args, offsets):
         artifacts = get_crop_artifacts(f"{args.root}/{file}")
         failed_images.extend(get_images(artifacts, args.root, dest_folder, subset, offsets[subset]))
 
+        print("Deleting empty folders...")
         treat_empty_folders(dest_folder)
 
     with open(f"_failed/{args.name}_failed_images.json", "w") as output:
+        print("Saving failed images json...")
         json.dump(failed_images, output, indent=2)
 
 

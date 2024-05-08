@@ -24,4 +24,5 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_0: There you can find the first experiments performed that helped shape the scripts;
 - checkpoint_1: There you can find the cross testing V1 script.
 - checkpoint_2: There you can find the labeling pipeline V1 script. The cross testing script stays the same.
-- checkpoint_3: There you can dinf the labeling pipeling V2 script. The cross testing script stays the same.
+- checkpoint_3: There you can find the labeling pipeling V2 script. The cross testing script stays the same.
+- checkpoint_4: There you can the first data leveling implementation for both cross testing and labeling pipeline

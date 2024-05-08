@@ -1,0 +1,31 @@
+{
+    "dataset": {
+        "path": "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented",
+        "split": 0.7
+    },
+    "fathers": {
+        "path": "/home/tteuz/Desktop/TCC/labeling_pipeline/fathers/PKLot"
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3",
+        "config": {
+            "training_mode": "normal",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        }
+    },
+    "experiment": {
+        "type": "fine_tunning",
+        "epochs": 15,
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ],
+            "batch_size": 1000,
+            "num_workers": 3
+        }
+    }
+}

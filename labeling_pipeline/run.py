@@ -2,63 +2,64 @@ import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from tools.utils.utils import create_folder
 import datetime
+import argparse
 import uuid
 import json
 
-# Pipeline variables
-FATHERS_PATH = "/home/tteuz/Desktop/TCC/labeling_pipeline/fathers/PKLot"
-FATHERS_CONSTRUCT_JSON = json.load(open(f"{FATHERS_PATH}/construct.json"))
-
-DATASET = "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented"
-SUBSETS = sorted(os.listdir(DATASET))
-
-MODEL = "tools.models.mobilenet_v3"
-LOSS = "CrossEntropyLoss"
-EPOCHS = 15
-SPLIT = 0.7
-
-TYPE = "fine_tunning"
-# TYPE = "transfer_learning"
-
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
-BEGIN_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
-create_folder("_summaries")
-create_folder("_models")
-create_folder("_results")
-create_folder(f"_models/{EXP_NAME}")
-create_folder(f"_results/{EXP_NAME}")
+def main(args):
+    assert os.path.exists(args.config), "Invalid config"
 
-# Writing experiment README
-print("Writing experiment README")
-with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
-    file.write("## Experiment infos\n")
-    file.write("- Fathers models used:\n")
-    for father in FATHERS_CONSTRUCT_JSON["models"]:
-        file.write(f"    - {father['name']}\n")
+    config = json.load(open(args.config, "r"))
+    begin_datetime = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 
-    file.write(f"- Model generated: {MODEL}\n")
-    file.write(f"- Loss: {LOSS}\n")
-    file.write(f"- Dataset: {DATASET}\n")
+    fathers_construct_json = json.load(open(f"{config['fathers']['path']}/construct.json"))
+    subsets = sorted(os.listdir(config["dataset"]["path"]))
 
-    file.write("- Subsets used:\n")
-    for subset in SUBSETS:
-        file.write(f"    - {subset}\n")
-    
-    file.write(f"- Training epocs: {EPOCHS}\n")
-    file.write(f"- Train/Val split: {SPLIT}\n")
-    file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
+    create_folder("_summaries")
+    create_folder("_models")
+    create_folder("_results")
+    create_folder(f"_models/{EXP_NAME}")
+    create_folder(f"_results/{EXP_NAME}")
 
-# Running pipeline
-for father in FATHERS_CONSTRUCT_JSON["models"]:
-    create_folder(f"_models/{EXP_NAME}/{father['name'][:-3]}")
-    create_folder(f"_results/{EXP_NAME}/{father['name'][:-3]}")
-    for subset in SUBSETS:
-        os.system(f"python3 main.py -f {FATHERS_PATH}/{father['name']} -t {father['threshold']} -ty {TYPE} -m {MODEL} -l {LOSS} -d {DATASET} -su {subset} -s {SPLIT} -e {EPOCHS} -sa {EXP_NAME}")
+    # Writing experiment README
+    print("Writing experiment README")
+    with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
+        file.write("## Experiment infos\n")
+        file.write("- Fathers models used:\n")
+        for father in fathers_construct_json["models"]:
+            file.write(f"    - {father['name']}\n")
 
-END_EXP_DATETIME = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
+        file.write(f"- Model generated: {config['model']['module']}\n")
+        file.write(f"- Loss: {config['model']['config']['loss']}\n")
+        file.write(f"- Optimizer: {config['model']['config']['optimizer']}\n")
+        file.write(f"- Dataset: {config['dataset']['path']}\n")
 
-# Writing summary
-print("\nWriting summary")
-os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {BEGIN_EXP_DATETIME} -ed {END_EXP_DATETIME} -t {TYPE} -m {MODEL} -md {FATHERS_CONSTRUCT_JSON['trained_at'].split('/')[-1]} -da {DATASET.split('/')[-1]}")
+        file.write("- Subsets used:\n")
+        for subset in subsets:
+            file.write(f"    - {subset}\n")
+        
+        file.write(f"- Training epocs: {config['experiment']['epochs']}\n")
+        file.write(f"- Train/Val split: {config['dataset']['split']}\n")
+        file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
+
+    # Running pipeline
+    for father in fathers_construct_json["models"]:
+        create_folder(f"_models/{EXP_NAME}/{father['name'][:-3]}")
+        create_folder(f"_results/{EXP_NAME}/{father['name'][:-3]}")
+        for subset in subsets:
+            os.system(f"python3 main.py -f {config['fathers']['path']}/{father['name']} -t {father['threshold']} -su {subset} -c {args.config} -sa {EXP_NAME}")
+
+    end_datetime = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
+
+    # Writing summary
+    print("\nWriting summary")
+    os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {begin_datetime} -ed {end_datetime} -t {config['experiment']['type']} -m {config['model']['module']} -md {fathers_construct_json['trained_at'].split('/')[-1]} -da {config['dataset']['path'].split('/')[-1]}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Cross Testing Run", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--config", "-c", type=str, required=True)
+
+    main(parser.parse_args())

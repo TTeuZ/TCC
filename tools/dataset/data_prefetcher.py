@@ -1,6 +1,4 @@
-import numpy as np
 import torch
-
 
 class data_prefetcher():
     def __init__(self, loader, normalize_data):

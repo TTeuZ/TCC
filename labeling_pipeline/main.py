@@ -1,7 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score
-from tools.dataset.data_prefetcher import fast_collate
 from dataset.pipeline_dataset import pipeline_dataset
 from tools.utils.metrics import get_roc_auc, get_eer
 from dataset.data_leveler import data_leveler
@@ -46,9 +45,8 @@ def get_test_dataset(second_half):
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
-def test(model, test_ds, fc_config, threshold, output_json, output_model):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+def test(model, test_ds, dl_config, threshold, output_json, output_model):
+    test_loader = torch.utils.data.DataLoader(test_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     print(f"Testing model")
     preds, labels = model.predict(test_loader, threshold)
@@ -58,9 +56,8 @@ def test(model, test_ds, fc_config, threshold, output_json, output_model):
     output_json[output_model]["test"] = {"accuracy": accuracy, "cm": str(cm)}
 
 
-def get_threshold(model, val_ds, fc_config, output_json):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+def get_threshold(model, val_ds, dl_config, output_json):
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     probs, labels = model.get_probs(val_loader)
     probs = np.array([prob[1] for prob in probs])
@@ -76,12 +73,9 @@ def get_threshold(model, val_ds, fc_config, output_json):
     return threshold
 
 
-def train(model, train_ds, val_ds, output_json, epochs, fc_config, output_name):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
-    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
-
-    print("Training model")
+def train(model, train_ds, val_ds, output_json, epochs, dl_config, output_name):
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
+    val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
@@ -104,14 +98,12 @@ def train(model, train_ds, val_ds, output_json, epochs, fc_config, output_name):
     return best_state_dict
 
 
-def classify(father_model, fc_config, first_half, output_json):
-    collate_fn = lambda batch: fast_collate(batch, fc_config)
-
+def classify(father_model, dl_config, first_half, output_json):
     print("Classifing images")
 
     all_preds, all_images, used_images = [], 0, 0
     for date in first_half:
-        classify_loader = torch.utils.data.DataLoader(date[1], batch_size=fc_config["batch_size"], shuffle=False, num_workers=fc_config["num_workers"], collate_fn=collate_fn)
+        classify_loader = torch.utils.data.DataLoader(date[1], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
         probs, _ = father_model.get_probs(classify_loader)
 
         preds = []
@@ -137,44 +129,46 @@ def classify(father_model, fc_config, first_half, output_json):
 
 def execute(model_module, config, args):
     father_model_name = args.father.split('/')[-1][:-3]
-    dl_config, fc_config, model_config = config
     output_name = f"model_{args.subset}"
     output_json = {}
 
-    print(f"Starting Labeling Pipeline [FATHER: {father_model_name}][DATASET: {args.dataset.split('/')[-1]}][SUBSET: {args.subset}]")
+    dl_config = config["experiment"]["dl_config"]
+    model_config = config["model"]["config"]
+
+    torch.cuda.set_device(model_config["device"])
+
+    print(f"Starting Labeling Pipeline [FATHER: {father_model_name}][DATASET: {config['dataset']['path'].split('/')[-1]}][SUBSET: {args.subset}]")
 
     ds_loader = data_loader(dl_config)
-    dataset = ds_loader.get_subset_from_dataset(args.dataset, args.subset)
+    dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
     first_half, second_half = divide_dataset(dataset)
 
-    father_model = model_module.model(pre_trained=False, loss=args.loss, config=model_config)
+    father_model = model_module.model(pre_trained=False, config=model_config)
     father_model.load_state_dict(torch.load(args.father))
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
-    output_json["dataset"] = {"dataset": args.dataset.split('/')[-1], "subset": args.subset, "train_val_split": args.split}
+    output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
     output_json["father_model"] = father_model.info()
     output_json["father_model"]["name"] = father_model_name
     output_json["father_model"]["threshold"] = args.threshold
 
-    new_labels = classify(father_model, fc_config, first_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, args.split)
+    new_labels = classify(father_model, dl_config, first_half, output_json)
+    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, config["dataset"]["split"])
     test_ds = get_test_dataset(second_half)
 
-    train_model = model_module.model(loss=args.loss, config=model_config)
+    train_model = model_module.model(config=model_config)
 
     output_json["model"] = {}
-    output_json["model"]["details"] = train_model.info()
-    output_json["model"]["details"]["loss"] = args.loss
-    output_json["model"]["details"]["training_type"] = args.type
+    output_json["model"]["details"] = model_config
 
-    best_state_dict = train(train_model, train_ds, val_ds, output_json, args.epochs, fc_config, output_name)
+    best_state_dict = train(train_model, train_ds, val_ds, output_json, config["experiment"]["epochs"], dl_config, output_name)
 
-    test_model = model_module.model(pre_trained=False, loss=args.loss, config=model_config)
+    test_model = model_module.model(pre_trained=False, config=model_config)
     test_model.load_state_dict(best_state_dict)
 
-    test_threshold = get_threshold(test_model, val_ds, fc_config, output_json)
-    test(test_model, test_ds, fc_config, test_threshold, output_json, "model")
-    test(father_model, test_ds, fc_config, args.threshold, output_json, "father_model")
+    test_threshold = get_threshold(test_model, val_ds, dl_config, output_json)
+    test(test_model, test_ds, dl_config, test_threshold, output_json, "model")
+    test(father_model, test_ds, dl_config, args.threshold, output_json, "father_model")
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.save}/{father_model_name}/{output_name}.pt")
@@ -186,34 +180,10 @@ def execute(model_module, config, args):
 
 def main(args):
     assert torch.cuda.is_available(), "Cuda unavailable"
-    assert os.path.exists(args.dataset), "Invalid dataset"
-    assert args.type in ["fine_tunning", "transfer_learning"]
-    assert 0 < args.split < 1, "Split may be between 0 and 1"
-    assert args.epochs > 0, "Invalid epochs count"
+    assert os.path.exists(args.config), "Invalid config"
 
-    model_module = importlib.import_module(args.model)
-
-    # Local Config
-    if args.type == "fine_tunning":
-        dl_config = { "img_size": (128, 128) }
-        fc_config = { "img_size": (128, 128), "batch_size": 1000, "num_workers": 6 }
-        model_config = { "training_mode": "normal", "normalize_data": True }
-    else:
-        dl_config = { "img_size": (224, 224) }
-        fc_config = { "img_size": (224, 224), "batch_size": 400 }
-        model_config = { "training_mode": "transfer", "normalize_data": True }
-    
-    # Server Config
-    # if args.type == "fine_tunning":
-    #     dl_config = { "img_size": (128, 128) }
-    #     fc_config = { "img_size": (128, 128), "batch_size": 3500, "num_workers": 48 }
-    #     model_config = { "training_mode": "normal", "normalize_data": True }
-    # else:
-    #     dl_config = { "img_size": (224, 224) }
-    #     fc_config = { "img_size": (224, 224), "batch_size": 1400 }
-    #     model_config = { "training_mode": "transfer", "normalize_data": True }
-    
-    config = (dl_config, fc_config, model_config)
+    config = json.load(open(args.config, "r"))
+    model_module = importlib.import_module(config["model"]["module"])
 
     execute(model_module, config, args)
 
@@ -222,13 +192,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--father", "-f", type=str, required=True)
     parser.add_argument("--threshold", "-t", type=float, required=True)
-    parser.add_argument("--type", "-ty", type=str, required=True)
-    parser.add_argument("--model", "-m", type=str, required=True)
-    parser.add_argument("--loss", "-l", type=str, required=True)
-    parser.add_argument("--dataset", "-d", type=str, required=True)
     parser.add_argument("--subset", "-su", type=str, required=True)
-    parser.add_argument("--split", "-s", type=float, required=True)
-    parser.add_argument("--epochs", "-e", type=int, required=True)
+    parser.add_argument("--config", "-c", type=str, required=True)
     parser.add_argument("--save", "-sa", type=str, required=True)
 
     main(parser.parse_args())

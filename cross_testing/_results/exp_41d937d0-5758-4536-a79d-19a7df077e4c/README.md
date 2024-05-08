@@ -1,6 +1,6 @@
 ## Experiment infos
 - Cross testing type: fine_tunning
-- Model: tools.models.mobilenet_v3_nlrd
+- Model: tools.models.mobilenet_v3
 - Train dataset: /home/pmla20/datasets/PKLotSegmented
 - Test dataset: /home/pmla20/datasets/CNRParkEXTSegmented
 - Training epochs: 15

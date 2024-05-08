@@ -26,8 +26,6 @@ class model():
 
         optimizer_module = importlib.import_module("torch.optim")
         self.optimizer = getattr(optimizer_module, self.config["optimizer"])(self.model.parameters())
-        
-        self.scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer=self.optimizer, gamma=0.96)
 
     
     def info(self):
@@ -121,5 +119,3 @@ class model():
             self.optimizer.step()
 
             inputs, labels = prefetcher.next()
-        
-        self.scheduler.step()

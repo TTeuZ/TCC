@@ -1,5 +1,14 @@
 # Latest Checkpoint
-**wip**
+## Changes
+In this checkpoint, the following changes were made:
+Dataset crop were re-made, trying to remove “failed” images that were with “black triangles” in the corners;
+Fast collate function remove, replaced by transform.ToTensor().
+
+With that, this checkpoint aimed to test a bunch of combinations between, model classification layer, optimizers such Adam or AdamW and learning rate decays.
+
+In the end, the best result came from the model with the simple classification layer (removing only the last layer to output 2 classes), using Adam and without learning rate decay.
+
+And also, both cross testing and labeling pipeline were refactored to start using configs json files to facilitate the experiment run.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

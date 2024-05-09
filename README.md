@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# CHeckpoint 5
 ## Changes
 In this checkpoint, the following changes were made:
 Dataset crop were re-made, trying to remove “failed” images that were with “black triangles” in the corners;

@@ -1,5 +1,6 @@
 from torchvision import transforms, datasets
 from datetime import datetime
+import random
 import torch
 import math
 import os
@@ -44,6 +45,27 @@ class data_loader():
         else:
             return (self.__get_pytorch_dataset(first_half), self.__get_pytorch_dataset(second_half))
 
+
+    def load_dataset_by_random(self, ds_path="", t_size=1):
+        assert os.path.exists(ds_path), "Invalid dataset"
+
+        all_dates = []
+
+        subsets = [os.path.join(ds_path, subset) for subset in os.listdir(ds_path)]
+        for subset in subsets:
+            all_dates.extend(self.__get_dates(subset))
+        
+        divisor = math.ceil(len(all_dates) * t_size)
+        random.shuffle(all_dates)
+
+        first_half = all_dates[:divisor]
+        second_half = all_dates[divisor:]
+
+        if len(second_half) == 0:
+            return self.__get_pytorch_dataset(first_half)
+        else:
+            return (self.__get_pytorch_dataset(first_half), self.__get_pytorch_dataset(second_half))
+    
     
     def load_dataset_by_subset(self, ds_path=""):
         assert os.path.exists(ds_path), "Invalid dataset"

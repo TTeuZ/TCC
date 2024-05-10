@@ -1,0 +1,101 @@
+{
+  "experiment": {
+    "type": "transfer_learning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 3500,
+      "num_workers": 24
+    },
+    "model_config": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:1",
+      "module": "tools.models.mobilenet_v3"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.1.2+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "train": "PKLotSegmented",
+    "test": "CNRParkEXTSegmented",
+    "train_val_split": 0.5
+  },
+  "epochs": {
+    "epoch_1": 0.013250582359983522,
+    "epoch_2": 0.013322366875303315,
+    "epoch_3": 0.01634255848036781,
+    "epoch_4": 0.01883581157327541,
+    "epoch_5": 0.021980484248791163,
+    "epoch_6": 0.032091581830913964,
+    "epoch_7": 0.02596717057147061,
+    "epoch_8": 0.03263031262647555,
+    "epoch_9": 0.02881210628452916,
+    "epoch_10": 0.02641192687308529,
+    "epoch_11": 0.024212030432722517,
+    "epoch_12": 0.031915278299225344,
+    "epoch_13": 0.030973232518443604,
+    "epoch_14": 0.03460771825241653,
+    "epoch_15": 0.03499248826304098
+  },
+  "best_model": {
+    "loss": 0.013250582359983522,
+    "epoch_id": 1,
+    "model": "model_64fdd967-f9d4-41a3-97d4-4802e2d4ee0c.pt"
+  },
+  "metrics": {
+    "auc": 0.9998417905671908,
+    "eer": 1.2581781580232182e-05,
+    "threshold": 0.4934118986129761
+  },
+  "test": {
+    "subsets": {
+      "CNR-CAMERA-7": {
+        "accuracy": 0.9416162172078518,
+        "cm": "[[10034   652]\n [  621 10497]]"
+      },
+      "CNR-CAMERA-5": {
+        "accuracy": 0.9330003599712023,
+        "cm": "[[ 9624   711]\n [  778 11111]]"
+      },
+      "CNR-CAMERA-1": {
+        "accuracy": 0.921172073154452,
+        "cm": "[[5525  609]\n [ 572 8276]]"
+      },
+      "CNR-CAMERA-9": {
+        "accuracy": 0.9447306791569087,
+        "cm": "[[5154  318]\n [ 390 6948]]"
+      },
+      "CNR-CAMERA-6": {
+        "accuracy": 0.9320690883190883,
+        "cm": "[[10158   621]\n [  905 10780]]"
+      },
+      "CNR-CAMERA-2": {
+        "accuracy": 0.9362995380500851,
+        "cm": "[[1347  104]\n [ 158 2504]]"
+      },
+      "CNR-CAMERA-8": {
+        "accuracy": 0.9343324788010254,
+        "cm": "[[10766  1249]\n [  416 12924]]"
+      },
+      "CNR-CAMERA-4": {
+        "accuracy": 0.9604558404558404,
+        "cm": "[[7337  290]\n [ 404 9519]]"
+      },
+      "CNR-CAMERA-3": {
+        "accuracy": 0.9236083299959952,
+        "cm": "[[4190  167]\n [ 596 5035]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.9363649561236057,
+      "cm": "[[64135  4721]\n [ 4840 77594]]"
+    }
+  }
+}

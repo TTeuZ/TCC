@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 6
 ## Changes
 In this checkpoint, the following changes were made:
 - Dataset recprop rollback, returning the images with “black triangles” in the corner

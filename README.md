@@ -1,11 +1,5 @@
 # Latest Checkpoint
-## Changes
-In this checkpoint, the following changes were made:
-- Dataset recprop rollback, returning the images with “black triangles” in the corner
-- Images that were too dark that was hard even to humans to categorize were removed from CNRParkExt
-
-Both Cross testing and Labeling pipeline stayed the same.
-
+**wip**
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
@@ -28,8 +22,9 @@ Long story short, the main branch can reproduce the **latest version of the resu
 
 ### Checkpoints
 - checkpoint_0: There you can find the first experiments performed that helped shape the scripts;
-- checkpoint_1: There you can find the cross testing V1 script.
-- checkpoint_2: There you can find the labeling pipeline V1 script. The cross testing script stays the same.
-- checkpoint_3: There you can find the labeling pipeling V2 script. The cross testing script stays the same.
-- checkpoint_4: There you can the first data leveling implementation for both cross testing and labeling pipeline
-- checkpoint_5: There you can find a set of tests to determinate one best config.
+- checkpoint_1: There you can find the cross testing V1 script;
+- checkpoint_2: There you can find the labeling pipeline V1 script. The cross testing script stays the same;
+- checkpoint_3: There you can find the labeling pipeling V2 script. The cross testing script stays the same;
+- checkpoint_4: There you can the first data leveling implementation for both cross testing and labeling pipeline;
+- checkpoint_5: There you can find a set of tests to determinate one best config;
+- checkpoint_6: There you can find the resutls with small modifications within the dataset. No changes in the code.

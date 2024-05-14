@@ -13,7 +13,7 @@ class model():
         self.model = mobilenet(weights=pre_weights.IMAGENET1K_V1) if pre_trained else mobilenet()
         self.config = config
 
-        self.model.classifier[-1] = torch.nn.Linear(1280, NUM_CLASSES)
+        self.model.classifier[-1] = torch.nn.Linear(1024, NUM_CLASSES)
         self.model = self.model.to(self.config["device"])
 
         if self.config["training_mode"] == "transfer":

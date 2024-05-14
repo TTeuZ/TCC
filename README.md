@@ -4,8 +4,9 @@ In this checkpoint, the following changes were made:
 - Dataset recprop rollback, returning the images with “black triangles” in the corner
 - Images that were too dark that was hard even to humans to categorize were removed from CNRParkExt
 
-Both Cross testing and Labeling pipeline stayed the same.
+also, were tested a new data split protocol, splitting the data into 2 halves(by day) picking up random days to train and validate
 
+Both Cross testing and Labeling pipeline stayed the same.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

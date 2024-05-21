@@ -1,9 +1,12 @@
 from torch.utils.data import Dataset
 from collections import defaultdict
 from torchvision import transforms
+from collections import Counter
 from datetime import datetime
 from PIL import Image
 import random
+
+FLATTEN_LINIAR = 5
 
 class sample_dataset(Dataset):
     def __init__(self, samples, transform):
@@ -44,6 +47,23 @@ class sample_generator():
             return random.sample(source, qty)
         else:
             return source
+        
+    
+    def _flatten_sample(self, data):
+        labels = [item[1] for item in data]
+
+        count = Counter(labels)
+        diff = abs(count[0] - count[1])
+        diff_perc = round((diff / (count[0] + count[1])) * 100)
+
+        if diff_perc > FLATTEN_LINIAR:
+            remove_class = 0 if count[0] > count[1] else 1
+            indexes = [index for index, label in enumerate(labels) if label == remove_class]
+            indexes_to_remove = random.sample(indexes, diff)
+
+            temp = [item for index, item in enumerate(data) if index not in indexes_to_remove]
+        
+        return temp
 
 
     def build(self, src_dataset):
@@ -90,5 +110,6 @@ class sample_generator():
                 data.extend(self._get_random(day["morning"][1], spots_qty))
                 data.extend(self._get_random(day["afternoon"][0], spots_qty))
                 data.extend(self._get_random(day["afternoon"][1], spots_qty))
-        
+
+        data = self._flatten_sample(data)
         return sample_dataset(data, transform)

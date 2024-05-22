@@ -5,4 +5,4 @@
 - Test dataset: /media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented
 - Training epochs: 50
 - Train/Val split: 0.7
-- Summary: _summaries/summary_45fffc96-8766-417c-a376-608721b9bf23
+- Summary: _summaries/summary_0ea23efa-83d4-4ba5-9c62-10ef1e971ea6

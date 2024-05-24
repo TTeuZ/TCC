@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 7
 ## Changes
 
 In this checkpoint we introduced the Mobilenet V3 small as an possible option, performing tests to evaluate the results in the cross testing.

@@ -1,20 +1,5 @@
 # Latest Checkpoint
-## Changes
-
-In this checkpoint we introduced the Mobilenet V3 small as an possible option, performing tests to evaluate the results in the cross testing.
-
-Also, one major change has been made in the cross testing script, the sample generator. This class aims to create random samples from the training dataset in each epoch, trying to achieve a better/generalized result in the end.
-
-The sample process is the following:
-- For each subset:
-	- For each day:
-		- Split the day in morning (0am to 12am) and afternoon(12am to 12pm)
-		- get N occupied and empty random samples from each time box.
-- Repeat the process for all days within the training dataset.
-
-With this process, we are able to create samples with 18450 images (CNRPark) and 16492 images (PKLot).
-
-The labeling pipeline stayed the same.
+**WIP**
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

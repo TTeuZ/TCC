@@ -15,3 +15,21 @@ class pipeline_dataset(Dataset):
             modified_label = self.labels[index]
             
             return (original_sample[0], modified_label)
+    
+
+class mutable_dataset(Dataset):
+    def __init__(self, dataset):
+        self.dataset = dataset
+    
+
+    def change_transform(self, transform):
+        for subset in self.dataset.datasets:
+            subset.transform = transform
+
+
+    def __len__(self):
+        return len(self.dataset)
+
+
+    def __getitem__(self, index):
+            return self.dataset[index]

@@ -1,10 +1,11 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+from dataset.customs_datasets import pipeline_dataset, mutable_dataset
 from sklearn.metrics import confusion_matrix, accuracy_score
-from dataset.pipeline_dataset import pipeline_dataset
 from tools.utils.metrics import get_roc_auc, get_eer
 from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
+from torchvision import transforms
 import numpy as np
 import importlib
 import argparse
@@ -15,12 +16,19 @@ import json
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
+def change_transform(dataset, dl_config):
+    transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
+
+    for subset in dataset.datasets:
+        subset.transform = transform
+
+
 def divide_dataset(dataset, split=0.5):
     divisor = math.ceil(len(dataset) * split)
     return (list(dataset.items())[:divisor], list(dataset.items())[divisor:])
 
 
-def get_train_val_datasets(first_half, new_labels, split=0.7):
+def get_train_val_datasets(first_half, new_labels, dl_config, split=0.7):
     divisor = math.ceil(len(first_half) * split)
 
     train_ds, train_labels = first_half[:divisor], new_labels[:divisor]
@@ -36,16 +44,19 @@ def get_train_val_datasets(first_half, new_labels, split=0.7):
     train_ds, train_labels = ds_leveler.flatten_dataset(train_ds, train_labels)
     val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
 
+    change_transform(train_ds, dl_config), change_transform(val_ds, dl_config)
     return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
 def get_test_dataset(second_half):
     test_ds = [date[1] for date in second_half]
-    return torch.utils.data.ConcatDataset(test_ds)
+    return mutable_dataset(torch.utils.data.ConcatDataset(test_ds))
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
 def test(model, test_ds, dl_config, threshold, output_json, output_model):
+    transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
+    test_ds.change_transform(transform)
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     print(f"Testing model")
@@ -73,7 +84,7 @@ def get_threshold(model, val_ds, dl_config, output_json):
     return threshold
 
 
-def train(model, train_ds, val_ds, output_json, epochs, dl_config, output_name):
+def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
@@ -98,13 +109,13 @@ def train(model, train_ds, val_ds, output_json, epochs, dl_config, output_name):
     return best_state_dict
 
 
-def classify(father_model, dl_config, first_half, output_json):
+def classify(model, dl_config, first_half, output_json):
     print("Classifing images")
 
     all_preds, all_images, used_images = [], 0, 0
     for date in first_half:
         classify_loader = torch.utils.data.DataLoader(date[1], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-        probs, _ = father_model.get_probs(classify_loader)
+        probs, _ = model.get_probs(classify_loader)
 
         preds = []
         index_to_remove = []
@@ -127,23 +138,27 @@ def classify(father_model, dl_config, first_half, output_json):
     return all_preds
 
 
-def execute(model_module, config, args):
+def execute(father_module, son_module, config, args):
     father_model_name = args.father.split('/')[-1][:-3]
     output_name = f"model_{args.subset}"
     output_json = {}
 
-    dl_config = config["experiment"]["dl_config"]
-    model_config = config["model"]["config"]
+    father_dl_config, father_config = config["fathers"]["dl_config"], config["fathers"]["config"]
+    son_dl_config, son_config = config["model"]["dl_config"], config["model"]["config"]
 
-    torch.cuda.set_device(model_config["device"])
+    selected_fields = ["img_size", "batch_size", "num_workers"]
+    father_dl_config = { key: father_dl_config.get(key, config["experiment"].get(key)) for key in selected_fields }
+    son_dl_config = { key: son_dl_config.get(key, config["experiment"].get(key)) for key in selected_fields }
+
+    torch.cuda.set_device(father_config["device"])
 
     print(f"Starting Labeling Pipeline [FATHER: {father_model_name}][DATASET: {config['dataset']['path'].split('/')[-1]}][SUBSET: {args.subset}]")
 
-    ds_loader = data_loader(dl_config)
+    ds_loader = data_loader(father_dl_config)
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
     first_half, second_half = divide_dataset(dataset)
 
-    father_model = model_module.model(pre_trained=False, config=model_config)
+    father_model = father_module.model(pre_trained=False, config=father_config)
     father_model.load_state_dict(torch.load(args.father))
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
@@ -152,23 +167,25 @@ def execute(model_module, config, args):
     output_json["father_model"]["name"] = father_model_name
     output_json["father_model"]["threshold"] = args.threshold
 
-    new_labels = classify(father_model, dl_config, first_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, config["dataset"]["split"])
+    new_labels = classify(father_model, father_dl_config, first_half, output_json)
+    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"])
     test_ds = get_test_dataset(second_half)
 
-    train_model = model_module.model(config=model_config)
+    train_model = son_module.model(pre_trained=False, config=son_config)
+    train_model.load_state_dict(torch.load(config["model"]["initial_weights"]))
 
     output_json["model"] = {}
-    output_json["model"]["details"] = model_config
+    output_json["model"]["initial_weights"] = config["model"]["initial_weights"]
+    output_json["model"]["details"] = son_config
 
-    best_state_dict = train(train_model, train_ds, val_ds, output_json, config["experiment"]["epochs"], dl_config, output_name)
+    best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, output_name)
 
-    test_model = model_module.model(pre_trained=False, config=model_config)
+    test_model = son_module.model(pre_trained=False, config=son_config)
     test_model.load_state_dict(best_state_dict)
 
-    test_threshold = get_threshold(test_model, val_ds, dl_config, output_json)
-    test(test_model, test_ds, dl_config, test_threshold, output_json, "model")
-    test(father_model, test_ds, dl_config, args.threshold, output_json, "father_model")
+    test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json)
+    test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model")
+    test(father_model, test_ds, father_dl_config, args.threshold, output_json, "father_model")
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.save}/{father_model_name}/{output_name}.pt")
@@ -183,9 +200,10 @@ def main(args):
     assert os.path.exists(args.config), "Invalid config"
 
     config = json.load(open(args.config, "r"))
-    model_module = importlib.import_module(config["model"]["module"])
+    father_module = importlib.import_module(config["fathers"]["module"])
+    son_module = importlib.import_module(config["model"]["module"])
 
-    execute(model_module, config, args)
+    execute(father_module, son_module, config, args)
 
 
 if __name__ == "__main__":

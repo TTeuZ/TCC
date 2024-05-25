@@ -154,7 +154,9 @@ def get_results_by_subset(path):
 
 def main(args):
     assert os.path.exists(args.files), "Invalid results files path"
+    assert os.path.exists(args.config), "Invalid config"
 
+    config = json.load(open(args.config, "r"))
     results_by_subset = get_results_by_subset(args.files)
 
     begin_date = datetime.strptime(args.begin_date, '%Y-%m-%d--%H:%M:%S')
@@ -168,10 +170,10 @@ def main(args):
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
 
-        file.write(f"Experiment type: {args.type} \n")
-        file.write(f"Father models trained with: {args.model_dataset}\n")
-        file.write(f"Models generated: {args.model}\n")
-        file.write(f"Dataset Used: {args.dataset}\n")
+        file.write(f"Father models trained with: {config['fathers']['trained_at']}\n")
+        file.write(f"Father models module: {config['fathers']['module']}\n")
+        file.write(f"Son models module: {config['model']['module']}\n")
+        file.write(f"Dataset used: {config['dataset']['path']}\n")
 
         file.write("\n###############################################################\n\n")
 
@@ -188,9 +190,6 @@ if __name__ == "__main__":
     parser.add_argument("--files", "-f", type=str, required=True)
     parser.add_argument("--begin_date", "-bd", type=str, required=True)
     parser.add_argument("--end_date", "-ed", type=str, required=True)
-    parser.add_argument("--type", "-t", type=str, required=True)
-    parser.add_argument("--model", "-m", type=str, required=True)
-    parser.add_argument("--model_dataset", "-md", type=str, required=True)
-    parser.add_argument("--dataset", "-da", type=str, required=True)
+    parser.add_argument("--config", "-c", type=str, required=True)
     
     main(parser.parse_args())

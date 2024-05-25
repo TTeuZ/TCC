@@ -18,7 +18,7 @@ class model():
 
         if self.config["training_mode"] == "transfer":
             for name, param in self.model.named_parameters():
-                if "classifier" not in name and "features.16" not in name:
+                if "classifier" not in name and "features.12" not in name:
                     param.requires_grad = False
 
         loss_module = importlib.import_module("torch.nn")

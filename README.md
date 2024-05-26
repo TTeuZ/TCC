@@ -28,3 +28,4 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_4: There you can the first data leveling implementation for both cross testing and labeling pipeline;
 - checkpoint_5: There you can find a set of tests to determinate one best config;
 - checkpoint_6: There you can find the resutls with small modifications within the dataset. No changes in the code.
+- checkpoint_7: There you can find the first application of the sample generator in the cross testing. Also, the first MobileNetV3 Small use.

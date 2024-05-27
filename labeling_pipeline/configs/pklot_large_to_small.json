@@ -1,0 +1,67 @@
+{
+    "fathers": {
+        "trained_at": "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented",
+        "module": "tools.models.mobilenet_v3_large",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        },
+        "models": [
+            {
+                "name": "resources/fathers/PKLot/model_01f92b59-2892-470a-86c6-3d03d6f8f115.pt",
+                "threshold": 0.43145832419395447
+            },
+            {
+                "name": "resources/fathers/PKLot/model_2ad1524e-fd50-4ca6-89ff-5fd3e239a64f.pt",
+                "threshold": 0.459237664937973
+            },
+            {
+                "name": "resources/fathers/PKLot/model_461ac9ae-b90a-4f54-a8f7-e6087903c182.pt",
+                "threshold": 0.5508272647857666
+            },
+            {
+                "name": "resources/fathers/PKLot/model_851e55fb-c950-4e3d-8682-27f554afe43b.pt",
+                "threshold": 0.4143337607383728
+            },
+            {
+                "name": "resources/fathers/PKLot/model_8761c3eb-daa4-4ecc-a060-68faf3d36f22.pt",
+                "threshold": 0.37230145931243896
+            }
+        ]
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3_small",
+        "initial_weights": "resources/base/model_38357394-8c58-423c-85e7-06bb66a8e2ef.pt",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        }
+    },
+    "experiment": {
+        "batch_size": 1000,
+        "num_workers": 6,
+        "epochs": 15
+    },
+    "dataset": {
+        "path": "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented",
+        "split": 0.7
+    }
+}

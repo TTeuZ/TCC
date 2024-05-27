@@ -61,7 +61,7 @@ class model():
 
         if self.config["training_mode"] == "transfer":
             for name, param in self.model.named_parameters():
-                if "fc2" not in name:
+                if "conv3" not in name and "fc2" not in name and "fc1" not in name:
                     param.requires_grad = False
         
         loss_module = importlib.import_module("torch.nn")

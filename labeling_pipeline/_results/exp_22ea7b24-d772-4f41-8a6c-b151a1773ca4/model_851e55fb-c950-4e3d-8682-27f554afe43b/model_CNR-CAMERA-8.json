@@ -1,0 +1,65 @@
+{
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-8",
+    "train_val_split": 0.7,
+    "classify": {
+      "all_images": 13365,
+      "used_images": 11593
+    }
+  },
+  "father_model": {
+    "cuda": true,
+    "classifier_classes": 2,
+    "name": "model_851e55fb-c950-4e3d-8682-27f554afe43b",
+    "threshold": 0.4143337607383728,
+    "test": {
+      "accuracy": 0.9264386989157631,
+      "cm": "[[5048  683]\n [ 199 6060]]"
+    }
+  },
+  "model": {
+    "details": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "epochs": {
+      "epoch_1": 0.06292874002179434,
+      "epoch_2": 0.06794385265472323,
+      "epoch_3": 0.0802357078407162,
+      "epoch_4": 0.06996713780848555,
+      "epoch_5": 0.07752480467622594,
+      "epoch_6": 0.0732342425242875,
+      "epoch_7": 0.0918954903072165,
+      "epoch_8": 0.1021651329342709,
+      "epoch_9": 0.08687756516674693,
+      "epoch_10": 0.10964013670766076,
+      "epoch_11": 0.07570314932932225,
+      "epoch_12": 0.08773740155752315,
+      "epoch_13": 0.09864040025213892,
+      "epoch_14": 0.08637759280066158,
+      "epoch_15": 0.08046706621499025
+    },
+    "best_model": {
+      "loss": 0.06292874002179434,
+      "epoch_id": 1,
+      "model": "model_CNR-CAMERA-8.pt"
+    },
+    "metrics": {
+      "auc": 0.9984111531758908,
+      "eer": 0.004651162790697619,
+      "threshold": 0.5955646634101868
+    },
+    "test": {
+      "accuracy": 0.9413678065054212,
+      "cm": "[[5274  457]\n [ 246 6013]]"
+    }
+  }
+}

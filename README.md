@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 8
 ## Changes
 
 In this checkpoint the changes focused on the labeling pipeline script. 

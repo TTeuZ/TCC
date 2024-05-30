@@ -1,7 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from sklearn.metrics import confusion_matrix, accuracy_score
-from dataset.sample_generator import sample_generator
 from tools.utils.metrics import get_roc_auc, get_eer
 from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
@@ -51,14 +50,14 @@ def get_threshold(model, val_ds, dl_config, output_json):
     return threshold
 
 
-def train(model, generator, val_ds, epochs, dl_config, output_json, output_name):
+def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
+    train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
     output_json["epochs"] = {}
     for epoch in range(epochs):
         print(f"Epoch [{epoch + 1}/{epochs}] Initializing training epoch")
-        train_loader = torch.utils.data.DataLoader(generator.get_sample(), batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
 
         model.train(train_loader)
         val_loss = model.get_loss_in_dataset(val_loader)
@@ -92,10 +91,8 @@ def execute(model_module, config, args):
     test_ds = ds_loader.load_dataset_by_subset(args.test)
 
     ds_leveler = data_leveler()
+    flattened_train_ds = ds_leveler.flatten_dataset(train_ds)
     flattened_val_ds = ds_leveler.flatten_dataset(val_ds)
-
-    generator = sample_generator(dl_config)
-    generator.build(train_ds)
 
     train_model = model_module.model(config=model_config)
 
@@ -104,7 +101,7 @@ def execute(model_module, config, args):
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"train": train_ds_name, "test": test_ds_name, "train_val_split": config["datasets"]["split"]}
 
-    best_state_dict = train(train_model, generator, flattened_val_ds, config["experiment"]["epochs"], dl_config, output_json, output_name)
+    best_state_dict = train(train_model, flattened_train_ds, flattened_val_ds, config["experiment"]["epochs"], dl_config, output_json, output_name)
 
     test_model = model_module.model(pre_trained=False, config=model_config)
     test_model.load_state_dict(best_state_dict)

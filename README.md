@@ -1,5 +1,11 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+
+In this checkpoint the changes focused on the labeling pipeline script. 
+- adjusting the config to run it with Mobilenets Large, Small and a custom 3 layer CNN created by hand;
+- Added initial weights, pre-trained in PKLot or CNRPark to the son models.
+
+Also, a new model was added to the poll, the 3-Layers custom CNN. 
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

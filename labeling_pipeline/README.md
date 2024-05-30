@@ -57,7 +57,7 @@ PKLot2.0
 - run.py: wrapper script to encapsulate the entire test process;
 - summary.py: script responsable to summarize the results.
 - dataset/data_loader.py: Specific data_loader class for the labeling pipeline;
-- dataset/pipeline_dataset.py: Dataset class that inherits from the PyTorch dataset. Used to replace the correct labels to the ones predicted by the father model;
+- dataset/customs_datasets.py: Python script with the customs datasets created to run in the pipeline;
 - dataset/data_leveler.py: SPecific data leveler class for the cross testing (random dropout of the smallest class).
 - configs: folder with configuration files for the labeling pipeline.
 

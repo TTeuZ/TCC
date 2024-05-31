@@ -16,6 +16,7 @@ def main(args):
 
     config = json.load(open(args.config, "r"))
     fathers_json = config['fathers']
+    initial_weights = config["initial_weights"]
     subsets = sorted(os.listdir(config["dataset"]["path"]))
 
     create_folder("_summaries")
@@ -52,11 +53,11 @@ def main(args):
         file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
 
     # Running pipeline
-    for father in fathers_json["models"]:
+    for index, father in enumerate(fathers_json["models"]):
         create_folder(f"_models/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
         create_folder(f"_results/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
         for subset in subsets:
-            os.system(f"python3 main.py -f {father['name']} -t {father['threshold']} -su {subset} -c {args.config} -sa {EXP_NAME}")
+            os.system(f"python3 main.py -f {father['name']} -ft {father['threshold']} -i {initial_weights[index]['name']} -it {initial_weights[index]['threshold']} -su {subset} -c {args.config} -sa {EXP_NAME}")
 
     end_datetime = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 

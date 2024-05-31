@@ -64,17 +64,17 @@ def get_test_dataset(second_half):
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
-def test(model, test_ds, dl_config, threshold, output_json, output_model):
+def test(model, test_ds, dl_config, threshold, output_json, output_model, output_type):
     transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
     test_ds.change_transform(transform)
     test_loader = torch.utils.data.DataLoader(test_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
-    print(f"Testing model")
+    print(f"Testing model - {output_model} - {output_type}")
     preds, labels = model.predict(test_loader, threshold)
     accuracy = accuracy_score(labels, preds)
     cm = confusion_matrix(labels, preds)
 
-    output_json[output_model]["test"] = {"accuracy": accuracy, "cm": str(cm)}
+    output_json[output_model][output_type] = {"accuracy": accuracy, "cm": str(cm)}
 
 
 def get_threshold(model, val_ds, dl_config, output_json):
@@ -97,9 +97,9 @@ def get_threshold(model, val_ds, dl_config, output_json):
 def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
+    print("Refining model")
     output_json["model"]["epochs"] = {}
     for epoch in range(epochs):
         print(f"Epoch [{epoch + 1}/{epochs}] Initializing training epoch")
@@ -175,27 +175,28 @@ def execute(father_module, son_module, config, args):
     output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
     output_json["father_model"] = father_model.info()
     output_json["father_model"]["name"] = father_model_name
-    output_json["father_model"]["threshold"] = args.threshold
+    output_json["father_model"]["threshold"] = args.father_threshold
 
     new_labels = classify(father_model, father_dl_config, first_half, output_json)
     train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
     test_ds = get_test_dataset(second_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)
-    train_model.load_state_dict(torch.load(config["model"]["initial_weights"]))
+    train_model.load_state_dict(torch.load(args.initial))
 
     output_json["model"] = {}
-    output_json["model"]["initial_weights"] = config["model"]["initial_weights"]
+    output_json["model"]["initial_weights"] = args.initial
     output_json["model"]["details"] = son_config
 
-    best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, output_name)
+    test(train_model, test_ds, son_dl_config, args.initial_threshold, output_json, "model", "pre_refinement")
 
+    best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, output_name)
     test_model = son_module.model(pre_trained=False, config=son_config)
     test_model.load_state_dict(best_state_dict)
 
     test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json)
-    test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model")
-    test(father_model, test_ds, father_dl_config, args.threshold, output_json, "father_model")
+    test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model", "pos_refinement")
+    test(father_model, test_ds, father_dl_config, args.father_threshold, output_json, "father_model", "test")
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.save}/{father_model_name}/{output_name}.pt")
@@ -219,7 +220,9 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--father", "-f", type=str, required=True)
-    parser.add_argument("--threshold", "-t", type=float, required=True)
+    parser.add_argument("--father_threshold", "-ft", type=float, required=True)
+    parser.add_argument("--initial", "-i", type=str, required=True)
+    parser.add_argument("--initial_threshold", "-it", type=float, required=True)
     parser.add_argument("--subset", "-su", type=str, required=True)
     parser.add_argument("--config", "-c", type=str, required=True)
     parser.add_argument("--save", "-sa", type=str, required=True)

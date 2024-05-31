@@ -6,6 +6,7 @@ from tools.utils.metrics import get_roc_auc, get_eer
 from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
 from torchvision import transforms
+from collections import Counter
 import numpy as np
 import importlib
 import argparse
@@ -28,7 +29,7 @@ def divide_dataset(dataset, split=0.5):
     return (list(dataset.items())[:divisor], list(dataset.items())[divisor:])
 
 
-def get_train_val_datasets(first_half, new_labels, dl_config, split=0.7):
+def get_train_val_datasets(first_half, new_labels, dl_config, split, output_json):
     divisor = math.ceil(len(first_half) * split)
 
     train_ds, train_labels = first_half[:divisor], new_labels[:divisor]
@@ -40,9 +41,18 @@ def get_train_val_datasets(first_half, new_labels, dl_config, split=0.7):
     train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
     val_ds, val_labels = torch.utils.data.ConcatDataset(val_ds), np.concatenate(val_labels)
 
+    class_count = Counter(train_labels)
+    before_class_0, before_class_1 = class_count[0], class_count[1]
+
     ds_leveler = data_leveler()
     train_ds, train_labels = ds_leveler.flatten_dataset(train_ds, train_labels)
     val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
+
+    class_count = Counter(train_labels)
+    after_class_0, after_class_1 = class_count[0], class_count[1]
+
+    output_json["dataset"]["train_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
+                                              "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
 
     change_transform(train_ds, dl_config), change_transform(val_ds, dl_config)
     return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
@@ -112,16 +122,16 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
 def classify(model, dl_config, first_half, output_json):
     print("Classifing images")
 
-    all_preds, all_images, used_images = [], 0, 0
+    all_preds, all_images, used_images, wrong_labels = [], 0, 0, 0
     for date in first_half:
         classify_loader = torch.utils.data.DataLoader(date[1], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-        probs, _ = model.get_probs(classify_loader)
+        probs, labels = model.get_probs(classify_loader)
 
-        preds = []
-        index_to_remove = []
+        preds, index_to_remove = [], []
         for index, prob in enumerate(probs):
             if prob[0] > 0.9 or prob[1] > 0.9:
                 preds.append(np.argmax(prob))
+                if np.argmax(prob) != labels[index]: wrong_labels += 1
             else:
                 index_to_remove.append(index)
         
@@ -133,7 +143,7 @@ def classify(model, dl_config, first_half, output_json):
         used_images += len(preds)
         all_preds.append((date[0], preds))
 
-    output_json["dataset"]["classify"] = {"all_images": all_images, "used_images": used_images}
+    output_json["dataset"]["classify"] = {"all_images": all_images, "used_images": used_images, "wrong_labels": wrong_labels}
 
     return all_preds
 
@@ -168,7 +178,7 @@ def execute(father_module, son_module, config, args):
     output_json["father_model"]["threshold"] = args.threshold
 
     new_labels = classify(father_model, father_dl_config, first_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"])
+    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
     test_ds = get_test_dataset(second_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)

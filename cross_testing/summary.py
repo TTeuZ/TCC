@@ -1,6 +1,7 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from tools.utils.utils import get_cm
+from collections import defaultdict
 from datetime import datetime
 import numpy as np
 import argparse
@@ -90,11 +91,7 @@ def get_experiments(path):
     jsons = [file for file in os.listdir(path) if ".json" in file]
     results = [json.load(open(f"{path}/{file}", "r")) for file in jsons]
 
-    types = set()
-    for result in results:
-        types.add(result["dataset"]["train"])
-    
-    experiments = {experiment: [] for experiment in types}
+    experiments = defaultdict(list)
     for result in results:
         experiments[result["dataset"]["train"]].append(result)
 

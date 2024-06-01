@@ -162,7 +162,7 @@ def execute(father_module, son_module, config, args):
 
     torch.cuda.set_device(father_config["device"])
 
-    print(f"Starting Labeling Pipeline [FATHER: {father_model_name}][DATASET: {config['dataset']['path'].split('/')[-1]}][SUBSET: {args.subset}]")
+    print(f"Starting Labeling Pipeline [FATHER: {father_model_name}][SON: {config['model']['module']}][DATASET: {config['dataset']['path'].split('/')[-1]}][SUBSET: {args.subset}]")
 
     ds_loader = data_loader(father_dl_config)
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)

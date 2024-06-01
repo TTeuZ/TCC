@@ -236,7 +236,9 @@ def main(args):
 
         file.write(f"Father models trained with: {config['fathers']['trained_at']}\n")
         file.write(f"Father models module: {config['fathers']['module']}\n")
+        file.write(f"Father models trained with: {config['fathers']['config']['training_mode']}\n")
         file.write(f"Son models module: {config['model']['module']}\n")
+        file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
         file.write(f"Dataset used: {config['dataset']['path']}\n")
 
         file.write("\n###############################################################\n\n")

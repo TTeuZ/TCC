@@ -169,7 +169,7 @@ def execute(father_module, son_module, config, args):
     first_half, second_half = divide_dataset(dataset)
 
     father_model = father_module.model(pre_trained=False, config=father_config)
-    father_model.load_state_dict(torch.load(args.father), map_location=father_config["device"])
+    father_model.load_state_dict(torch.load(args.father, map_location=father_config["device"]))
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
@@ -182,7 +182,7 @@ def execute(father_module, son_module, config, args):
     test_ds = get_test_dataset(second_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)
-    train_model.load_state_dict(torch.load(args.initial), map_location=son_config["device"])
+    train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))
 
     output_json["model"] = {}
     output_json["model"]["initial_weights"] = args.initial

@@ -1,5 +1,16 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+In this checkpoint both the cross testing and labeling pipeline scripts were modified.
+
+### cross testing
+Here, the changes were simple, basically, we removed the sampling technique that was implemented in the generate_sample.py because it didn't improve the results in the way that we thought.
+
+### Labeling Pipeline
+Here we had more changes. in summary:
+- We capture more information related to the images classified by the father model, like how many images were wrong classified, how many images were used to train the son model before and after leveling;
+- The initial weights loaded from the models trained in our datasets (PKLot or CNRPark) were all used, i.e. not only the best one is used as initial weight, but all the 5 trained to make the results more “real”;
+- The son model classifies the second half of the dataset before and after the refinement, so we can compare the improvement.
+
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

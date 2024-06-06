@@ -1,5 +1,5 @@
 # Labeling Pipeline
-This is the third version of the Labeling Pipeline
+This is the fifth version of the Labeling Pipeline
 
 The pipeline itself is coded in the main.py file, the run.py and summary.py are related to the full testing cycle running it a couple of times.
 
@@ -10,6 +10,7 @@ The pipeline itself is coded in the main.py file, the run.py and summary.py are 
         - Select only the ones that the model in more than 90% sure that the label is correct;
         - Flatten the data by the smallest class (in qty).
     - Use this images to train a new model;
+        - The train model(son) has its initial weights from one model already trained in the PKLot or CNRPark;
         - Uses the same structure as the cross testing.
     - Use this new model to classify the second half;
     - Also classify this second half with the father model.

@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 9
 ## Changes
 In this checkpoint both the cross testing and labeling pipeline scripts were modified.
 

@@ -1,16 +1,5 @@
 # Latest Checkpoint
-## Changes
-In this checkpoint both the cross testing and labeling pipeline scripts were modified.
-
-### cross testing
-Here, the changes were simple, basically, we removed the sampling technique that was implemented in the generate_sample.py because it didn't improve the results in the way that we thought.
-
-### Labeling Pipeline
-Here we had more changes. in summary:
-- We capture more information related to the images classified by the father model, like how many images were wrong classified, how many images were used to train the son model before and after leveling;
-- The initial weights loaded from the models trained in our datasets (PKLot or CNRPark) were all used, i.e. not only the best one is used as initial weight, but all the 5 trained to make the results more “real”;
-- The son model classifies the second half of the dataset before and after the refinement, so we can compare the improvement.
-
+**WIP**
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
@@ -40,4 +29,5 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_5: There you can find a set of tests to determinate one best config;
 - checkpoint_6: There you can find the results with small modifications within the dataset. No changes in the code;
 - checkpoint_7: There you can find the first application of the sample generator in the cross testing. Also, the first MobileNetV3 Small use;
-- checkpoint_8: There you can find the labeling pipeling V3 script. Also, here we have the fisrt use of the custom 3-layer CNN.
+- checkpoint_8: There you can find the labeling pipeline V3 script. Also, here we have the fisrt use of the custom 3-layer CNN.
+- checkpoint_9: There you can find the labeling pipeline v5 script. Also, small modifications were made in the cross testing script.

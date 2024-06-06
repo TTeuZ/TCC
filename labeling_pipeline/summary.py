@@ -41,6 +41,8 @@ def print_results(subset, results, file):
     all_images = results[0]["dataset"]["classify"]["all_images"]
     used_images = [result["dataset"]["classify"]["used_images"] for result in results]
     wrong_labeled = [result["dataset"]["classify"]["wrong_labels"] for result in results]
+    empty_wrong = [result["dataset"]["classify"]["empty_wrong"] for result in results]
+    occupied_wrong = [result["dataset"]["classify"]["occupied_wrong"] for result in results]
 
     labels_before_leveling_empty = [result["dataset"]["train_labels"]["before_leveling"]["empty"] for result in results]
     labels_before_leveling_occupied = [result["dataset"]["train_labels"]["before_leveling"]["occupied"] for result in results]
@@ -49,6 +51,8 @@ def print_results(subset, results, file):
 
     avg_used_images = int(np.round(sum(used_images) / len(used_images)))
     avg_wrong_labeled = int(np.round(sum(wrong_labeled) / len(wrong_labeled)))
+    avg_empty_wrong = int(sum(empty_wrong) / len(empty_wrong))
+    avg_occupied_wrong = int(sum(occupied_wrong) / len(occupied_wrong))
 
     avg_labels_before_leveling_empty = int(np.round(sum(labels_before_leveling_empty) / len(labels_before_leveling_empty)))
     avg_labels_before_leveling_occupied = int(np.round(sum(labels_before_leveling_occupied) / len(labels_before_leveling_occupied)))
@@ -65,6 +69,7 @@ def print_results(subset, results, file):
     file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
     file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {std_used_images:.2f}[STD] - {pct_used_images:.2f}[%]\n")
     file.write(f"Wrong Labeled: {avg_wrong_labeled}[AVG] - {std_wrong_labeled:.2f}[STD] - {pct_wrong_labeled:.2f}[%]\n")
+    file.write(f"Empty wrong: {avg_empty_wrong}[AVG] - Occupied wrong: {avg_occupied_wrong}[AVG]\n\n")
     file.write(f"Train Labels before leveling: {avg_labels_before_leveling_empty}[EMPTY] - {avg_labels_before_leveling_occupied}[OCCUPIED]\n")
     file.write(f"Train Labels before leveling: {avg_labels_after_leveling_empty}[EMPTY] - {avg_labels_after_leveling_occupied}[OCCUPIED]\n")
 
@@ -106,7 +111,7 @@ def print_results(subset, results, file):
 
 def print_avg_results(results_by_subset, file):
     pre_accs, pre_cms, pos_accs, pos_cms, father_accs, father_cms = [], [], [], [], [], []
-    all_images, wrong_labeled, used_images = 0, [], []
+    all_images, wrong_labeled, used_images, empty_wrong, occupied_wrong = 0, [], [], [], []
     labels_before_leveling, labels_after_leveling = {"empty": [], "occupied": []}, {"empty": [], "occupied": []}
 
     for subset, results in results_by_subset.items():
@@ -125,6 +130,8 @@ def print_avg_results(results_by_subset, file):
             subset_father_cms.append(get_cm(result["father_model"]["test"]["cm"]))
 
             wrong_labeled.append(result["dataset"]["classify"]["wrong_labels"])
+            empty_wrong.append(result["dataset"]["classify"]["empty_wrong"])
+            occupied_wrong.append(result["dataset"]["classify"]["occupied_wrong"])
             subset_used_images.append(result["dataset"]["classify"]["used_images"])
 
             subset_labels_before_leveling["empty"].append(result["dataset"]["train_labels"]["before_leveling"]["empty"])
@@ -167,6 +174,8 @@ def print_avg_results(results_by_subset, file):
     avg_father_cms = sum(father_cms)
 
     avg_wrong_labeled = int(sum(wrong_labeled) / len(wrong_labeled))
+    avg_empty_wrong = int(sum(empty_wrong) / len(empty_wrong))
+    avg_occupied_wrong = int(sum(occupied_wrong) / len(occupied_wrong))
     avg_used_images = sum(used_images)
     pct_used_images = avg_used_images / all_images
 
@@ -176,7 +185,8 @@ def print_avg_results(results_by_subset, file):
     file.write(f"AVG of all results:\n")
 
     file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
-    file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {pct_used_images:.2f}[%] - Wrong: {avg_wrong_labeled}[AVG]\n")
+    file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {pct_used_images:.2f}[%]\n")
+    file.write(f"All wrong: {avg_wrong_labeled} - Empty wrong: {avg_empty_wrong} - Occupied wrong: {avg_occupied_wrong}\n")
     file.write(f"Train Labels before leveling: {avg_labels_before_leveling['empty']}[EMPTY] - {avg_labels_before_leveling['occupied']}[OCCUPIED]\n")
     file.write(f"Train Labels before leveling: {avg_labels_after_leveling['empty']}[EMPTY] - {avg_labels_after_leveling['occupied']}[OCCUPIED]\n")
 

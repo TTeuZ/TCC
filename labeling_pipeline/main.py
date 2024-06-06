@@ -16,6 +16,7 @@ import copy
 import json
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
+CLASSIFY_THRESHOLD = 0.95
 
 def change_transform(dataset, dl_config):
     transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
@@ -122,16 +123,17 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
 def classify(model, dl_config, first_half, output_json):
     print("Classifing images")
 
-    all_preds, all_images, used_images, wrong_labels = [], 0, 0, 0
+    wrongs = {0: 0, 1: 0}
+    all_preds, all_images, used_images = [], 0, 0
     for date in first_half:
         classify_loader = torch.utils.data.DataLoader(date[1], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
         probs, labels = model.get_probs(classify_loader)
 
         preds, index_to_remove = [], []
         for index, prob in enumerate(probs):
-            if prob[0] > 0.9 or prob[1] > 0.9:
+            if prob[0] > CLASSIFY_THRESHOLD or prob[1] > CLASSIFY_THRESHOLD:
                 preds.append(np.argmax(prob))
-                if np.argmax(prob) != labels[index]: wrong_labels += 1
+                if np.argmax(prob) != labels[index]: wrongs[labels[index]] += 1
             else:
                 index_to_remove.append(index)
         
@@ -143,7 +145,7 @@ def classify(model, dl_config, first_half, output_json):
         used_images += len(preds)
         all_preds.append((date[0], preds))
 
-    output_json["dataset"]["classify"] = {"all_images": all_images, "used_images": used_images, "wrong_labels": wrong_labels}
+    output_json["dataset"]["classify"] = {"all_images": all_images, "used_images": used_images, "wrong_labels": wrongs[0] + wrongs[1], "empty_wrong": wrongs[0], "occupied_wrong": wrongs[1]}
 
     return all_preds
 

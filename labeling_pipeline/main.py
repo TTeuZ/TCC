@@ -79,7 +79,7 @@ def test(model, test_ds, dl_config, threshold, output_json, output_model, output
     output_json[output_model][output_type] = {"accuracy": accuracy, "cm": str(cm)}
 
 
-def get_threshold(model, val_ds, dl_config, output_json):
+def get_threshold(model, val_ds, dl_config, output_json, output_model):
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     probs, labels = model.get_probs(val_loader)
@@ -88,10 +88,10 @@ def get_threshold(model, val_ds, dl_config, output_json):
     roc, auc = get_roc_auc(probs, labels)
     threshold, eer = get_eer(roc)
 
-    output_json["model"]["metrics"] = {}
-    output_json["model"]["metrics"]["auc"] = float(auc)
-    output_json["model"]["metrics"]["eer"] = float(eer)
-    output_json["model"]["metrics"]["threshold"] = float(threshold)
+    output_json[output_model]["metrics"] = {}
+    output_json[output_model]["metrics"]["auc"] = float(auc)
+    output_json[output_model]["metrics"]["eer"] = float(eer)
+    output_json[output_model]["metrics"]["threshold"] = float(threshold)
 
     return threshold
 
@@ -194,9 +194,11 @@ def execute(father_module, son_module, config, args):
     test_model = son_module.model(pre_trained=False, config=son_config)
     test_model.load_state_dict(best_state_dict)
 
-    test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json)
+    test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, "model")
     test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model", "pos_refinement")
-    test(father_model, test_ds, father_dl_config, 0.5, output_json, "father_model", "test")
+
+    father_threshold = get_threshold(father_model, val_ds, father_dl_config, output_json, "father_model")
+    test(father_model, test_ds, father_dl_config, father_threshold, output_json, "father_model", "test")
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.exp}/{father_model_name}/{output_name}.pt")

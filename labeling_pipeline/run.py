@@ -1,5 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+from models.ensemble_generator import ensemble_generator
 from tools.utils.utils import create_folder
 import datetime
 import argparse
@@ -18,6 +19,8 @@ def main(args):
     fathers_json = config['fathers']
     initial_weights = config["initial_weights"]
     subsets = sorted(os.listdir(config["dataset"]["path"]))
+
+    generator = ensemble_generator(config, EXP_NAME)
 
     create_folder("_summaries")
     create_folder("_models")
@@ -56,8 +59,10 @@ def main(args):
     for index, father in enumerate(fathers_json["models"]):
         create_folder(f"_models/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
         create_folder(f"_results/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
+
+        generator.generate(father)
         for subset in subsets:
-            os.system(f"python3 main.py -f {father['name']} -ft {father['threshold']} -i {initial_weights[index]['name']} -it {initial_weights[index]['threshold']} -su {subset} -c {args.config} -sa {EXP_NAME}")
+            os.system(f"python3 main.py -f {father} -i {initial_weights[index]['name']} -it {initial_weights[index]['threshold']} -su {subset} -c {args.config} -e {EXP_NAME}")
 
     end_datetime = "--".join(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S').split(" "))
 

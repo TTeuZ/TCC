@@ -3,6 +3,7 @@ import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from dataset.customs_datasets import pipeline_dataset, mutable_dataset
 from sklearn.metrics import confusion_matrix, accuracy_score
 from tools.utils.metrics import get_roc_auc, get_eer
+from models.ensemble_model import ensemble_model
 from dataset.data_leveler import data_leveler
 from dataset.data_loader import data_loader
 from torchvision import transforms
@@ -170,14 +171,11 @@ def execute(father_module, son_module, config, args):
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
     first_half, second_half = divide_dataset(dataset)
 
-    father_model = father_module.model(pre_trained=False, config=father_config)
-    father_model.load_state_dict(torch.load(args.father, map_location=father_config["device"]))
+    father_model = ensemble_model(father_module, father_config, args.father, args.exp)
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
     output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
     output_json["father_model"] = father_model.info()
-    output_json["father_model"]["name"] = father_model_name
-    output_json["father_model"]["threshold"] = args.father_threshold
 
     new_labels = classify(father_model, father_dl_config, first_half, output_json)
     train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
@@ -198,13 +196,13 @@ def execute(father_module, son_module, config, args):
 
     test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json)
     test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model", "pos_refinement")
-    test(father_model, test_ds, father_dl_config, args.father_threshold, output_json, "father_model", "test")
+    test(father_model, test_ds, father_dl_config, 0.5, output_json, "father_model", "test")
 
     print("Saving best model")
-    torch.save(best_state_dict, f"_models/{args.save}/{father_model_name}/{output_name}.pt")
+    torch.save(best_state_dict, f"_models/{args.exp}/{father_model_name}/{output_name}.pt")
 
     print("Saving result file")
-    with open(f"_results/{args.save}/{father_model_name}/{output_name}.json", "w") as output:
+    with open(f"_results/{args.exp}/{father_model_name}/{output_name}.json", "w") as output:
         json.dump(output_json, output, indent=2)
 
 
@@ -222,11 +220,10 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Dataset", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--father", "-f", type=str, required=True)
-    parser.add_argument("--father_threshold", "-ft", type=float, required=True)
     parser.add_argument("--initial", "-i", type=str, required=True)
     parser.add_argument("--initial_threshold", "-it", type=float, required=True)
     parser.add_argument("--subset", "-su", type=str, required=True)
     parser.add_argument("--config", "-c", type=str, required=True)
-    parser.add_argument("--save", "-sa", type=str, required=True)
+    parser.add_argument("--exp", "-e", type=str, required=True)
 
     main(parser.parse_args())

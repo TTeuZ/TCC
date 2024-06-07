@@ -38,7 +38,7 @@ def main(args):
         file.write(f"- Training mode: {fathers_json['config']['training_mode']}\n")
         file.write("- Models used:\n")
         for father in fathers_json["models"]:
-            file.write(f"    - {father['name']}\n")
+            file.write(f"    - {father}\n")
 
         file.write("\n## Sons\n")
         file.write(f"- Model: {config['model']['module']}\n")
@@ -57,8 +57,8 @@ def main(args):
 
     # Running pipeline
     for index, father in enumerate(fathers_json["models"]):
-        create_folder(f"_models/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
-        create_folder(f"_results/{EXP_NAME}/{father['name'].split('/')[-1][:-3]}")
+        create_folder(f"_models/{EXP_NAME}/{father.split('/')[-1][:-3]}")
+        create_folder(f"_results/{EXP_NAME}/{father.split('/')[-1][:-3]}")
 
         generator.generate(father)
         for subset in subsets:

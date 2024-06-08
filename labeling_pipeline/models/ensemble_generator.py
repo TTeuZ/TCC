@@ -17,7 +17,7 @@ class ensemble_generator():
         self.dl_config = config["fathers"]["dl_config"]
         self.dl_config = {key: self.dl_config.get(key, config["experiment"].get(key)) for key in ["img_size", "batch_size", "num_workers"]}
 
-        self.epochs = config["experiment"]["epochs"]
+        self.epochs = 6
         self.dataset = config["fathers"]["trained_at"]
 
         self.model_module = importlib.import_module(config["fathers"]["module"])
@@ -65,3 +65,6 @@ class ensemble_generator():
             best_state_dict = self._train(train_model, flattened_train_ds, flattened_val_ds, self.epochs, self.dl_config)
 
             torch.save(best_state_dict, f"{save_path}/{subset}.pt")
+            
+            del train_model
+            torch.cuda.empty_cache()

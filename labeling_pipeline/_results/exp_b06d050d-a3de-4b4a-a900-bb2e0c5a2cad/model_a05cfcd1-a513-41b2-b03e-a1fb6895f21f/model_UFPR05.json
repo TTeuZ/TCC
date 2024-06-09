@@ -1,0 +1,96 @@
+{
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "UFPR05",
+    "train_val_split": 0.7,
+    "classify": {
+      "all_images": 98440,
+      "used_images": 49677,
+      "wrong_labels": 29,
+      "empty_wrong": 27,
+      "occupied_wrong": 2
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 9602,
+        "occupied": 17421
+      },
+      "after_leveling": {
+        "empty": 9602,
+        "occupied": 9602
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_a05cfcd1-a513-41b2-b03e-a1fb6895f21f.pt"
+    ],
+    "metrics": {
+      "auc": 0.6559493209154881,
+      "eer": 0.0,
+      "threshold": 0.41510438919067383
+    },
+    "test": {
+      "accuracy": 0.9391633728590251,
+      "cm": "[[29194  5068]\n [  473 56345]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/CNRPark/model_980b9bf6-d4ad-4c97-8793-d10a674995da.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.6238252086078173,
+      "cm": "[[    0 34262]\n [    0 56818]]"
+    },
+    "epochs": {
+      "epoch_1": 0.014698874071999992,
+      "epoch_2": 0.010915038869438858,
+      "epoch_3": 0.007656302381219409,
+      "epoch_4": 0.008492647056528638,
+      "epoch_5": 0.01552160163724716,
+      "epoch_6": 0.010627044317870479,
+      "epoch_7": 0.00882956709188408,
+      "epoch_8": 0.017448680205452004,
+      "epoch_9": 0.012181281160274126,
+      "epoch_10": 0.017015100608794242,
+      "epoch_11": 0.041354240403688784,
+      "epoch_12": 0.01663267761116841,
+      "epoch_13": 0.019133670975103174,
+      "epoch_14": 0.028080153521171686,
+      "epoch_15": 0.029482131466516993
+    },
+    "best_model": {
+      "loss": 0.007656302381219409,
+      "epoch_id": 3,
+      "model": "model_UFPR05.pt"
+    },
+    "metrics": {
+      "auc": 0.9999724456096015,
+      "eer": 1.214306433183765e-17,
+      "threshold": 0.8035162091255188
+    },
+    "pos_refinement": {
+      "accuracy": 0.9770750988142293,
+      "cm": "[[33886   376]\n [ 1712 55106]]"
+    }
+  }
+}

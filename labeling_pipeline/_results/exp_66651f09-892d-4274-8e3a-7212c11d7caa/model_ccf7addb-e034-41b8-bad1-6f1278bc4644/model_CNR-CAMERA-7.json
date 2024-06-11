@@ -1,0 +1,90 @@
+{
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-7",
+    "train_val_split": 0.7,
+    "classify": {
+      "all_images": 11592,
+      "used_images": 8230,
+      "wrong_labels": 8,
+      "empty_wrong": 0,
+      "occupied_wrong": 8
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 3779,
+        "occupied": 2731
+      },
+      "after_leveling": {
+        "empty": 2731,
+        "occupied": 2731
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_ccf7addb-e034-41b8-bad1-6f1278bc4644.pt"
+    ],
+    "metrics": {
+      "auc": 0.9575392140327206,
+      "eer": 0.006493506493506537,
+      "threshold": 0.5669748187065125
+    },
+    "test": {
+      "accuracy": 0.8801410105757932,
+      "cm": "[[4998   24]\n [1200 3990]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_d2ee15f4-3efc-4a83-a9d4-bf57dbd5bdfa.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8062083822953389,
+      "cm": "[[4826  196]\n [1783 3407]]"
+    },
+    "epochs": {
+      "epoch_1": 0.03481334721209941,
+      "epoch_2": 0.041255779032196314,
+      "epoch_3": 0.05170093510638584,
+      "epoch_4": 0.051370630814851104,
+      "epoch_5": 0.0496400391997455,
+      "epoch_6": 0.050833589482036506,
+      "epoch_7": 0.05812295407734134,
+      "epoch_8": 0.06100893344778519,
+      "epoch_9": 0.06151847139774979,
+      "epoch_10": 0.0624201578608194,
+      "epoch_11": 0.06403441903749843,
+      "epoch_12": 0.06310466430210449,
+      "epoch_13": 0.06386940749724965,
+      "epoch_14": 0.06479065187952736,
+      "epoch_15": 0.06631426960713678
+    },
+    "best_model": {
+      "loss": 0.03481334721209941,
+      "epoch_id": 1,
+      "model": "model_CNR-CAMERA-7.pt"
+    },
+    "metrics": {
+      "auc": 0.9994439407994603,
+      "eer": 3.469446951953614e-18,
+      "threshold": 0.7250717282295227
+    },
+    "pos_refinement": {
+      "accuracy": 0.84087348217783,
+      "cm": "[[4866  156]\n [1469 3721]]"
+    }
+  }
+}

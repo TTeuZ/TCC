@@ -197,8 +197,7 @@ def execute(father_module, son_module, config, args):
     test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, "model")
     test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model", "pos_refinement")
 
-    father_threshold = get_threshold(father_model, val_ds, father_dl_config, output_json, "father_model")
-    test(father_model, test_ds, father_dl_config, father_threshold, output_json, "father_model", "test")
+    test(father_model, test_ds, father_dl_config, 0.5, output_json, "father_model", "test")
 
     print("Saving best model")
     torch.save(best_state_dict, f"_models/{args.exp}/{father_model_name}/{output_name}.pt")

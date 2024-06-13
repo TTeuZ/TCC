@@ -26,16 +26,15 @@ def change_transform(dataset, dl_config):
         subset.transform = transform
 
 
-def divide_dataset(dataset, split=0.5):
-    divisor = math.ceil(len(dataset) * split)
-    return (list(dataset.items())[:divisor], list(dataset.items())[divisor:])
+def divide_dataset(dataset, train_days):
+    return (list(dataset.items())[:train_days], list(dataset.items())[train_days:])
 
 
-def get_train_val_datasets(first_half, new_labels, dl_config, split, output_json):
-    divisor = math.ceil(len(first_half) * split)
+def get_train_val_datasets(train_half, new_labels, dl_config, split, output_json):
+    divisor = math.ceil(len(train_half) * split)
 
-    train_ds, train_labels = first_half[:divisor], new_labels[:divisor]
-    val_ds, val_labels = first_half[divisor:], new_labels[divisor:]
+    train_ds, train_labels = train_half[:divisor], new_labels[:divisor]
+    val_ds, val_labels = train_half[divisor:], new_labels[divisor:]
 
     train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
     val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
@@ -60,8 +59,8 @@ def get_train_val_datasets(first_half, new_labels, dl_config, split, output_json
     return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
-def get_test_dataset(second_half):
-    test_ds = [date[1] for date in second_half]
+def get_test_dataset(test_half):
+    test_ds = [date[1] for date in test_half]
     return mutable_dataset(torch.utils.data.ConcatDataset(test_ds))
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
@@ -121,12 +120,12 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
     return best_state_dict
 
 
-def classify(model, dl_config, first_half, output_json):
+def classify(model, dl_config, train_half, output_json):
     print("Classifing images")
 
     wrongs = {0: 0, 1: 0}
     all_preds, all_images, used_images = [], 0, 0
-    for date in first_half:
+    for date in train_half:
         classify_loader = torch.utils.data.DataLoader(date[1], batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
         probs, labels = model.get_probs(classify_loader)
 
@@ -169,7 +168,7 @@ def execute(father_module, son_module, config, args):
 
     ds_loader = data_loader(father_dl_config)
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
-    first_half, second_half = divide_dataset(dataset)
+    train_half, test_half = divide_dataset(dataset, config["dataset"]["train_days"])
 
     father_model = ensemble_model(father_module, father_config, args.father, args.exp)
 
@@ -177,9 +176,9 @@ def execute(father_module, son_module, config, args):
     output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
     output_json["father_model"] = father_model.info()
 
-    new_labels = classify(father_model, father_dl_config, first_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(first_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
-    test_ds = get_test_dataset(second_half)
+    new_labels = classify(father_model, father_dl_config, train_half, output_json)
+    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
+    test_ds = get_test_dataset(test_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)
     train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))

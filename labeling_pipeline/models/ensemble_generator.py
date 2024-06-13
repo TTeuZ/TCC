@@ -17,7 +17,7 @@ class ensemble_generator():
         self.dl_config = config["fathers"]["dl_config"]
         self.dl_config = {key: self.dl_config.get(key, config["experiment"].get(key)) for key in ["img_size", "batch_size", "num_workers"]}
 
-        self.epochs = 6
+        self.epochs = 10
         self.dataset = config["fathers"]["trained_at"]
 
         self.model_module = importlib.import_module(config["fathers"]["module"])

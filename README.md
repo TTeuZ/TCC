@@ -1,5 +1,9 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+
+In this checkpoint the changes were related only to the labeling pipeline. Here we introduced for the first time the **ensemble father**. 
+
+More details can be found in the labeling pipeline README.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

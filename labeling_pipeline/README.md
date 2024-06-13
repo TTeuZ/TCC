@@ -1,17 +1,36 @@
 # Labeling Pipeline
-This is the fifth version of the Labeling Pipeline
-
 The pipeline itself is coded in the main.py file, the run.py and summary.py are related to the full testing cycle running it a couple of times.
 
+## Details
+
+This pipeline aims to create Lightweight models from an Heavyweight father.
+
+The father model is an Ensemble, composed from 1 model trained in the cross test script and other N models trained using the trained dataset from the cross testing model.
+
+The N is equivalent as the number of cameras in the dataset, so, for the PKLot we have 3 more models and for the CNRPark we have 9 more. In total, the PKLot ensemble has 4 models and the CNRPark ensemble has 10.
+
+## Ensemble training
+
+Each father model from the fathers array in the config gains its own ensemble. The other N models that compose the ensemble are trained in the following way:
+- Given the train dataset;
+- Train one model letting one camera as validation dataset.
+
+For example, given the PKLot dataset:
+- PUCPR and UFPR04 as train and UFPR05 as validation;
+- PUCPR and UFPR05 as train and UFPR04 as validation;
+- UFPR04 and UFPR05 as train and PUCPR as validation.
+
+
 ## Basic flow
-- Given one father model (can be any model that classify slots as empty our occupied);
+- Given one father model;
+- Create the ensemble;
 - For each subset (camera pos/parking slot);
-    - Classify the first half of the images with the father model;
-        - Select only the ones that the model in more than 90% sure that the label is correct;
+    - Classify the first half of the images with the father ensemble;
+        - Select only the ones that the model in more than 95% sure that the label is correct;
         - Flatten the data by the smallest class (in qty).
     - Use this images to train a new model;
         - The train model(son) has its initial weights from one model already trained in the PKLot or CNRPark;
-        - Uses the same structure as the cross testing.
+        - Test the model before refining.
     - Use this new model to classify the second half;
     - Also classify this second half with the father model.
 - Summarize all the results to compare the father model with the created one by the pipeline.

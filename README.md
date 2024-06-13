@@ -1,12 +1,5 @@
 # Latest Checkpoint
-## Changes
-
-In this checkpoint the changes were related only to the labeling pipeline. Here we introduced for the first time the **ensemble father**. 
-
-More details can be found in the labeling pipeline README.
-
-## Datasets
-The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
+** WIP **
 
 ## Structure
 - acr: Folder with architecture diagrams and helper files;
@@ -35,3 +28,4 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_7: There you can find the first application of the sample generator in the cross testing. Also, the first MobileNetV3 Small use;
 - checkpoint_8: There you can find the labeling pipeline V3 script. Also, here we have the fisrt use of the custom 3-layer CNN.
 - checkpoint_9: There you can find the labeling pipeline v5 script. Also, small modifications were made in the cross testing script.
+- checkpoint_10: There you can find the first ensemble implementation in the labeling pipeline.

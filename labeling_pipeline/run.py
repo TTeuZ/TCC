@@ -30,7 +30,7 @@ def main(args):
 
     # Writing experiment README
     print("Writing experiment README")
-    with open(f"_results/exp_{EXP_UUID}/README.md", "w") as file:
+    with open(f"_results/{EXP_NAME}/README.md", "w") as file:
         file.write("# Experiment infos\n\n")
 
         file.write("## Fathers\n")

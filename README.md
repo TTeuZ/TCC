@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 10
 ## Changes
 
 In this checkpoint the changes were related only to the labeling pipeline. Here we introduced for the first time the **ensemble father**. 

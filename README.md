@@ -1,5 +1,5 @@
 # Latest Checkpoint
-** WIP **
+**WIP**
 
 ## Structure
 - acr: Folder with architecture diagrams and helper files;

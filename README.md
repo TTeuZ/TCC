@@ -1,5 +1,6 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+In this checkpoint the only change was made in the Labeling pipeline. Now it's possible to give a certain quantity of days to be used as training days, letting the rest to be tested by the father and son models.
 
 ## Structure
 - acr: Folder with architecture diagrams and helper files;

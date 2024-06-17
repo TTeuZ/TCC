@@ -24,15 +24,16 @@ For example, given the PKLot dataset:
 ## Basic flow
 - Given one father model;
 - Create the ensemble;
-- For each subset (camera pos/parking slot);
-    - Classify the first half of the images with the father ensemble;
+- For each subset;
+    - Select N days to be training days.
+    - Classify this days with the father ensemble;
         - Select only the ones that the model in more than 95% sure that the label is correct;
         - Flatten the data by the smallest class (in qty).
     - Use this images to train a new model;
         - The train model(son) has its initial weights from one model already trained in the PKLot or CNRPark;
         - Test the model before refining.
-    - Use this new model to classify the second half;
-    - Also classify this second half with the father model.
+    - Use this new model to classify the other days;
+    - Also classify this other days with the father model.
 - Summarize all the results to compare the father model with the created one by the pipeline.
 
 ## How to Reproduce

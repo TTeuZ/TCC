@@ -1,6 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-# from labeling_pipeline.models.ensemble_generator import ensemble_generator
+from labeling_pipeline.models.ensemble_generator import ensemble_generator
 from tools.utils.utils import create_folder
 import datetime
 import argparse
@@ -8,8 +8,7 @@ import uuid
 import json
 
 EXP_UUID = uuid.uuid4()
-# EXP_NAME = f"exp_{EXP_UUID}"
-EXP_NAME = "exp_d88bbb7e-f412-4e40-8276-9cca9c910245"
+EXP_NAME = f"exp_{EXP_UUID}"
 
 def main(args):
     assert os.path.exists(args.config), "Invalid config"
@@ -21,10 +20,9 @@ def main(args):
     initial_weights = config["initial_weights"]
     subsets = sorted(os.listdir(config["dataset"]["path"]))
 
-    # generator = ensemble_generator(config, EXP_NAME)
+    generator = ensemble_generator(config, EXP_NAME)
 
     create_folder("_summaries")
-    create_folder("_models")
     create_folder("_results")
     create_folder(f"_models/{EXP_NAME}")
     create_folder(f"_results/{EXP_NAME}")
@@ -60,10 +58,9 @@ def main(args):
 
     # Running pipeline
     for index, father in enumerate(fathers_json["models"]):
-        create_folder(f"_models/{EXP_NAME}/{father.split('/')[-1][:-3]}")
         create_folder(f"_results/{EXP_NAME}/{father.split('/')[-1][:-3]}")
 
-        # generator.generate(father)
+        generator.generate(father)
         for subset in subsets:
             os.system(f"python3 main.py -f {father} -i {initial_weights[index]['name']} -it {initial_weights[index]['threshold']} -su {subset} -c {args.config} -e {EXP_NAME}")
 

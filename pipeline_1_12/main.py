@@ -217,8 +217,8 @@ def execute(father_module, son_module, config, args):
         test_model = son_module.model(pre_trained=False, config=son_config)
         test_model.load_state_dict(best_state_dict)
 
-        # test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, days_str)
-        test(test_model, test_ds, son_dl_config, 0.5, output_json["model"], days_str, "pos_refinement")
+        test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, days_str)
+        test(test_model, test_ds, son_dl_config, test_threshold, output_json["model"], days_str, "pos_refinement")
 
     test(father_model, test_ds, father_dl_config, 0.5, output_json, "father_model", "test")
 

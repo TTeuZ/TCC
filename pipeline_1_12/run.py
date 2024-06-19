@@ -24,7 +24,6 @@ def main(args):
 
     create_folder("_summaries")
     create_folder("_results")
-    create_folder(f"_models/{EXP_NAME}")
     create_folder(f"_results/{EXP_NAME}")
 
     # Writing experiment README

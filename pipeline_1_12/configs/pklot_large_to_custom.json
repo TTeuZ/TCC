@@ -1,0 +1,85 @@
+{
+    "fathers": {
+        "trained_at": "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented",
+        "module": "tools.models.mobilenet_v3_large",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        },
+        "models": [
+            "resources/fathers/PKLot/model_5710a2ff-c157-4389-a8c5-c8e3141e5aee.pt",
+            "resources/fathers/PKLot/model_8909415f-6afe-41ab-9ac7-350b8d621ad7.pt",
+            "resources/fathers/PKLot/model_80645867-bf7e-4678-966d-be20067b1016.pt",
+            "resources/fathers/PKLot/model_a4f31131-fb3a-4a64-9610-9e8ad2b8812d.pt",
+            "resources/fathers/PKLot/model_b6254325-9f25-40cb-8dd6-f7a20a586533.pt"
+        ]
+    },
+    "initial_weights": [
+        {
+            "name": "resources/base/custom/PKLot/model_1b06f79e-3e70-4f18-864e-5781100409b2.pt",
+            "threshold": 0.28170597553253174
+        },
+        {
+            "name": "resources/base/custom/PKLot/model_3df4e62e-0dd1-40aa-8672-a3b794ad5be9.pt",
+            "threshold": 0.03451038897037506
+        },
+        {
+            "name": "resources/base/custom/PKLot/model_c8b73312-8a2b-4f27-9e62-c5ac9a521f63.pt",
+            "threshold": 0.5366682410240173
+        },
+        {
+            "name": "resources/base/custom/PKLot/model_d2ee15f4-3efc-4a83-a9d4-bf57dbd5bdfa.pt",
+            "threshold": 0.39709529280662537
+        },
+        {
+            "name": "resources/base/custom/PKLot/model_f888210d-810b-4b4e-8771-6452dd3a762a.pt",
+            "threshold": 0.5457377433776855
+        }
+    ],
+    "model": {
+        "module": "tools.models.custom_3_layer",
+        "config": {
+            "training_mode": "normal",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                32,
+                32
+            ]
+        }
+    },
+    "experiment": {
+        "batch_size": 1000,
+        "num_workers": 6,
+        "epochs": 45
+    },
+    "dataset": {
+        "path": "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented",
+        "train_days": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+        ],
+        "val_days": 2
+    }
+}

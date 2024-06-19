@@ -29,7 +29,7 @@ For example, given the PKLot dataset:
     - Classify this days with the father ensemble;
         - Select only the ones that the model in more than 95% sure that the label is correct;
         - Flatten the data by the smallest class (in qty).
-    - Use this images to train a new model;
+    - Use these images to train a new model;
         - The train model(son) has its initial weights from one model already trained in the PKLot or CNRPark;
         - Test the model before refining.
     - Use this new model to classify the other days;

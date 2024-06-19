@@ -1,11 +1,11 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from dataset.customs_datasets import pipeline_dataset, mutable_dataset
+from labeling_pipeline.dataset.customs_datasets import pipeline_dataset, mutable_dataset
+from labeling_pipeline.models.ensemble_model import ensemble_model
+from labeling_pipeline.dataset.data_leveler import data_leveler
+from labeling_pipeline.dataset.data_loader import data_loader
 from sklearn.metrics import confusion_matrix, accuracy_score
 from tools.utils.metrics import get_roc_auc, get_eer
-from models.ensemble_model import ensemble_model
-from dataset.data_leveler import data_leveler
-from dataset.data_loader import data_loader
 from torchvision import transforms
 from collections import Counter
 import numpy as np
@@ -26,37 +26,54 @@ def change_transform(dataset, dl_config):
         subset.transform = transform
 
 
-def divide_dataset(dataset, train_days):
-    return (list(dataset.items())[:train_days], list(dataset.items())[train_days:])
+def divide_dataset(dataset, train_days, val_days):
+    divider = train_days[-1] + val_days
+    return (list(dataset.items())[:divider], list(dataset.items())[divider:])
 
 
-def get_train_val_datasets(train_half, new_labels, dl_config, split, output_json):
-    divider = math.ceil(len(train_half) * split)
-
-    train_ds, train_labels = train_half[:divider], new_labels[:divider]
-    val_ds, val_labels = train_half[divider:], new_labels[divider:]
-
-    train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
+def split_in_train_val(train_half, new_labels, dl_config, val_days, output_json):
+    val_ds, val_labels = train_half[:val_days], new_labels[:val_days]
     val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
-
-    train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
     val_ds, val_labels = torch.utils.data.ConcatDataset(val_ds), np.concatenate(val_labels)
+
+    class_count = Counter(val_labels)
+    before_class_0, before_class_1 = class_count[0], class_count[1]
+
+    ds_leveler = data_leveler()
+    val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
+
+    class_count = Counter(val_labels)
+    after_class_0, after_class_1 = class_count[0], class_count[1]
+
+    output_json["dataset"]["val_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
+                                            "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
+
+    change_transform(val_ds, dl_config)
+    train_days, train_labels = train_half[val_days:], new_labels[val_days:]
+    
+    return (train_days, train_labels), pipeline_dataset(val_ds, val_labels)
+
+
+def get_train_ds(train_days, days, dl_config, output_json, output_location):
+    train_ds, train_labels = train_days
+    train_ds, train_labels = train_ds[:days], train_labels[:days]
+    train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
+    train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
 
     class_count = Counter(train_labels)
     before_class_0, before_class_1 = class_count[0], class_count[1]
 
     ds_leveler = data_leveler()
     train_ds, train_labels = ds_leveler.flatten_dataset(train_ds, train_labels)
-    val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
 
     class_count = Counter(train_labels)
     after_class_0, after_class_1 = class_count[0], class_count[1]
 
-    output_json["dataset"]["train_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
-                                              "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
+    output_json["model"][output_location]["train_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
+                                                       "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
 
-    change_transform(train_ds, dl_config), change_transform(val_ds, dl_config)
-    return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
+    change_transform(train_ds, dl_config)
+    return pipeline_dataset(train_ds, train_labels)
 
 
 def get_test_dataset(test_half):
@@ -78,7 +95,7 @@ def test(model, test_ds, dl_config, threshold, output_json, output_model, output
     output_json[output_model][output_type] = {"accuracy": accuracy, "cm": str(cm)}
 
 
-def get_threshold(model, val_ds, dl_config, output_json, output_model):
+def get_threshold(model, val_ds, dl_config, output_json, days_str):
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
 
     probs, labels = model.get_probs(val_loader)
@@ -87,21 +104,21 @@ def get_threshold(model, val_ds, dl_config, output_json, output_model):
     roc, auc = get_roc_auc(probs, labels)
     threshold, eer = get_eer(roc)
 
-    output_json[output_model]["metrics"] = {}
-    output_json[output_model]["metrics"]["auc"] = float(auc)
-    output_json[output_model]["metrics"]["eer"] = float(eer)
-    output_json[output_model]["metrics"]["threshold"] = float(threshold)
+    output_json["model"][days_str]["metrics"] = {}
+    output_json["model"][days_str]["metrics"]["auc"] = float(auc)
+    output_json["model"][days_str]["metrics"]["eer"] = float(eer)
+    output_json["model"][days_str]["metrics"]["threshold"] = float(threshold)
 
     return threshold
 
 
-def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
+def train(model, train_ds, val_ds, epochs, dl_config, output_json, days_str, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
     best_state_dict, best_loss, epoch_id = None, math.inf, -1
 
-    print("Refining model")
-    output_json["model"]["epochs"] = {}
+    print(f"Refining model - {days_str}")
+    output_json["model"][days_str]["epochs"] = {}
     for epoch in range(epochs):
         print(f"Epoch [{epoch + 1}/{epochs}] Initializing training epoch")
 
@@ -113,9 +130,9 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
             best_loss = val_loss
             epoch_id = (epoch + 1)
         
-        output_json["model"]["epochs"][f"epoch_{epoch + 1}"] = val_loss
+        output_json["model"][days_str]["epochs"][f"epoch_{epoch + 1}"] = val_loss
     
-    output_json["model"]["best_model"] = {"loss": best_loss, "epoch_id": epoch_id, "model": f"{output_name}.pt"}
+    output_json["model"][days_str]["best_model"] = {"loss": best_loss, "epoch_id": epoch_id}
 
     return best_state_dict
 
@@ -168,38 +185,42 @@ def execute(father_module, son_module, config, args):
 
     ds_loader = data_loader(father_dl_config)
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
-    train_half, test_half = divide_dataset(dataset, config["dataset"]["train_days"])
-
+    train_half, test_half = divide_dataset(dataset, config["dataset"]["train_days"], config["dataset"]["val_days"])
+    
     father_model = ensemble_model(father_module, father_config, args.father, args.exp)
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
-    output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_val_split": config["dataset"]["split"]}
+    output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_days": config["dataset"]["train_days"], "train_days": config["dataset"]["val_days"]}
     output_json["father_model"] = father_model.info()
 
     new_labels = classify(father_model, father_dl_config, train_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
+    train_days, val_ds = split_in_train_val(train_half, new_labels, son_dl_config, config["dataset"]["val_days"], output_json)
     test_ds = get_test_dataset(test_half)
-
-    train_model = son_module.model(pre_trained=False, config=son_config)
-    train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))
 
     output_json["model"] = {}
     output_json["model"]["initial_weights"] = args.initial
     output_json["model"]["details"] = son_config
 
+    train_model = son_module.model(pre_trained=False, config=son_config)
+    train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))
     test(train_model, test_ds, son_dl_config, args.initial_threshold, output_json, "model", "pre_refinement")
 
-    best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, output_name)
-    test_model = son_module.model(pre_trained=False, config=son_config)
-    test_model.load_state_dict(best_state_dict)
+    for days in config["dataset"]["train_days"]:
+        days_str = f"{days}_days"
+        output_json["model"][days_str] = {}
+        train_ds = get_train_ds(train_days, days, son_dl_config, output_json, days_str)
 
-    test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, "model")
-    test(test_model, test_ds, son_dl_config, test_threshold, output_json, "model", "pos_refinement")
+        train_model = son_module.model(pre_trained=False, config=son_config)
+        train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))
+
+        best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, days_str, output_name)
+        test_model = son_module.model(pre_trained=False, config=son_config)
+        test_model.load_state_dict(best_state_dict)
+
+        # test_threshold = get_threshold(test_model, val_ds, son_dl_config, output_json, days_str)
+        test(test_model, test_ds, son_dl_config, 0.5, output_json["model"], days_str, "pos_refinement")
 
     test(father_model, test_ds, father_dl_config, 0.5, output_json, "father_model", "test")
-
-    print("Saving best model")
-    torch.save(best_state_dict, f"_models/{args.exp}/{father_model_name}/{output_name}.pt")
 
     print("Saving result file")
     with open(f"_results/{args.exp}/{father_model_name}/{output_name}.json", "w") as output:

@@ -36,9 +36,9 @@ class data_loader():
         for subset in subsets:
             dates = self.__get_dates(subset)
 
-            divisor = math.ceil(len(dates) * t_size)
-            first_half.extend(dates[:divisor])
-            second_half.extend(dates[divisor:])
+            divider = math.ceil(len(dates) * t_size)
+            first_half.extend(dates[:divider])
+            second_half.extend(dates[divider:])
         
         if len(second_half) == 0:
             return self.__get_pytorch_dataset(first_half)
@@ -55,11 +55,11 @@ class data_loader():
         for subset in subsets:
             all_dates.extend(self.__get_dates(subset))
         
-        divisor = math.ceil(len(all_dates) * t_size)
+        divider = math.ceil(len(all_dates) * t_size)
         random.shuffle(all_dates)
 
-        first_half = all_dates[:divisor]
-        second_half = all_dates[divisor:]
+        first_half = all_dates[:divider]
+        second_half = all_dates[divider:]
 
         if len(second_half) == 0:
             return self.__get_pytorch_dataset(first_half)

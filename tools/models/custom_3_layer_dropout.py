@@ -23,27 +23,19 @@ class custom_3_layer_dropout(nn.Module):
 
         self.flatten = nn.Flatten()
 
+        self.fc1 = nn.Linear(1600, 64)
+        self.fc2 = nn.Linear(64, NUM_CLASSES)
+
         self.dropout_input = nn.Dropout(0.1)
         self.dropout_hidden = nn.Dropout(0.2)
-
-        self._to_linear = None
-        self.convs(torch.randn(1, *INPUT_SHAPE))
-
-        self.fc1 = nn.Linear(self._to_linear, 64)
-        self.fc2 = nn.Linear(64, NUM_CLASSES)
 
 
     def convs(self, x):
         x = f.relu(self.conv1(x))
         x = self.pool1(x)
-        x = self.dropout_input(x)
         x = f.relu(self.conv2(x))
         x = self.pool2(x)
-        x = self.dropout_input(x)
         x = f.relu(self.conv3(x))
-        
-        if self._to_linear is None:
-            self._to_linear = x.view(x.size(0), -1).size(1)
         
         return x
     
@@ -51,6 +43,7 @@ class custom_3_layer_dropout(nn.Module):
     def forward(self, x):
         x = self.convs(x)
         x = self.flatten(x)
+        x = self.dropout_input(x)
         x = f.relu(self.fc1(x))
         x = self.dropout_hidden(x)
         x = self.fc2(x)

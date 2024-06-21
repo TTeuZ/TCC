@@ -67,7 +67,7 @@ def main(args):
 
     # Writing summary
     print("\nWriting summary")
-    print(f"python3 summary.py -f _results/{EXP_NAME} -bd {begin_datetime} -ed {end_datetime} -c {args.config}")
+    os.system(f"python3 summary.py -f _results/{EXP_NAME} -bd {begin_datetime} -ed {end_datetime} -c {args.config}")
 
 
 if __name__ == "__main__":

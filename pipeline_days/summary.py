@@ -13,20 +13,10 @@ def print_results(subset, results, file):
     empty_wrong = [result["dataset"]["classify"]["empty_wrong"] for result in results]
     occupied_wrong = [result["dataset"]["classify"]["occupied_wrong"] for result in results]
 
-    val_labels_before_leveling_empty = [result["dataset"]["val_labels"]["before_leveling"]["empty"] for result in results]
-    val_labels_before_leveling_occupied = [result["dataset"]["val_labels"]["before_leveling"]["occupied"] for result in results]
-    val_labels_after_leveling_empty = [result["dataset"]["val_labels"]["after_leveling"]["empty"] for result in results]
-    val_labels_after_leveling_occupied = [result["dataset"]["val_labels"]["after_leveling"]["occupied"] for result in results]
-
     avg_used_images = int(np.round(sum(used_images) / len(used_images)))
     avg_wrong_labeled = int(np.round(sum(wrong_labeled) / len(wrong_labeled)))
     avg_empty_wrong = int(sum(empty_wrong) / len(empty_wrong))
     avg_occupied_wrong = int(sum(occupied_wrong) / len(occupied_wrong))
-
-    avg_val_labels_before_leveling_empty = int(np.round(sum(val_labels_before_leveling_empty) / len(val_labels_before_leveling_empty)))
-    avg_val_labels_before_leveling_occupied = int(np.round(sum(val_labels_before_leveling_occupied) / len(val_labels_before_leveling_occupied)))
-    avg_val_labels_after_leveling_empty = int(np.round(sum(val_labels_after_leveling_empty) / len(val_labels_after_leveling_empty)))
-    avg_val_labels_after_leveling_occupied = int(np.round(sum(val_labels_after_leveling_occupied) / len(val_labels_after_leveling_occupied)))
 
     std_used_images = np.std(used_images)
     pct_used_images = (avg_used_images * 100) / all_images
@@ -39,8 +29,6 @@ def print_results(subset, results, file):
     file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {std_used_images:.2f}[STD] - {pct_used_images:.2f}[%]\n")
     file.write(f"Wrong Labeled: {avg_wrong_labeled}[AVG] - {std_wrong_labeled:.2f}[STD] - {pct_wrong_labeled:.2f}[%]\n")
     file.write(f"Empty wrong: {avg_empty_wrong}[AVG] - Occupied wrong: {avg_occupied_wrong}[AVG]\n\n")
-    file.write(f"Val Labels before leveling: {avg_val_labels_before_leveling_empty}[EMPTY] - {avg_val_labels_before_leveling_occupied}[OCCUPIED]\n")
-    file.write(f"Val Labels before leveling: {avg_val_labels_after_leveling_empty}[EMPTY] - {avg_val_labels_after_leveling_occupied}[OCCUPIED]\n")
 
     file.write("\n------------------------[FATHER MODEL]-------------------------\n")
     father_accs = [result["father_model"]["test"]["accuracy"] for result in results]
@@ -75,7 +63,6 @@ def print_results(subset, results, file):
 
 def print_avg_results(results_by_subset, file):
     all_images, used_images, wrong_labeled, empty_wrong, occupied_wrong = 0, [], [], [], []
-    val_labels_before_leveling, val_labels_after_leveling = {"empty": [], "occupied": []}, {"empty": [], "occupied": []}
     father_accs, pre_accs, pos_accs = [], [], defaultdict(list)
 
     for subset, results in results_by_subset.items():
@@ -83,18 +70,12 @@ def print_avg_results(results_by_subset, file):
 
         all_images += results_by_subset[subset][0]["dataset"]["classify"]["all_images"]
         subset_used_images = []
-        subset_val_labels_before_leveling, subset_val_labels_after_leveling = {"empty": [], "occupied": []}, {"empty": [], "occupied": []}
 
         for result in results:
             wrong_labeled.append(result["dataset"]["classify"]["wrong_labels"])
             empty_wrong.append(result["dataset"]["classify"]["empty_wrong"])
             occupied_wrong.append(result["dataset"]["classify"]["occupied_wrong"])
             subset_used_images.append(result["dataset"]["classify"]["used_images"])
-
-            subset_val_labels_before_leveling["empty"].append(result["dataset"]["val_labels"]["before_leveling"]["empty"])
-            subset_val_labels_before_leveling["occupied"].append(result["dataset"]["val_labels"]["before_leveling"]["occupied"])
-            subset_val_labels_after_leveling["empty"].append(result["dataset"]["val_labels"]["after_leveling"]["empty"])
-            subset_val_labels_after_leveling["occupied"].append(result["dataset"]["val_labels"]["after_leveling"]["occupied"])
             
             father_accs.append(result["father_model"]["test"]["accuracy"])
             pre_accs.append(result["model"]["pre_refinement"]["accuracy"])
@@ -104,26 +85,13 @@ def print_avg_results(results_by_subset, file):
 
         subset_used_images = int(np.round(sum(subset_used_images) / len(subset_used_images)))
 
-        subset_val_labels_before_leveling["empty"] = int(np.round(sum(subset_val_labels_before_leveling["empty"]) / len(subset_val_labels_before_leveling["empty"])))
-        subset_val_labels_before_leveling["occupied"] = int(np.round(sum(subset_val_labels_before_leveling["occupied"]) / len(subset_val_labels_before_leveling["occupied"])))
-        subset_val_labels_after_leveling["empty"] = int(np.round(sum(subset_val_labels_after_leveling["empty"]) / len(subset_val_labels_after_leveling["empty"])))
-        subset_val_labels_after_leveling["occupied"] = int(np.round(sum(subset_val_labels_after_leveling["occupied"]) / len(subset_val_labels_after_leveling["occupied"])))
-
         used_images.append(subset_used_images)
-
-        val_labels_before_leveling["empty"].append(subset_val_labels_before_leveling["empty"])
-        val_labels_before_leveling["occupied"].append(subset_val_labels_before_leveling["occupied"])
-        val_labels_after_leveling["empty"].append(subset_val_labels_after_leveling["empty"])
-        val_labels_after_leveling["occupied"].append(subset_val_labels_after_leveling["occupied"])
 
     avg_wrong_labeled = int(sum(wrong_labeled) / len(wrong_labeled))
     avg_empty_wrong = int(sum(empty_wrong) / len(empty_wrong))
     avg_occupied_wrong = int(sum(occupied_wrong) / len(occupied_wrong))
     avg_used_images = sum(used_images)
     pct_used_images = avg_used_images / all_images
-
-    avg_val_labels_before_leveling = {"empty": sum(val_labels_before_leveling["empty"]), "occupied": sum(val_labels_before_leveling["occupied"])}
-    avg_val_labels_after_leveling = {"empty": sum(val_labels_after_leveling["empty"]), "occupied": sum(val_labels_after_leveling["occupied"])}
 
     avg_father_accs = sum(father_accs) / len(father_accs)
     avg_pre_acc = sum(pre_accs) / len(pre_accs)
@@ -144,8 +112,6 @@ def print_avg_results(results_by_subset, file):
     file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
     file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {pct_used_images:.2f}[%]\n")
     file.write(f"All wrong: {avg_wrong_labeled} - Empty wrong: {avg_empty_wrong} - Occupied wrong: {avg_occupied_wrong}\n")
-    file.write(f"Val Labels before leveling: {avg_val_labels_before_leveling['empty']}[EMPTY] - {avg_val_labels_before_leveling['occupied']}[OCCUPIED]\n")
-    file.write(f"Val Labels before leveling: {avg_val_labels_after_leveling['empty']}[EMPTY] - {avg_val_labels_after_leveling['occupied']}[OCCUPIED]\n")
 
     file.write("\n------------------------[FATHER MODEL]-------------------------\n")
     file.write(" [AVG]  [STD]\n")
@@ -200,9 +166,7 @@ def main(args):
         file.write(f"Son models module: {config['model']['module']}\n")
         file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
         file.write(f"Dataset used: {config['dataset']['path']}\n")
-
-        file.write(f"\nUsing {config['dataset']['train_days'][0]} to {config['dataset']['train_days'][-1]} training days ")
-        file.write(f"and {config['dataset']['val_days']} validation days\n")
+        file.write(f"Split: {config['dataset']['split']}\n")
 
         file.write("\n###############################################################\n\n")
 

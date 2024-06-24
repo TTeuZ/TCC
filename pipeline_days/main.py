@@ -26,8 +26,8 @@ def change_transform(dataset, dl_config):
         subset.transform = transform
 
 
-def divide_dataset(dataset, train_days, val_days):
-    divider = train_days[-1] + val_days
+def divide_dataset(dataset, train_days):
+    divider = train_days[-1]
     return (list(dataset.items())[:divider], list(dataset.items())[divider:])
 
 
@@ -54,26 +54,39 @@ def split_in_train_val(train_half, new_labels, dl_config, val_days, output_json)
     return (train_days, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
-def get_train_ds(train_days, days, dl_config, output_json, output_location):
-    train_ds, train_labels = train_days
-    train_ds, train_labels = train_ds[:days], train_labels[:days]
-    train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
-    train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
+def get_train_val_ds(train_days, days, split, dl_config, output_json, output_location):
+    targets, labels = train_days[0][:days], train_days[1][:days]
+    divider = (days - math.floor(days * split))
 
-    class_count = Counter(train_labels)
-    before_class_0, before_class_1 = class_count[0], class_count[1]
+    train_ds, train_labels = targets[divider:], labels[divider:]
+    val_ds, val_labels = targets[:divider], labels[:divider]
+
+    train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
+    val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
+
+    train_ds, train_labels = torch.utils.data.ConcatDataset(train_ds), np.concatenate(train_labels)
+    val_ds, val_labels = torch.utils.data.ConcatDataset(val_ds), np.concatenate(val_labels)
+
+    train_count, val_count = Counter(train_labels), Counter(val_labels)
+    train_before_0, train_before_1 = train_count[0], train_count[1]
+    val_before_0, val_before_1 = val_count[0], val_count[1]
 
     ds_leveler = data_leveler()
     train_ds, train_labels = ds_leveler.flatten_dataset(train_ds, train_labels)
+    val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
 
-    class_count = Counter(train_labels)
-    after_class_0, after_class_1 = class_count[0], class_count[1]
+    train_count, val_count = Counter(train_labels), Counter(val_labels)
+    train_after_0, train_after_1 = train_count[0], train_count[1]
+    val_after_0, val_after_1 = val_count[0], val_count[1]
 
-    output_json["model"][output_location]["train_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
-                                                       "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
+    output_json["model"][output_location]["train_labels"] = {"before_leveling": {"empty": train_before_0, "occupied": train_before_1},
+                                                             "after_leveling": {"empty": train_after_0, "occupied": train_after_1}}
 
-    change_transform(train_ds, dl_config)
-    return pipeline_dataset(train_ds, train_labels)
+    output_json["model"][output_location]["val_labels"] = {"before_leveling": {"empty": val_before_0, "occupied": val_before_1},
+                                                           "after_leveling": {"empty": val_after_0, "occupied": val_after_1}}
+
+    change_transform(train_ds, dl_config), change_transform(val_ds, dl_config)
+    return pipeline_dataset(train_ds, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
 def get_test_dataset(test_half):
@@ -185,16 +198,16 @@ def execute(father_module, son_module, config, args):
 
     ds_loader = data_loader(father_dl_config)
     dataset = ds_loader.get_subset_from_dataset(config["dataset"]["path"], args.subset)
-    train_half, test_half = divide_dataset(dataset, config["dataset"]["train_days"], config["dataset"]["val_days"])
+    train_half, test_half = divide_dataset(dataset, config["dataset"]["train_days"])
     
     father_model = ensemble_model(father_module, father_config, args.father, args.exp)
 
     output_json["system_info"] = {"pytorch_version": torch.__version__, "cuda_device": torch.cuda.get_device_name(torch.cuda.current_device())}
-    output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_days": config["dataset"]["train_days"], "train_days": config["dataset"]["val_days"]}
+    output_json["dataset"] = {"dataset": config["dataset"]["path"].split('/')[-1], "subset": args.subset, "train_days": config["dataset"]["train_days"], "split": config["dataset"]["split"]}
     output_json["father_model"] = father_model.info()
 
     new_labels = classify(father_model, father_dl_config, train_half, output_json)
-    train_days, val_ds = split_in_train_val(train_half, new_labels, son_dl_config, config["dataset"]["val_days"], output_json)
+    train_days = (train_half, new_labels)
     test_ds = get_test_dataset(test_half)
 
     output_json["model"] = {}
@@ -208,7 +221,7 @@ def execute(father_module, son_module, config, args):
     for days in config["dataset"]["train_days"]:
         days_str = f"{days}_days"
         output_json["model"][days_str] = {}
-        train_ds = get_train_ds(train_days, days, son_dl_config, output_json, days_str)
+        train_ds, val_ds = get_train_val_ds(train_days, days, config["dataset"]["split"], son_dl_config, output_json, days_str)
 
         train_model = son_module.model(pre_trained=False, config=son_config)
         train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))

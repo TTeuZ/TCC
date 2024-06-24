@@ -1,5 +1,12 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+
+In this checkpoint we modified the labeling pipeline to make it accept a certain train days to refine the son models.
+
+Also, we created a new pipeline version called “pipeline_days” that aimed to reproduce the pipeline flow with different days quantity, in order to find the minimum days value to get reasonable results in the son models.
+
+## Datasets
+The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
 
 ## Structure
 - acr: Folder with architecture diagrams and helper files;

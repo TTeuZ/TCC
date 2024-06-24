@@ -1,4 +1,4 @@
-# Labeling Pipeline
+# Pipeline Days
 ## Details
 
 This version of the pipeline aims to recreate the labeling_pipeline flow using a sequence of training days specified in the config in order to find the minimum days necessary to achieve a reasonable result in the son model.

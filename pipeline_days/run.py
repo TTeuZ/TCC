@@ -52,7 +52,7 @@ def main(args):
         
         file.write(f"- Training epocs: {config['experiment']['epochs']}\n")
         file.write(f"- Train days: {' - '.join(str(day) for day in config['dataset']['train_days'])}\n")
-        file.write(f"- val days: {config['dataset']['val_days']}\n")
+        file.write(f"- Split: {config['dataset']['split']}\n")
         file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
 
     # Running pipeline

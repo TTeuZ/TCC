@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 11
 ## Changes
 
 In this checkpoint we modified the labeling pipeline to make it accept a certain train days to refine the son models.

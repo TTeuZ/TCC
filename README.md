@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 12
 ## Changes
 In this checkpoint we modified the pipeline_days script to select the first days as validation and used a split value, like 0.75, to divide the dataset in training and validation.
 

@@ -25,7 +25,7 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_1: There you can find the cross testing V1 script;
 - checkpoint_2: There you can find the labeling pipeline V1 script. The cross testing script stays the same;
 - checkpoint_3: There you can find the labeling pipeling V2 script. The cross testing script stays the same;
-- checkpoint_4: There you can the first data leveling implementation for both cross testing and labeling pipeline;
+- checkpoint_4: There you can find the first data leveling implementation for both cross testing and labeling pipeline;
 - checkpoint_5: There you can find a set of tests to determinate one best config;
 - checkpoint_6: There you can find the results with small modifications within the dataset. No changes in the code;
 - checkpoint_7: There you can find the first application of the sample generator in the cross testing. Also, the first MobileNetV3 Small use;
@@ -33,3 +33,4 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_9: There you can find the labeling pipeline v5 script. Also, small modifications were made in the cross testing script;
 - checkpoint_10: There you can find the first ensemble implementation in the labeling pipeline;
 - checkpoint_11: There you can find the first implementation of the pipeline_days and also the labeling pipeline change that allows to specify training days quantity.
+- checkpoint_12: There you can find the pipeline_days second version script, that modifies a little the train/val split, and also the first tests with the residual_net and skip_net.

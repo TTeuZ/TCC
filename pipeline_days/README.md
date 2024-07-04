@@ -9,11 +9,10 @@ This version was created seeking better performance in the experiment run.
 
 ## Diferences from the labeling pipeline
 The mandatory changes in this pipeline are:
-- Always, the 2 first days are for validation, the training days start counting after the first 2.
-- Only the images from the 13th day and beyond are used for the test, no matter how many train days.
+- it uses the first days as validation.
+- Only the images from the 15th day and beyond are used for the test, no matter how many train days.
 
 ## Ensemble training
-
 Each father model from the fathers array in the config gains its own ensemble. The other N models that compose the ensemble are trained in the following way:
 - Given the train dataset;
 - Train one model letting one camera as validation dataset.

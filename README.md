@@ -1,5 +1,8 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+In this checkpoint we modified the pipeline_days script to select the first days as validation and used a split value, like 0.75, to divide the dataset in training and validation.
+
+Also, we added two new small models to test, the skip_net and residual_net.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

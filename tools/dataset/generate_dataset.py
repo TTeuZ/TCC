@@ -84,8 +84,7 @@ def crop_image(cv_image, categories, subset, crop_info, save_path):
             image_name = f"{date}_{time}#{subset}#{crop_id}"
             subfolder = f"{date}/{categories[category]['name']}"
 
-            poly = np.array(crop["segmentation"]).reshape((-1, 2)).astype(np.int64)
-            rotated_rect = cv.minAreaRect(poly)
+            rotated_rect = crop["best_rotated_rect"]
 
             if not is_inside(rotated_rect, bounding_rect, offset):
                 raise Exception("Spot out of boundings or occluded")

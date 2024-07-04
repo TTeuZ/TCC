@@ -13,6 +13,8 @@ import json
 import math
 import copy
 
+EARLY_STOP = 5
+
 def test(model, test_ds, dl_config, threshold, output_json):
     average_accuracy, final_cm = 0.0, [[0, 0], [0, 0]]
     output_json["test"] = { "subsets": {} }
@@ -53,7 +55,7 @@ def get_threshold(model, val_ds, dl_config, output_json):
 def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-    best_state_dict, best_loss, epoch_id = None, math.inf, -1
+    best_state_dict, best_loss, epoch_id, early_stop_count = None, math.inf, -1, 0
 
     output_json["epochs"] = {}
     for epoch in range(epochs):
@@ -66,8 +68,15 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
             best_state_dict = copy.deepcopy(model.get_state_dict())
             best_loss = val_loss
             epoch_id = (epoch + 1)
+            early_stop_count = 0
+        else:
+            early_stop_count += 1
         
         output_json["epochs"][f"epoch_{epoch + 1}"] = val_loss
+
+        if early_stop_count == EARLY_STOP:
+            print("5 attempts - val_loss not decreasing - early stoping")
+            break
     
     output_json["best_model"] = {"loss": best_loss, "epoch_id": epoch_id, "model": f"{output_name}.pt"}
 

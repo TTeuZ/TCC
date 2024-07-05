@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-7",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 6486,
+      "used_images": 5080,
+      "wrong_labels": 4,
+      "empty_wrong": 1,
+      "occupied_wrong": 3
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2011,
+        "occupied": 1540
+      },
+      "after_leveling": {
+        "empty": 1540,
+        "occupied": 1540
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_733c9384-4948-4c1a-91cc-852556ae1937.pt"
+    ],
+    "test": {
+      "accuracy": 0.9659374134588756,
+      "cm": "[[6672   35]\n [ 457 7280]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/PKLot/model_37b2e54f-b5e4-49e9-b81e-370ac837d84b.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8104403212406536,
+      "cm": "[[6644   63]\n [2675 5062]]"
+    },
+    "epochs": {
+      "epoch_1": 0.003446436719968915,
+      "epoch_2": 0.0024383850395679474,
+      "epoch_3": 0.0026299317833036184,
+      "epoch_4": 0.001804986735805869,
+      "epoch_5": 0.0015520269516855478,
+      "epoch_6": 0.0038744211196899414,
+      "epoch_7": 0.005002632271498442,
+      "epoch_8": 0.008347022347152233,
+      "epoch_9": 0.004254286177456379,
+      "epoch_10": 0.00435402849689126
+    },
+    "best_model": {
+      "loss": 0.0015520269516855478,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-7.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.6910389065742493
+    },
+    "pos_refinement": {
+      "accuracy": 0.8620880642481307,
+      "cm": "[[6638   69]\n [1923 5814]]"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-9",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 3772,
+      "used_images": 2835,
+      "wrong_labels": 5,
+      "empty_wrong": 2,
+      "occupied_wrong": 3
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 895,
+        "occupied": 1074
+      },
+      "after_leveling": {
+        "empty": 895,
+        "occupied": 895
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_878b56f2-b09c-4650-96cd-b0a1c4712fb9.pt"
+    ],
+    "test": {
+      "accuracy": 0.963245492371706,
+      "cm": "[[3471   90]\n [ 228 4863]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/PKLot/model_884fc515-050b-46ad-91e6-54165c06c88d.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.893088303282478,
+      "cm": "[[3480   81]\n [ 844 4247]]"
+    },
+    "epochs": {
+      "epoch_1": 0.041826777160167694,
+      "epoch_2": 0.02011154219508171,
+      "epoch_3": 0.02856666035950184,
+      "epoch_4": 0.024458566680550575,
+      "epoch_5": 0.019534621387720108,
+      "epoch_6": 0.019789662212133408,
+      "epoch_7": 0.02196115255355835,
+      "epoch_8": 0.022278841584920883,
+      "epoch_9": 0.021516188979148865,
+      "epoch_10": 0.020980052649974823
+    },
+    "best_model": {
+      "loss": 0.019534621387720108,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-9.pt"
+    },
+    "metrics": {
+      "auc": 0.9998329249276008,
+      "eer": 0.007462686567164179,
+      "threshold": 0.857495129108429
+    },
+    "pos_refinement": {
+      "accuracy": 0.8535598705501618,
+      "cm": "[[3529   32]\n [1235 3856]]"
+    }
+  }
+}

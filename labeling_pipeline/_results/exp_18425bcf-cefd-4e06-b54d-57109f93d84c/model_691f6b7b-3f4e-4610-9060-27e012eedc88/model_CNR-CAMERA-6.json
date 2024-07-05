@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-6",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 6768,
+      "used_images": 5196,
+      "wrong_labels": 13,
+      "empty_wrong": 0,
+      "occupied_wrong": 13
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2142,
+        "occupied": 1527
+      },
+      "after_leveling": {
+        "empty": 1527,
+        "occupied": 1527
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_691f6b7b-3f4e-4610-9060-27e012eedc88.pt"
+    ],
+    "test": {
+      "accuracy": 0.9633757961783439,
+      "cm": "[[6852   69]\n [ 483 7668]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_10b7ff9b-e8fb-44fc-9fe1-e7ece582ae87.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.934381634819533,
+      "cm": "[[6754  167]\n [ 822 7329]]"
+    },
+    "epochs": {
+      "epoch_1": 0.004742116667330265,
+      "epoch_2": 0.007720136549323797,
+      "epoch_3": 0.009091068990528584,
+      "epoch_4": 0.031974952667951584,
+      "epoch_5": 0.004118915181607008,
+      "epoch_6": 0.02439585141837597,
+      "epoch_7": 0.010037683881819248,
+      "epoch_8": 0.011049844324588776,
+      "epoch_9": 0.010305811651051044,
+      "epoch_10": 0.010014181956648827
+    },
+    "best_model": {
+      "loss": 0.004118915181607008,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-6.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.9959372282028198
+    },
+    "pos_refinement": {
+      "accuracy": 0.8940419320594479,
+      "cm": "[[6900   21]\n [1576 6575]]"
+    }
+  }
+}

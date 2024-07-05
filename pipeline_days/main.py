@@ -16,8 +16,10 @@ import math
 import copy
 import json
 
-# -------------------------------------------------- HELPERS ---------------------------------------------------------
+EARLY_STOP = 5
 CLASSIFY_THRESHOLD = 0.95
+
+# -------------------------------------------------- HELPERS ---------------------------------------------------------
 
 def change_transform(dataset, dl_config):
     transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
@@ -29,29 +31,6 @@ def change_transform(dataset, dl_config):
 def divide_dataset(dataset, train_days):
     divider = train_days[-1]
     return (list(dataset.items())[:divider], list(dataset.items())[divider:])
-
-
-def split_in_train_val(train_half, new_labels, dl_config, val_days, output_json):
-    val_ds, val_labels = train_half[:val_days], new_labels[:val_days]
-    val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
-    val_ds, val_labels = torch.utils.data.ConcatDataset(val_ds), np.concatenate(val_labels)
-
-    class_count = Counter(val_labels)
-    before_class_0, before_class_1 = class_count[0], class_count[1]
-
-    ds_leveler = data_leveler()
-    val_ds, val_labels = ds_leveler.flatten_dataset(val_ds, val_labels)
-
-    class_count = Counter(val_labels)
-    after_class_0, after_class_1 = class_count[0], class_count[1]
-
-    output_json["dataset"]["val_labels"] = {"before_leveling": {"empty": before_class_0, "occupied": before_class_1},
-                                            "after_leveling": {"empty": after_class_0, "occupied": after_class_1}}
-
-    change_transform(val_ds, dl_config)
-    train_days, train_labels = train_half[val_days:], new_labels[val_days:]
-    
-    return (train_days, train_labels), pipeline_dataset(val_ds, val_labels)
 
 
 def get_train_val_ds(train_days, days, split, dl_config, output_json, output_location):
@@ -128,7 +107,7 @@ def get_threshold(model, val_ds, dl_config, output_json, days_str):
 def train(model, train_ds, val_ds, epochs, dl_config, output_json, days_str, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-    best_state_dict, best_loss, epoch_id = None, math.inf, -1
+    best_state_dict, best_loss, epoch_id, early_stop_count = None, math.inf, -1, 0
 
     print(f"Refining model - {days_str}")
     output_json["model"][days_str]["epochs"] = {}
@@ -142,8 +121,15 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, days_str, out
             best_state_dict = copy.deepcopy(model.get_state_dict())
             best_loss = val_loss
             epoch_id = (epoch + 1)
+            early_stop_count = 0
+        else:
+            early_stop_count += 1
         
         output_json["model"][days_str]["epochs"][f"epoch_{epoch + 1}"] = val_loss
+
+        if early_stop_count == EARLY_STOP:
+            print("5 attempts - val_loss not decreasing - early stoping")
+            break
     
     output_json["model"][days_str]["best_model"] = {"loss": best_loss, "epoch_id": epoch_id}
 

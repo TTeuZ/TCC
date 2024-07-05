@@ -16,8 +16,10 @@ import math
 import copy
 import json
 
-# -------------------------------------------------- HELPERS ---------------------------------------------------------
+EARLY_STOP = 5
 CLASSIFY_THRESHOLD = 0.95
+
+# -------------------------------------------------- HELPERS ---------------------------------------------------------
 
 def change_transform(dataset, dl_config):
     transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(dl_config["img_size"], antialias=True)])
@@ -30,11 +32,11 @@ def divide_dataset(dataset, train_days):
     return (list(dataset.items())[:train_days], list(dataset.items())[train_days:])
 
 
-def get_train_val_datasets(train_half, new_labels, dl_config, split, output_json):
-    divider = math.ceil(len(train_half) * split)
+def get_train_val_datasets(train_half, new_labels, dl_config, split, days, output_json):
+    divider = (days - math.floor(days * split))
 
-    train_ds, train_labels = train_half[:divider], new_labels[:divider]
-    val_ds, val_labels = train_half[divider:], new_labels[divider:]
+    train_ds, train_labels = train_half[divider:], new_labels[divider:]
+    val_ds, val_labels = train_half[:divider], new_labels[:divider]
 
     train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
     val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]
@@ -98,7 +100,7 @@ def get_threshold(model, val_ds, dl_config, output_json, output_model):
 def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-    best_state_dict, best_loss, epoch_id = None, math.inf, -1
+    best_state_dict, best_loss, epoch_id, early_stop_count = None, math.inf, -1, 0
 
     print("Refining model")
     output_json["model"]["epochs"] = {}
@@ -112,8 +114,15 @@ def train(model, train_ds, val_ds, epochs, dl_config, output_json, output_name):
             best_state_dict = copy.deepcopy(model.get_state_dict())
             best_loss = val_loss
             epoch_id = (epoch + 1)
+            early_stop_count = 0
+        else:
+            early_stop_count += 1
         
         output_json["model"]["epochs"][f"epoch_{epoch + 1}"] = val_loss
+
+        if early_stop_count == EARLY_STOP:
+            print("5 attempts - val_loss not decreasing - early stoping")
+            break
     
     output_json["model"]["best_model"] = {"loss": best_loss, "epoch_id": epoch_id, "model": f"{output_name}.pt"}
 
@@ -177,7 +186,7 @@ def execute(father_module, son_module, config, args):
     output_json["father_model"] = father_model.info()
 
     new_labels = classify(father_model, father_dl_config, train_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
+    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], config["dataset"]["train_days"], output_json)
     test_ds = get_test_dataset(test_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)

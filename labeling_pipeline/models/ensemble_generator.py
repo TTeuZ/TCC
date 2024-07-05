@@ -8,6 +8,8 @@ import torch
 import math
 import copy
 
+EARLY_STOP = 5
+
 class ensemble_generator():
     def __init__(self, config, exp_name):
         self.exp_name = exp_name
@@ -17,7 +19,7 @@ class ensemble_generator():
         self.dl_config = config["fathers"]["dl_config"]
         self.dl_config = {key: self.dl_config.get(key, config["experiment"].get(key)) for key in ["img_size", "batch_size", "num_workers"]}
 
-        self.epochs = 10
+        self.epochs = config["experiment"]["epochs"]
         self.dataset = config["fathers"]["trained_at"]
 
         self.model_module = importlib.import_module(config["fathers"]["module"])
@@ -29,7 +31,7 @@ class ensemble_generator():
     def _train(self, model, train_ds, val_ds, epochs, dl_config):
         train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
         val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
-        best_state_dict, best_loss = None, math.inf
+        best_state_dict, best_loss, early_stop_count = None, math.inf, 0
 
         for epoch in range(epochs):
             print(f"Epoch [{epoch + 1}/{epochs}] Initializing training epoch", end=" ")
@@ -40,8 +42,15 @@ class ensemble_generator():
             if (best_loss - val_loss) > 0.0:
                 best_state_dict = copy.deepcopy(model.get_state_dict())
                 best_loss = val_loss
+                early_stop_count = 0
+            else:
+                early_stop_count += 1
 
             print(f" loss: {val_loss} - best_loss: {best_loss}")
+
+            if early_stop_count == EARLY_STOP:
+                print("5 attempts - val_loss not decreasing - early stoping")
+                break
 
         return best_state_dict
 

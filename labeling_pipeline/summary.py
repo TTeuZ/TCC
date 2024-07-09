@@ -250,6 +250,7 @@ def main(args):
         file.write(f"Son models module: {config['model']['module']}\n")
         file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
         file.write(f"Dataset used: {config['dataset']['path']}\n")
+        file.write(f"Training days: {config['dataset']['train_days']}")
 
         file.write("\n###############################################################\n\n")
 

@@ -1,0 +1,76 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-2",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 2010,
+      "used_images": 1767,
+      "wrong_labels": 12,
+      "empty_wrong": 0,
+      "occupied_wrong": 12
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 629,
+        "occupied": 609
+      },
+      "after_leveling": {
+        "empty": 629,
+        "occupied": 609
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_733c9384-4948-4c1a-91cc-852556ae1937.pt"
+    ],
+    "test": {
+      "accuracy": 0.95078125,
+      "cm": "[[ 818    5]\n [ 121 1616]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_70fc506e-05d6-4727-8a06-9692a7d4afa6.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.934765625,
+      "cm": "[[ 796   27]\n [ 140 1597]]"
+    },
+    "epochs": {
+      "epoch_1": 0.1104777455329895,
+      "epoch_2": 0.12608087062835693,
+      "epoch_3": 0.14504125714302063,
+      "epoch_4": 0.16809140145778656,
+      "epoch_5": 0.19133798778057098,
+      "epoch_6": 0.20029522478580475
+    },
+    "best_model": {
+      "loss": 0.1104777455329895,
+      "epoch_id": 1,
+      "model": "model_CNR-CAMERA-2.pt"
+    },
+    "metrics": {
+      "auc": 0.9966822267659426,
+      "eer": 0.018633540372670808,
+      "threshold": 0.43925654888153076
+    },
+    "pos_refinement": {
+      "accuracy": 0.912890625,
+      "cm": "[[ 822    1]\n [ 222 1515]]"
+    }
+  }
+}

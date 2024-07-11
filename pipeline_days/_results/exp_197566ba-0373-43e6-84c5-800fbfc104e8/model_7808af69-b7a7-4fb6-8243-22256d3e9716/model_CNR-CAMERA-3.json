@@ -1,0 +1,691 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-3",
+    "train_days": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "split": 0.75,
+    "classify": {
+      "all_images": 6325,
+      "used_images": 4454,
+      "wrong_labels": 35,
+      "empty_wrong": 0,
+      "occupied_wrong": 35
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_7808af69-b7a7-4fb6-8243-22256d3e9716.pt"
+    ],
+    "test": {
+      "accuracy": 0.9383443871284697,
+      "cm": "[[1556    1]\n [ 250 2264]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_972ec1fc-19f9-4f1c-a9a0-b6d80f77e0ee.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9228690739376074,
+      "cm": "[[1512   45]\n [ 269 2245]]"
+    },
+    "2_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 89,
+          "occupied": 244
+        },
+        "after_leveling": {
+          "empty": 89,
+          "occupied": 89
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 97,
+          "occupied": 254
+        },
+        "after_leveling": {
+          "empty": 97,
+          "occupied": 97
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.029688334092497826,
+        "epoch_2": 0.005643688607960939,
+        "epoch_3": 0.0033321252558380365,
+        "epoch_4": 0.0028239539824426174,
+        "epoch_5": 0.0022822467144578695,
+        "epoch_6": 0.0016479380428791046,
+        "epoch_7": 0.0012484637554734945,
+        "epoch_8": 0.0010744091123342514,
+        "epoch_9": 0.0010403826599940658,
+        "epoch_10": 0.001066667726263404,
+        "epoch_11": 0.001147664268501103,
+        "epoch_12": 0.0012518567964434624,
+        "epoch_13": 0.0013702444266527891,
+        "epoch_14": 0.0014858217909932137
+      },
+      "best_model": {
+        "loss": 0.0010403826599940658,
+        "epoch_id": 9
+      },
+      "metrics": {
+        "auc": 1.0,
+        "eer": 0.0,
+        "threshold": 0.713662326335907
+      },
+      "pos_refinement": {
+        "accuracy": 0.8228936379267993,
+        "cm": "[[1551    6]\n [ 715 1799]]"
+      }
+    },
+    "3_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 187,
+          "occupied": 458
+        },
+        "after_leveling": {
+          "empty": 187,
+          "occupied": 187
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 97,
+          "occupied": 254
+        },
+        "after_leveling": {
+          "empty": 97,
+          "occupied": 97
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.006827456410974264,
+        "epoch_2": 0.011069316416978836,
+        "epoch_3": 0.007768790237605572,
+        "epoch_4": 0.005896067712455988,
+        "epoch_5": 0.004796274472028017,
+        "epoch_6": 0.003924388438463211,
+        "epoch_7": 0.0034457799047231674,
+        "epoch_8": 0.0031820714939385653,
+        "epoch_9": 0.003010961227118969,
+        "epoch_10": 0.002914926502853632,
+        "epoch_11": 0.002838759683072567,
+        "epoch_12": 0.0027807210572063923,
+        "epoch_13": 0.0027248107362538576,
+        "epoch_14": 0.0026745847426354885,
+        "epoch_15": 0.002634812844917178,
+        "epoch_16": 0.0025851032696664333,
+        "epoch_17": 0.002537405351176858,
+        "epoch_18": 0.0024946797639131546,
+        "epoch_19": 0.002453296910971403,
+        "epoch_20": 0.0024058527778834105
+      },
+      "best_model": {
+        "loss": 0.0024058527778834105,
+        "epoch_id": 20
+      },
+      "metrics": {
+        "auc": 1.0,
+        "eer": 0.0,
+        "threshold": 0.4819164574146271
+      },
+      "pos_refinement": {
+        "accuracy": 0.8278064357651682,
+        "cm": "[[1550    7]\n [ 694 1820]]"
+      }
+    },
+    "4_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 503,
+          "occupied": 458
+        },
+        "after_leveling": {
+          "empty": 458,
+          "occupied": 458
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 97,
+          "occupied": 254
+        },
+        "after_leveling": {
+          "empty": 97,
+          "occupied": 97
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.003051159670576453,
+        "epoch_2": 0.0008737915195524693,
+        "epoch_3": 0.0013348321663215756,
+        "epoch_4": 0.0010215764632448554,
+        "epoch_5": 0.0005624464247375727,
+        "epoch_6": 0.00042781425872817636,
+        "epoch_7": 0.00036715547321364284,
+        "epoch_8": 0.0003231292648706585,
+        "epoch_9": 0.000298367056529969,
+        "epoch_10": 0.00027364882407709956,
+        "epoch_11": 0.00025676179211586714,
+        "epoch_12": 0.0002397326024947688,
+        "epoch_13": 0.00022473504941444844,
+        "epoch_14": 0.00021288474090397358,
+        "epoch_15": 0.00020346597011666745,
+        "epoch_16": 0.00019532610895112157,
+        "epoch_17": 0.00018876424292102456,
+        "epoch_18": 0.00018197840836364776,
+        "epoch_19": 0.00017450781888328493,
+        "epoch_20": 0.00016887095989659429
+      },
+      "best_model": {
+        "loss": 0.00016887095989659429,
+        "epoch_id": 20
+      },
+      "metrics": {
+        "auc": 1.0,
+        "eer": 0.0,
+        "threshold": 0.8221206665039062
+      },
+      "pos_refinement": {
+        "accuracy": 0.7899778924097274,
+        "cm": "[[1552    5]\n [ 850 1664]]"
+      }
+    },
+    "5_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 719,
+          "occupied": 214
+        },
+        "after_leveling": {
+          "empty": 214,
+          "occupied": 214
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 186,
+          "occupied": 498
+        },
+        "after_leveling": {
+          "empty": 186,
+          "occupied": 186
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.1065889373421669,
+        "epoch_2": 0.05647779256105423,
+        "epoch_3": 0.034785374999046326,
+        "epoch_4": 0.025002365931868553,
+        "epoch_5": 0.01985767111182213,
+        "epoch_6": 0.017156219109892845,
+        "epoch_7": 0.015686674043536186,
+        "epoch_8": 0.014892046339809895,
+        "epoch_9": 0.014293606393039227,
+        "epoch_10": 0.013881737366318703,
+        "epoch_11": 0.013607889413833618,
+        "epoch_12": 0.013430444523692131,
+        "epoch_13": 0.013271138072013855,
+        "epoch_14": 0.013127177953720093,
+        "epoch_15": 0.012980576604604721,
+        "epoch_16": 0.01286405511200428,
+        "epoch_17": 0.012774085626006126,
+        "epoch_18": 0.01270994357764721,
+        "epoch_19": 0.012659220024943352,
+        "epoch_20": 0.012661006301641464
+      },
+      "best_model": {
+        "loss": 0.012659220024943352,
+        "epoch_id": 19
+      },
+      "metrics": {
+        "auc": 0.9966759162909007,
+        "eer": 2.7755575615628914e-17,
+        "threshold": 0.354390949010849
+      },
+      "pos_refinement": {
+        "accuracy": 0.835912552198477,
+        "cm": "[[1549    8]\n [ 660 1854]]"
+      }
+    },
+    "6_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 801,
+          "occupied": 451
+        },
+        "after_leveling": {
+          "empty": 451,
+          "occupied": 451
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 186,
+          "occupied": 498
+        },
+        "after_leveling": {
+          "empty": 186,
+          "occupied": 186
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.10280318558216095,
+        "epoch_2": 0.08812832832336426,
+        "epoch_3": 0.08459142595529556,
+        "epoch_4": 0.08405572921037674,
+        "epoch_5": 0.08652469515800476,
+        "epoch_6": 0.08895045518875122,
+        "epoch_7": 0.09123267978429794,
+        "epoch_8": 0.09207937866449356,
+        "epoch_9": 0.09227170050144196
+      },
+      "best_model": {
+        "loss": 0.08405572921037674,
+        "epoch_id": 4
+      },
+      "metrics": {
+        "auc": 0.9976875939414961,
+        "eer": 2.42861286636753e-17,
+        "threshold": 0.7060551047325134
+      },
+      "pos_refinement": {
+        "accuracy": 0.8508965856055023,
+        "cm": "[[1550    7]\n [ 600 1914]]"
+      }
+    },
+    "7_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 884,
+          "occupied": 655
+        },
+        "after_leveling": {
+          "empty": 655,
+          "occupied": 655
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 186,
+          "occupied": 498
+        },
+        "after_leveling": {
+          "empty": 186,
+          "occupied": 186
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.07851098477840424,
+        "epoch_2": 0.07744091004133224,
+        "epoch_3": 0.06931939721107483,
+        "epoch_4": 0.07099194824695587,
+        "epoch_5": 0.07134116441011429,
+        "epoch_6": 0.0733032301068306,
+        "epoch_7": 0.07412362098693848,
+        "epoch_8": 0.07482436299324036
+      },
+      "best_model": {
+        "loss": 0.06931939721107483,
+        "epoch_id": 3
+      },
+      "metrics": {
+        "auc": 0.9995953289397619,
+        "eer": 1.0408340855860843e-17,
+        "threshold": 0.8865441083908081
+      },
+      "pos_refinement": {
+        "accuracy": 0.8275607958732498,
+        "cm": "[[1555    2]\n [ 700 1814]]"
+      }
+    },
+    "8_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1220,
+          "occupied": 675
+        },
+        "after_leveling": {
+          "empty": 675,
+          "occupied": 675
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 186,
+          "occupied": 498
+        },
+        "after_leveling": {
+          "empty": 186,
+          "occupied": 186
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.05671442300081253,
+        "epoch_2": 0.0765736773610115,
+        "epoch_3": 0.08753683418035507,
+        "epoch_4": 0.08386579900979996,
+        "epoch_5": 0.08369698375463486,
+        "epoch_6": 0.07879182696342468
+      },
+      "best_model": {
+        "loss": 0.05671442300081253,
+        "epoch_id": 1
+      },
+      "metrics": {
+        "auc": 0.9991039426523298,
+        "eer": 0.005376344086021487,
+        "threshold": 0.8620688915252686
+      },
+      "pos_refinement": {
+        "accuracy": 0.8167526406288381,
+        "cm": "[[1554    3]\n [ 743 1771]]"
+      }
+    },
+    "9_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1212,
+          "occupied": 709
+        },
+        "after_leveling": {
+          "empty": 709,
+          "occupied": 709
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 284,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 284,
+          "occupied": 284
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.07972025126218796,
+        "epoch_2": 0.03188697248697281,
+        "epoch_3": 0.15199297666549683,
+        "epoch_4": 0.11175647377967834,
+        "epoch_5": 0.09311734139919281,
+        "epoch_6": 0.09315206110477448,
+        "epoch_7": 0.09124994277954102
+      },
+      "best_model": {
+        "loss": 0.03188697248697281,
+        "epoch_id": 2
+      },
+      "metrics": {
+        "auc": 0.9998884149970244,
+        "eer": 0.003521126760563371,
+        "threshold": 0.7766638398170471
+      },
+      "pos_refinement": {
+        "accuracy": 0.8626873004175878,
+        "cm": "[[1551    6]\n [ 553 1961]]"
+      }
+    },
+    "10_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1273,
+          "occupied": 906
+        },
+        "after_leveling": {
+          "empty": 906,
+          "occupied": 906
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 284,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 284,
+          "occupied": 284
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.029951125383377075,
+        "epoch_2": 0.10029640048742294,
+        "epoch_3": 0.03626374900341034,
+        "epoch_4": 0.033834267407655716,
+        "epoch_5": 0.030715713277459145,
+        "epoch_6": 0.029845433309674263,
+        "epoch_7": 0.027837518602609634,
+        "epoch_8": 0.026880202814936638,
+        "epoch_9": 0.02633572556078434,
+        "epoch_10": 0.02703098952770233,
+        "epoch_11": 0.024978116154670715,
+        "epoch_12": 0.025196881964802742,
+        "epoch_13": 0.0256572924554348,
+        "epoch_14": 0.02506595104932785,
+        "epoch_15": 0.023965461179614067,
+        "epoch_16": 0.02171708270907402,
+        "epoch_17": 0.02163301408290863,
+        "epoch_18": 0.023051006719470024,
+        "epoch_19": 0.02140873111784458,
+        "epoch_20": 0.022216016426682472
+      },
+      "best_model": {
+        "loss": 0.02140873111784458,
+        "epoch_id": 19
+      },
+      "metrics": {
+        "auc": 0.9999752033326721,
+        "eer": 0.003521126760563371,
+        "threshold": 0.902901828289032
+      },
+      "pos_refinement": {
+        "accuracy": 0.8459837877671333,
+        "cm": "[[1553    4]\n [ 623 1891]]"
+      }
+    },
+    "11_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1344,
+          "occupied": 1107
+        },
+        "after_leveling": {
+          "empty": 1107,
+          "occupied": 1107
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 284,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 284,
+          "occupied": 284
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.0736004188656807,
+        "epoch_2": 0.0521889291703701,
+        "epoch_3": 0.048825833946466446,
+        "epoch_4": 0.052899520844221115,
+        "epoch_5": 0.05484256148338318,
+        "epoch_6": 0.05241581052541733,
+        "epoch_7": 0.052622124552726746,
+        "epoch_8": 0.054125722497701645
+      },
+      "best_model": {
+        "loss": 0.048825833946466446,
+        "epoch_id": 3
+      },
+      "metrics": {
+        "auc": 0.9999628049990081,
+        "eer": 0.0035211267605633804,
+        "threshold": 0.902513325214386
+      },
+      "pos_refinement": {
+        "accuracy": 0.8558093834438713,
+        "cm": "[[1554    3]\n [ 584 1930]]"
+      }
+    },
+    "12_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1441,
+          "occupied": 1358
+        },
+        "after_leveling": {
+          "empty": 1441,
+          "occupied": 1358
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 284,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 284,
+          "occupied": 284
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.024094266816973686,
+        "epoch_2": 0.1088796928524971,
+        "epoch_3": 0.09990091621875763,
+        "epoch_4": 0.10342297703027725,
+        "epoch_5": 0.10649824142456055,
+        "epoch_6": 0.10519304871559143
+      },
+      "best_model": {
+        "loss": 0.024094266816973686,
+        "epoch_id": 1
+      },
+      "metrics": {
+        "auc": 0.9997768299940488,
+        "eer": 0.003521126760563366,
+        "threshold": 0.7974743247032166
+      },
+      "pos_refinement": {
+        "accuracy": 0.8558093834438713,
+        "cm": "[[1553    4]\n [ 583 1931]]"
+      }
+    },
+    "13_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1391,
+          "occupied": 1396
+        },
+        "after_leveling": {
+          "empty": 1391,
+          "occupied": 1396
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 600,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 600,
+          "occupied": 600
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.050447702407836914,
+        "epoch_2": 0.030455922707915306,
+        "epoch_3": 0.07930836826562881,
+        "epoch_4": 0.04232616350054741,
+        "epoch_5": 0.0813266858458519,
+        "epoch_6": 0.07875639200210571,
+        "epoch_7": 0.07495886087417603
+      },
+      "best_model": {
+        "loss": 0.030455922707915306,
+        "epoch_id": 2
+      },
+      "metrics": {
+        "auc": 0.9997611111111111,
+        "eer": 0.0016666666666666236,
+        "threshold": 0.7625225782394409
+      },
+      "pos_refinement": {
+        "accuracy": 0.8757062146892656,
+        "cm": "[[1553    4]\n [ 502 2012]]"
+      }
+    },
+    "14_days": {
+      "train_labels": {
+        "before_leveling": {
+          "empty": 1488,
+          "occupied": 1654
+        },
+        "after_leveling": {
+          "empty": 1488,
+          "occupied": 1488
+        }
+      },
+      "val_labels": {
+        "before_leveling": {
+          "empty": 600,
+          "occupied": 712
+        },
+        "after_leveling": {
+          "empty": 600,
+          "occupied": 600
+        }
+      },
+      "epochs": {
+        "epoch_1": 0.04707590490579605,
+        "epoch_2": 0.0682549998164177,
+        "epoch_3": 0.0532628633081913,
+        "epoch_4": 0.07593151181936264,
+        "epoch_5": 0.07495410740375519,
+        "epoch_6": 0.07406103610992432
+      },
+      "best_model": {
+        "loss": 0.04707590490579605,
+        "epoch_id": 1
+      },
+      "metrics": {
+        "auc": 0.9998916666666666,
+        "eer": 0.001666666666666671,
+        "threshold": 0.8611313700675964
+      },
+      "pos_refinement": {
+        "accuracy": 0.8614591009579956,
+        "cm": "[[1552    5]\n [ 559 1955]]"
+      }
+    }
+  }
+}

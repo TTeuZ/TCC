@@ -1,4 +1,4 @@
-# Latest Checkpoint
+# Checkpoint 13
 ## Changes
 In this checkpoint 2 major changes were made.
 

@@ -17,7 +17,7 @@ import copy
 import json
 
 EARLY_STOP = 5
-CLASSIFY_THRESHOLD = 0.95
+CLASSIFY_THRESHOLD = 0.90
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
@@ -33,10 +33,10 @@ def divide_dataset(dataset, train_days):
 
 
 def get_train_val_datasets(train_half, new_labels, dl_config, split, days, output_json):
-    divider = (days - math.floor(days * split))
+    divider = math.floor(len(train_half) * split)
 
-    train_ds, train_labels = train_half[divider:], new_labels[divider:]
-    val_ds, val_labels = train_half[:divider], new_labels[:divider]
+    train_ds, train_labels = train_half[:divider], new_labels[:divider]
+    val_ds, val_labels = train_half[divider:], new_labels[divider:]
 
     train_ds, train_labels = [date[1] for date in train_ds], [label[1] for label in train_labels]
     val_ds, val_labels = [date[1] for date in val_ds], [label[1] for label in val_labels]

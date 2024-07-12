@@ -1,5 +1,11 @@
 # Latest Checkpoint
-**WIP**
+## Changes
+In this checkpoint 2 major changes were made.
+
+1. The datasets were recroped with a newer version
+2. The labeling_pipeline train/val split were setted to be the same as in the pipeline_days
+
+Also, we ran a ton of experiments to collect results.
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.

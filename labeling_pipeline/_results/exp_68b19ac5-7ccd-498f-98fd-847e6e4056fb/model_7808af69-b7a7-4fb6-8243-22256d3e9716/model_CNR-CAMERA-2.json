@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-2",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 1420,
+      "used_images": 1274,
+      "wrong_labels": 3,
+      "empty_wrong": 0,
+      "occupied_wrong": 3
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 512,
+        "occupied": 585
+      },
+      "after_leveling": {
+        "empty": 512,
+        "occupied": 512
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_7808af69-b7a7-4fb6-8243-22256d3e9716.pt"
+    ],
+    "test": {
+      "accuracy": 0.9577777777777777,
+      "cm": "[[1041    5]\n [ 128 1976]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_972ec1fc-19f9-4f1c-a9a0-b6d80f77e0ee.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.932063492063492,
+      "cm": "[[ 992   54]\n [ 160 1944]]"
+    },
+    "epochs": {
+      "epoch_1": 0.009390643797814846,
+      "epoch_2": 0.009853149764239788,
+      "epoch_3": 0.0021158133167773485,
+      "epoch_4": 0.0014155899407342076,
+      "epoch_5": 0.0013604772975668311,
+      "epoch_6": 0.0019892381969839334,
+      "epoch_7": 0.0028817374259233475,
+      "epoch_8": 0.002330619841814041,
+      "epoch_9": 0.0026976715307682753,
+      "epoch_10": 0.0028704488649964333
+    },
+    "best_model": {
+      "loss": 0.0013604772975668311,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-2.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.8895764350891113
+    },
+    "pos_refinement": {
+      "accuracy": 0.8590476190476191,
+      "cm": "[[1044    2]\n [ 442 1662]]"
+    }
+  }
+}

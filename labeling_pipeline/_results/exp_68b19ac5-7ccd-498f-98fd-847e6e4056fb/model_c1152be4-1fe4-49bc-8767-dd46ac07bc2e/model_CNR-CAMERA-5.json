@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-5",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 6672,
+      "used_images": 5745,
+      "wrong_labels": 9,
+      "empty_wrong": 0,
+      "occupied_wrong": 9
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2449,
+        "occupied": 2481
+      },
+      "after_leveling": {
+        "empty": 2449,
+        "occupied": 2481
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_c1152be4-1fe4-49bc-8767-dd46ac07bc2e.pt"
+    ],
+    "test": {
+      "accuracy": 0.9671957671957672,
+      "cm": "[[6744   30]\n [ 466 7880]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/PKLot/model_a242d2fe-7ef2-46fd-9f6e-b4c2989f8ac6.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9266534391534391,
+      "cm": "[[6648  126]\n [ 983 7363]]"
+    },
+    "epochs": {
+      "epoch_1": 0.017169440165162086,
+      "epoch_2": 0.003947543911635876,
+      "epoch_3": 0.03117077611386776,
+      "epoch_4": 0.009360959753394127,
+      "epoch_5": 0.003941025584936142,
+      "epoch_6": 0.017602544277906418,
+      "epoch_7": 0.014867093414068222,
+      "epoch_8": 0.012993574142456055,
+      "epoch_9": 0.014427946880459785,
+      "epoch_10": 0.015653643757104874
+    },
+    "best_model": {
+      "loss": 0.003941025584936142,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-5.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.47413453459739685
+    },
+    "pos_refinement": {
+      "accuracy": 0.9544312169312169,
+      "cm": "[[6732   42]\n [ 647 7699]]"
+    }
+  }
+}

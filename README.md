@@ -1,11 +1,5 @@
 # Latest Checkpoint
-## Changes
-In this checkpoint 2 major changes were made.
-
-1. The datasets were recroped with a newer version
-2. The labeling_pipeline train/val split were setted to be the same as in the pipeline_days
-
-Also, we ran a ton of experiments to collect results.
+**WIP**
 
 ## Datasets
 The datasets used aren't stored in this repository, you will need a copy of PKLot2.0 and CNRPark-EXT to reproduce the experiments.
@@ -38,5 +32,6 @@ Long story short, the main branch can reproduce the **latest version of the resu
 - checkpoint_8: There you can find the labeling pipeline V3 script. Also, here we have the fisrt use of the custom 3-layer CNN;
 - checkpoint_9: There you can find the labeling pipeline v5 script. Also, small modifications were made in the cross testing script;
 - checkpoint_10: There you can find the first ensemble implementation in the labeling pipeline;
-- checkpoint_11: There you can find the first implementation of the pipeline_days and also the labeling pipeline change that allows to specify training days quantity.
-- checkpoint_12: There you can find the pipeline_days second version script, that modifies a little the train/val split, and also the first tests with the residual_net and skip_net.
+- checkpoint_11: There you can find the first implementation of the pipeline_days and also the labeling pipeline change that allows to specify training days quantity;
+- checkpoint_12: There you can find the pipeline_days second version script, that modifies a little the train/val split, and also the first tests with the residual_net and skip_net;
+- checkpoint_13: There you can find the first results with the new dataset and the old train/val split criteria.

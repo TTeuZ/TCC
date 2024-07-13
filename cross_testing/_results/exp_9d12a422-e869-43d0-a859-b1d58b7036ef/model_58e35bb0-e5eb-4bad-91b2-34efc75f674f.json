@@ -1,0 +1,68 @@
+{
+  "experiment": {
+    "type": "transfer_learning",
+    "dl_config": {
+      "img_size": [
+        128,
+        128
+      ],
+      "batch_size": 1000,
+      "num_workers": 6
+    },
+    "model_config": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0",
+      "module": "tools.models.mobilenet_v3_large"
+    }
+  },
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "train": "CNRParkEXTSegmented",
+    "test": "PKLotSegmented",
+    "train_val_split": 0.7
+  },
+  "epochs": {
+    "epoch_1": 0.0597206010714556,
+    "epoch_2": 0.07307993598985155,
+    "epoch_3": 0.07097430764081655,
+    "epoch_4": 0.08103419169999926,
+    "epoch_5": 0.09301293980417286,
+    "epoch_6": 0.10142019860234842
+  },
+  "best_model": {
+    "loss": 0.0597206010714556,
+    "epoch_id": 1,
+    "model": "model_58e35bb0-e5eb-4bad-91b2-34efc75f674f.pt"
+  },
+  "metrics": {
+    "auc": 0.9979367323977162,
+    "eer": 0.0002748763056624019,
+    "threshold": 0.48712554574012756
+  },
+  "test": {
+    "subsets": {
+      "UFPR04": {
+        "accuracy": 0.9080354651703506,
+        "cm": "[[58001  9110]\n [ 2756 59161]]"
+      },
+      "PUCPR": {
+        "accuracy": 0.93567506848687,
+        "cm": "[[459838  40444]\n [ 15675 356473]]"
+      },
+      "UFPR05": {
+        "accuracy": 0.9424057620524683,
+        "cm": "[[ 70901   9938]\n [  1017 108354]]"
+      }
+    },
+    "average": {
+      "accuracy": 0.9287054319032296,
+      "cm": "[[588740  59492]\n [ 19448 523988]]"
+    }
+  }
+}

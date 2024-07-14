@@ -1,0 +1,84 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "PUCPR",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 165555,
+      "used_images": 96574,
+      "wrong_labels": 130,
+      "empty_wrong": 96,
+      "occupied_wrong": 34
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 18639,
+        "occupied": 45347
+      },
+      "after_leveling": {
+        "empty": 18639,
+        "occupied": 18639
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_b52709b5-e9ec-43f8-b446-a22471c743be.pt"
+    ],
+    "test": {
+      "accuracy": 0.9549679929266136,
+      "cm": "[[391086  17035]\n [ 14797 283957]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/models/model_d973d949-af3b-4e64-b3c0-fde769f0e454.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8355310344827587,
+      "cm": "[[297523 110598]\n [  5661 293093]]"
+    },
+    "epochs": {
+      "epoch_1": 0.008962976187899183,
+      "epoch_2": 0.004156237177898365,
+      "epoch_3": 0.0027762255559029315,
+      "epoch_4": 0.008420382417119714,
+      "epoch_5": 0.004585203414050163,
+      "epoch_6": 0.007183844605417602,
+      "epoch_7": 0.007675830660681621,
+      "epoch_8": 0.009724244900562663
+    },
+    "best_model": {
+      "loss": 0.0027762255559029315,
+      "epoch_id": 3,
+      "model": "model_PUCPR.pt"
+    },
+    "metrics": {
+      "auc": 0.9999964885704431,
+      "eer": 6.815238874120723e-05,
+      "threshold": 0.43271318078041077
+    },
+    "pos_refinement": {
+      "accuracy": 0.9775448275862069,
+      "cm": "[[397783  10338]\n [  5535 293219]]"
+    }
+  }
+}

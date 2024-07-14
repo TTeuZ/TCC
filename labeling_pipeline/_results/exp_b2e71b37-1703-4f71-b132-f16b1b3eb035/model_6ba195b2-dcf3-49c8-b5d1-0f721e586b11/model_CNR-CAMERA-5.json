@@ -1,0 +1,81 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-5",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 6672,
+      "used_images": 5956,
+      "wrong_labels": 24,
+      "empty_wrong": 0,
+      "occupied_wrong": 24
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2373,
+        "occupied": 1871
+      },
+      "after_leveling": {
+        "empty": 1871,
+        "occupied": 1871
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_6ba195b2-dcf3-49c8-b5d1-0f721e586b11.pt"
+    ],
+    "test": {
+      "accuracy": 0.9672619047619048,
+      "cm": "[[6743   31]\n [ 464 7882]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_7c23f00a-2bfe-4852-b63e-48b28115c572.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9179232804232804,
+      "cm": "[[6639  135]\n [1106 7240]]"
+    },
+    "epochs": {
+      "epoch_1": 0.10734633356332779,
+      "epoch_2": 0.07962111383676529,
+      "epoch_3": 0.0812714546918869,
+      "epoch_4": 0.08398503810167313,
+      "epoch_5": 0.07447583228349686,
+      "epoch_6": 0.06107189133763313,
+      "epoch_7": 0.0700707882642746,
+      "epoch_8": 0.07173777371644974,
+      "epoch_9": 0.06251129508018494,
+      "epoch_10": 0.06694579869508743,
+      "epoch_11": 0.06804530322551727
+    },
+    "best_model": {
+      "loss": 0.06107189133763313,
+      "epoch_id": 6,
+      "model": "model_CNR-CAMERA-5.pt"
+    },
+    "metrics": {
+      "auc": 0.9986747473494947,
+      "eer": 2.7755575615628914e-17,
+      "threshold": 0.3099392354488373
+    },
+    "pos_refinement": {
+      "accuracy": 0.9300925925925926,
+      "cm": "[[6749   25]\n [1032 7314]]"
+    }
+  }
+}

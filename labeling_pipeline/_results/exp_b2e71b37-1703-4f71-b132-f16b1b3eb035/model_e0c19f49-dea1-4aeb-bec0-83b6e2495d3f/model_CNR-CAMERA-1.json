@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-1",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 4089,
+      "used_images": 2881,
+      "wrong_labels": 14,
+      "empty_wrong": 11,
+      "occupied_wrong": 3
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 1019,
+        "occupied": 1037
+      },
+      "after_leveling": {
+        "empty": 1019,
+        "occupied": 1037
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_e0c19f49-dea1-4aeb-bec0-83b6e2495d3f.pt"
+    ],
+    "test": {
+      "accuracy": 0.9462246368777026,
+      "cm": "[[3256  172]\n [ 313 5278]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_f8cf2473-dff8-4b96-85be-8d0d8684f251.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8901208559707284,
+      "cm": "[[3328  100]\n [ 891 4700]]"
+    },
+    "epochs": {
+      "epoch_1": 0.1439526230096817,
+      "epoch_2": 0.1341923177242279,
+      "epoch_3": 0.13196849822998047,
+      "epoch_4": 0.16594290733337402,
+      "epoch_5": 0.12278146296739578,
+      "epoch_6": 0.15008991956710815,
+      "epoch_7": 0.13190531730651855,
+      "epoch_8": 0.1466616541147232,
+      "epoch_9": 0.17109674215316772,
+      "epoch_10": 0.1320660561323166
+    },
+    "best_model": {
+      "loss": 0.12278146296739578,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-1.pt"
+    },
+    "metrics": {
+      "auc": 0.9970414201183432,
+      "eer": 4.163336342344337e-17,
+      "threshold": 0.11776084452867508
+    },
+    "pos_refinement": {
+      "accuracy": 0.9373544738884577,
+      "cm": "[[3301  127]\n [ 438 5153]]"
+    }
+  }
+}

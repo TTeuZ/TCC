@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-6",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 6768,
+      "used_images": 5747,
+      "wrong_labels": 20,
+      "empty_wrong": 0,
+      "occupied_wrong": 20
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2392,
+        "occupied": 1712
+      },
+      "after_leveling": {
+        "empty": 1712,
+        "occupied": 1712
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_6ba195b2-dcf3-49c8-b5d1-0f721e586b11.pt"
+    ],
+    "test": {
+      "accuracy": 0.9677547770700637,
+      "cm": "[[6820  101]\n [ 385 7766]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_7c23f00a-2bfe-4852-b63e-48b28115c572.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9392250530785563,
+      "cm": "[[6758  163]\n [ 753 7398]]"
+    },
+    "epochs": {
+      "epoch_1": 0.03141940385103226,
+      "epoch_2": 0.03769906237721443,
+      "epoch_3": 0.03843139484524727,
+      "epoch_4": 0.03883497044444084,
+      "epoch_5": 0.027681080624461174,
+      "epoch_6": 0.03270190581679344,
+      "epoch_7": 0.03226913511753082,
+      "epoch_8": 0.0331442728638649,
+      "epoch_9": 0.041841648519039154,
+      "epoch_10": 0.0288531556725502
+    },
+    "best_model": {
+      "loss": 0.027681080624461174,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-6.pt"
+    },
+    "metrics": {
+      "auc": 0.9999203190425536,
+      "eer": 5.204170427930421e-18,
+      "threshold": 0.15827277302742004
+    },
+    "pos_refinement": {
+      "accuracy": 0.948911889596603,
+      "cm": "[[6833   88]\n [ 682 7469]]"
+    }
+  }
+}

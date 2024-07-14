@@ -1,0 +1,79 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-4",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 5421,
+      "used_images": 4854,
+      "wrong_labels": 5,
+      "empty_wrong": 0,
+      "occupied_wrong": 5
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 1887,
+        "occupied": 1586
+      },
+      "after_leveling": {
+        "empty": 1586,
+        "occupied": 1586
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_6ba195b2-dcf3-49c8-b5d1-0f721e586b11.pt"
+    ],
+    "test": {
+      "accuracy": 0.976095947063689,
+      "cm": "[[5116   27]\n [ 262 6685]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_7c23f00a-2bfe-4852-b63e-48b28115c572.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9572373862696444,
+      "cm": "[[4998  145]\n [ 372 6575]]"
+    },
+    "epochs": {
+      "epoch_1": 0.007850623689591885,
+      "epoch_2": 0.0055291117168962955,
+      "epoch_3": 0.005526613909751177,
+      "epoch_4": 0.004057145211845636,
+      "epoch_5": 0.005770884454250336,
+      "epoch_6": 0.005788541864603758,
+      "epoch_7": 0.004794168286025524,
+      "epoch_8": 0.0050303577445447445,
+      "epoch_9": 0.0045743356458842754
+    },
+    "best_model": {
+      "loss": 0.004057145211845636,
+      "epoch_id": 4,
+      "model": "model_CNR-CAMERA-4.pt"
+    },
+    "metrics": {
+      "auc": 0.9999935907707098,
+      "eer": 1.3444106938820255e-17,
+      "threshold": 0.43932271003723145
+    },
+    "pos_refinement": {
+      "accuracy": 0.9376344086021505,
+      "cm": "[[5141    2]\n [ 752 6195]]"
+    }
+  }
+}

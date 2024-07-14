@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-2",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 1420,
+      "used_images": 1237,
+      "wrong_labels": 2,
+      "empty_wrong": 0,
+      "occupied_wrong": 2
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 454,
+        "occupied": 420
+      },
+      "after_leveling": {
+        "empty": 454,
+        "occupied": 420
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_ea713e4b-f032-41f1-83ba-3f52a58b83cd.pt"
+    ],
+    "test": {
+      "accuracy": 0.9580952380952381,
+      "cm": "[[1036   10]\n [ 122 1982]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_c829da7e-c564-4778-be75-01b50ad970d4.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9726984126984127,
+      "cm": "[[ 999   47]\n [  39 2065]]"
+    },
+    "epochs": {
+      "epoch_1": 0.0029780599288642406,
+      "epoch_2": 0.0031705154106020927,
+      "epoch_3": 0.0024323228280991316,
+      "epoch_4": 0.0021001033019274473,
+      "epoch_5": 0.001983015099540353,
+      "epoch_6": 0.002189477439969778,
+      "epoch_7": 0.0025706400629132986,
+      "epoch_8": 0.002583862515166402,
+      "epoch_9": 0.0027436527889221907,
+      "epoch_10": 0.0027161745820194483
+    },
+    "best_model": {
+      "loss": 0.001983015099540353,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-2.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.6838359236717224
+    },
+    "pos_refinement": {
+      "accuracy": 0.9206349206349206,
+      "cm": "[[1043    3]\n [ 247 1857]]"
+    }
+  }
+}

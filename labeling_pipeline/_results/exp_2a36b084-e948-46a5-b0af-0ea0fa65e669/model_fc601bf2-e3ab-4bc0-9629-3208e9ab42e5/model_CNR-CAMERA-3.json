@@ -1,0 +1,80 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-3",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 3220,
+      "used_images": 2693,
+      "wrong_labels": 46,
+      "empty_wrong": 0,
+      "occupied_wrong": 46
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 1197,
+        "occupied": 775
+      },
+      "after_leveling": {
+        "empty": 775,
+        "occupied": 775
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_fc601bf2-e3ab-4bc0-9629-3208e9ab42e5.pt"
+    ],
+    "test": {
+      "accuracy": 0.9463489409141583,
+      "cm": "[[2979    6]\n [ 379 3812]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/models/model_c983b39c-4fcd-47bd-8ba4-9fa4e8ce3525.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9289297658862876,
+      "cm": "[[2935   50]\n [ 460 3731]]"
+    },
+    "epochs": {
+      "epoch_1": 0.23741844296455383,
+      "epoch_2": 0.1637539118528366,
+      "epoch_3": 0.17293104529380798,
+      "epoch_4": 0.30293264985084534,
+      "epoch_5": 0.16213706135749817,
+      "epoch_6": 0.19713082909584045,
+      "epoch_7": 0.21143120527267456,
+      "epoch_8": 0.21366523206233978,
+      "epoch_9": 0.21509230136871338,
+      "epoch_10": 0.21726547181606293
+    },
+    "best_model": {
+      "loss": 0.16213706135749817,
+      "epoch_id": 5,
+      "model": "model_CNR-CAMERA-3.pt"
+    },
+    "metrics": {
+      "auc": 0.9970442974008886,
+      "eer": 0.004366812227074208,
+      "threshold": 0.6246832013130188
+    },
+    "pos_refinement": {
+      "accuracy": 0.8886566332218506,
+      "cm": "[[2967   18]\n [ 781 3410]]"
+    }
+  }
+}

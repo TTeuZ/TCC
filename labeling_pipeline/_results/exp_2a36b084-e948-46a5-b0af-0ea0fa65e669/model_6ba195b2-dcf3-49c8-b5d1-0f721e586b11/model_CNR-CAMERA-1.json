@@ -1,0 +1,79 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-1",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 4089,
+      "used_images": 2900,
+      "wrong_labels": 15,
+      "empty_wrong": 14,
+      "occupied_wrong": 1
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 949,
+        "occupied": 1079
+      },
+      "after_leveling": {
+        "empty": 949,
+        "occupied": 949
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_6ba195b2-dcf3-49c8-b5d1-0f721e586b11.pt"
+    ],
+    "test": {
+      "accuracy": 0.9479986694755516,
+      "cm": "[[3231  197]\n [ 272 5319]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/models/model_12ac3a6e-8596-4804-8b16-7564a101df6a.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.799423439405699,
+      "cm": "[[3341   87]\n [1722 3869]]"
+    },
+    "epochs": {
+      "epoch_1": 0.11987185478210449,
+      "epoch_2": 0.07904038578271866,
+      "epoch_3": 0.09671726077795029,
+      "epoch_4": 0.07591567188501358,
+      "epoch_5": 0.09541912376880646,
+      "epoch_6": 0.09712263196706772,
+      "epoch_7": 0.08556745201349258,
+      "epoch_8": 0.08175545185804367,
+      "epoch_9": 0.08443109691143036
+    },
+    "best_model": {
+      "loss": 0.07591567188501358,
+      "epoch_id": 4,
+      "model": "model_CNR-CAMERA-1.pt"
+    },
+    "metrics": {
+      "auc": 0.9999265381083563,
+      "eer": 0.006060606060606022,
+      "threshold": 0.023366156965494156
+    },
+    "pos_refinement": {
+      "accuracy": 0.9509923494844218,
+      "cm": "[[3271  157]\n [ 285 5306]]"
+    }
+  }
+}

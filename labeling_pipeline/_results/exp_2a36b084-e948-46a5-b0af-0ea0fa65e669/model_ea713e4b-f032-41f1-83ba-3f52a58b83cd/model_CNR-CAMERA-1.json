@@ -1,0 +1,81 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-1",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 4089,
+      "used_images": 2555,
+      "wrong_labels": 11,
+      "empty_wrong": 10,
+      "occupied_wrong": 1
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 849,
+        "occupied": 942
+      },
+      "after_leveling": {
+        "empty": 849,
+        "occupied": 849
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "PUCPR.pt",
+      "UFPR04.pt",
+      "UFPR05.pt",
+      "model_ea713e4b-f032-41f1-83ba-3f52a58b83cd.pt"
+    ],
+    "test": {
+      "accuracy": 0.9447832353919503,
+      "cm": "[[3243  185]\n [ 313 5278]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/models/model_01f909e9-f5b1-4f19-920c-174b3edd44c9.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8731566692537975,
+      "cm": "[[3324  104]\n [1040 4551]]"
+    },
+    "epochs": {
+      "epoch_1": 0.03796520456671715,
+      "epoch_2": 0.07898636907339096,
+      "epoch_3": 0.053158629685640335,
+      "epoch_4": 0.0327061265707016,
+      "epoch_5": 0.01380800548940897,
+      "epoch_6": 0.0004288055934011936,
+      "epoch_7": 0.19679352641105652,
+      "epoch_8": 0.024798870086669922,
+      "epoch_9": 0.03649153187870979,
+      "epoch_10": 0.041237663477659225,
+      "epoch_11": 0.038967300206422806
+    },
+    "best_model": {
+      "loss": 0.0004288055934011936,
+      "epoch_id": 6,
+      "model": "model_CNR-CAMERA-1.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.5681447386741638
+    },
+    "pos_refinement": {
+      "accuracy": 0.9212773034704512,
+      "cm": "[[3339   89]\n [ 621 4970]]"
+    }
+  }
+}

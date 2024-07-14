@@ -1,0 +1,84 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "UFPR05",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 32292,
+      "used_images": 18613,
+      "wrong_labels": 27,
+      "empty_wrong": 26,
+      "occupied_wrong": 1
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 6149,
+        "occupied": 8767
+      },
+      "after_leveling": {
+        "empty": 6149,
+        "occupied": 6149
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_5c7500bf-70db-450b-927c-6c397a8aa42e.pt"
+    ],
+    "test": {
+      "accuracy": 0.9624108714649375,
+      "cm": "[[54727  5161]\n [  775 97255]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_e0ba6bbb-d1fb-465f-baec-2e2e3c6949c3.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.7647829886396738,
+      "cm": "[[23292 36596]\n [  549 97481]]"
+    },
+    "epochs": {
+      "epoch_1": 0.07656979560852051,
+      "epoch_2": 0.17134462296962738,
+      "epoch_3": 0.06420610100030899,
+      "epoch_4": 0.08831757307052612,
+      "epoch_5": 0.12125610560178757,
+      "epoch_6": 0.11814624071121216,
+      "epoch_7": 0.13513092696666718,
+      "epoch_8": 0.14989164471626282
+    },
+    "best_model": {
+      "loss": 0.06420610100030899,
+      "epoch_id": 3,
+      "model": "model_UFPR05.pt"
+    },
+    "metrics": {
+      "auc": 0.9972895389663583,
+      "eer": 3.642919299551295e-17,
+      "threshold": 0.4819442629814148
+    },
+    "pos_refinement": {
+      "accuracy": 0.9870375764637344,
+      "cm": "[[58571  1317]\n [  730 97300]]"
+    }
+  }
+}

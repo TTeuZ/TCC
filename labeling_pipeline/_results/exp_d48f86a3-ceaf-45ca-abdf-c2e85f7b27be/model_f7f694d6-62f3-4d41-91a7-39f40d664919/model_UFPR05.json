@@ -1,0 +1,83 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "UFPR05",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 32292,
+      "used_images": 20006,
+      "wrong_labels": 38,
+      "empty_wrong": 36,
+      "occupied_wrong": 2
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 7016,
+        "occupied": 8952
+      },
+      "after_leveling": {
+        "empty": 7016,
+        "occupied": 7016
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_f7f694d6-62f3-4d41-91a7-39f40d664919.pt"
+    ],
+    "test": {
+      "accuracy": 0.9590357020732279,
+      "cm": "[[54089  5799]\n [  670 97360]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_fdea821d-b7c9-48b3-9ced-0b477ff5c871.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.7449309135120759,
+      "cm": "[[21184 38704]\n [ 1576 96454]]"
+    },
+    "epochs": {
+      "epoch_1": 0.08561167865991592,
+      "epoch_2": 0.06596089899539948,
+      "epoch_3": 0.0885997861623764,
+      "epoch_4": 0.08638020604848862,
+      "epoch_5": 0.11851134896278381,
+      "epoch_6": 0.07348757982254028,
+      "epoch_7": 0.09255654364824295
+    },
+    "best_model": {
+      "loss": 0.06596089899539948,
+      "epoch_id": 2,
+      "model": "model_UFPR05.pt"
+    },
+    "metrics": {
+      "auc": 0.9973698617522793,
+      "eer": 2.0816681711721685e-17,
+      "threshold": 0.4542853534221649
+    },
+    "pos_refinement": {
+      "accuracy": 0.9661596524778683,
+      "cm": "[[56195  3693]\n [ 1651 96379]]"
+    }
+  }
+}

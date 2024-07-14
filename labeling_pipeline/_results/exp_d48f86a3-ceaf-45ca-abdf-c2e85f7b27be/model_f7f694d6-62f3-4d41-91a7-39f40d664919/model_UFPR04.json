@@ -1,0 +1,83 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "UFPR04",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 27935,
+      "used_images": 21256,
+      "wrong_labels": 130,
+      "empty_wrong": 19,
+      "occupied_wrong": 111
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 3593,
+        "occupied": 11052
+      },
+      "after_leveling": {
+        "empty": 3593,
+        "occupied": 3593
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_f7f694d6-62f3-4d41-91a7-39f40d664919.pt"
+    ],
+    "test": {
+      "accuracy": 0.9128327381717825,
+      "cm": "[[51458  6408]\n [ 2404 40823]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/residual/models/model_fdea821d-b7c9-48b3-9ced-0b477ff5c871.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.6213585510371638,
+      "cm": "[[20201 37665]\n [  613 42614]]"
+    },
+    "epochs": {
+      "epoch_1": 0.0166559582751798,
+      "epoch_2": 0.014486758068720816,
+      "epoch_3": 0.015236096949700047,
+      "epoch_4": 0.01582466178096088,
+      "epoch_5": 0.016168002025811833,
+      "epoch_6": 0.017565679189434996,
+      "epoch_7": 0.01830803653232412
+    },
+    "best_model": {
+      "loss": 0.014486758068720816,
+      "epoch_id": 2,
+      "model": "model_UFPR04.pt"
+    },
+    "metrics": {
+      "auc": 0.9995648780357974,
+      "eer": 0.0017961383026493354,
+      "threshold": 0.6506882309913635
+    },
+    "pos_refinement": {
+      "accuracy": 0.9512528068214416,
+      "cm": "[[55300  2566]\n [ 2362 40865]]"
+    }
+  }
+}

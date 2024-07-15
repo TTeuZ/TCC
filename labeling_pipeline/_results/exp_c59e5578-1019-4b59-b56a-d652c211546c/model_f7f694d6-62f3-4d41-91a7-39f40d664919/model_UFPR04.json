@@ -1,0 +1,88 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "UFPR04",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 27935,
+      "used_images": 20581,
+      "wrong_labels": 78,
+      "empty_wrong": 11,
+      "occupied_wrong": 67
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 3432,
+        "occupied": 10676
+      },
+      "after_leveling": {
+        "empty": 3432,
+        "occupied": 3432
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_f7f694d6-62f3-4d41-91a7-39f40d664919.pt"
+    ],
+    "test": {
+      "accuracy": 0.9245645099067196,
+      "cm": "[[52612  5254]\n [ 2372 40855]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/small/models/model_5d37b2dc-1a63-40d7-85d0-03c81dab6bcf.pt",
+    "details": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.7856627066166797,
+      "cm": "[[37831 20035]\n [ 1633 41594]]"
+    },
+    "epochs": {
+      "epoch_1": 0.02582627432803585,
+      "epoch_2": 0.02919066875968894,
+      "epoch_3": 0.0253106503147785,
+      "epoch_4": 0.02716370596716257,
+      "epoch_5": 0.049878164717595874,
+      "epoch_6": 0.02764038501741135,
+      "epoch_7": 0.02405261177756743,
+      "epoch_8": 0.034547962699102486,
+      "epoch_9": 0.03775449132027964,
+      "epoch_10": 0.0586571183787089,
+      "epoch_11": 0.05303493016250602,
+      "epoch_12": 0.030219667442313067
+    },
+    "best_model": {
+      "loss": 0.02405261177756743,
+      "epoch_id": 7,
+      "model": "model_UFPR04.pt"
+    },
+    "metrics": {
+      "auc": 0.9996078063426534,
+      "eer": 0.0004566210045661989,
+      "threshold": 0.7427152395248413
+    },
+    "pos_refinement": {
+      "accuracy": 0.9602049597895007,
+      "cm": "[[57110   756]\n [ 3267 39960]]"
+    }
+  }
+}

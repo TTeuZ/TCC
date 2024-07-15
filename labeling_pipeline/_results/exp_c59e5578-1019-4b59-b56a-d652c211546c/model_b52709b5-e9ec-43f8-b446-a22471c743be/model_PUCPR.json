@@ -1,0 +1,87 @@
+{
+  "system_info": {
+    "pytorch_version": "2.3.1+cu121",
+    "cuda_device": "NVIDIA RTX A5000"
+  },
+  "dataset": {
+    "dataset": "PKLotSegmented",
+    "subset": "PUCPR",
+    "train_val_split": 0.75,
+    "classify": {
+      "all_images": 165555,
+      "used_images": 99765,
+      "wrong_labels": 158,
+      "empty_wrong": 105,
+      "occupied_wrong": 53
+    },
+    "train_labels": {
+      "before_leveling": {
+        "empty": 20559,
+        "occupied": 45375
+      },
+      "after_leveling": {
+        "empty": 20559,
+        "occupied": 20559
+      }
+    }
+  },
+  "father_model": {
+    "models": [
+      "CNR-CAMERA-1.pt",
+      "CNR-CAMERA-2.pt",
+      "CNR-CAMERA-3.pt",
+      "CNR-CAMERA-4.pt",
+      "CNR-CAMERA-5.pt",
+      "CNR-CAMERA-6.pt",
+      "CNR-CAMERA-7.pt",
+      "CNR-CAMERA-8.pt",
+      "CNR-CAMERA-9.pt",
+      "model_b52709b5-e9ec-43f8-b446-a22471c743be.pt"
+    ],
+    "test": {
+      "accuracy": 0.9555437665782494,
+      "cm": "[[391277  16844]\n [ 14581 284173]]"
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/small/models/model_226ff258-c968-4f59-b0a7-8a900f1672aa.pt",
+    "details": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9374514588859416,
+      "cm": "[[382133  25988]\n [ 18226 280528]]"
+    },
+    "epochs": {
+      "epoch_1": 0.009483402473453327,
+      "epoch_2": 0.00604057507691677,
+      "epoch_3": 0.00715029334002616,
+      "epoch_4": 0.005870697753116412,
+      "epoch_5": 0.015885777746934865,
+      "epoch_6": 0.005777104838349497,
+      "epoch_7": 0.009901057401634166,
+      "epoch_8": 0.011565261565459166,
+      "epoch_9": 0.009507951197118619,
+      "epoch_10": 0.010972220163175539,
+      "epoch_11": 0.008512638598026423
+    },
+    "best_model": {
+      "loss": 0.005777104838349497,
+      "epoch_id": 6,
+      "model": "model_PUCPR.pt"
+    },
+    "metrics": {
+      "auc": 0.99998274464367,
+      "eer": 3.0140820395097023e-17,
+      "threshold": 0.31323614716529846
+    },
+    "pos_refinement": {
+      "accuracy": 0.9737053934571176,
+      "cm": "[[398011  10110]\n [  8477 290277]]"
+    }
+  }
+}

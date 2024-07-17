@@ -1,0 +1,32 @@
+{
+    "initial_weights": {
+        "path": "resources/base/custom",
+        "dataset": "PKLot"
+    },
+    "model": {
+        "module": "tools.models.custom_3_layer",
+        "config": {
+            "training_mode": "normal",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                32,
+                32
+            ]
+        }
+    },
+    "experiment": {
+        "batch_size": 1000,
+        "num_workers": 6,
+        "epochs": 20
+    },
+    "dataset": {
+        "path": "/media/tteuz/ssd/datasets/PKLot2.0/CNRParkEXTSegmented",
+        "train_days": 7,
+        "split": 0.75
+    }
+}

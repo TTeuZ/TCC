@@ -1,0 +1,32 @@
+{
+    "initial_weights": {
+        "path": "resources/base/small",
+        "dataset": "CNRPark"
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3_small",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        }
+    },
+    "experiment": {
+        "batch_size": 1000,
+        "num_workers": 6,
+        "epochs": 20
+    },
+    "dataset": {
+        "path": "/media/tteuz/ssd/datasets/PKLot2.0/PKLotSegmented",
+        "train_days": 7,
+        "split": 0.75
+    }
+}

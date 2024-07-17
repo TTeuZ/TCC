@@ -89,7 +89,6 @@ def print_avg_results(results_by_subset, file):
         total_train += results_by_subset[subset][0]["dataset"]["total_train"]
         total_val += results_by_subset[subset][0]["dataset"]["total_val"]
         subset_pre_cms, subset_pos_cms = [], []
-        subset_used_images = []
         subset_labels_before_leveling, subset_labels_after_leveling = {"empty": [], "occupied": []}, {"empty": [], "occupied": []}
 
         for result in results:

@@ -1,0 +1,73 @@
+{
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-9",
+    "train_val_split": 0.75,
+    "total_train": 2652,
+    "total_val": 1120,
+    "train_labels": {
+      "before_leveling": {
+        "empty": 1323,
+        "occupied": 1329
+      },
+      "after_leveling": {
+        "empty": 1323,
+        "occupied": 1329
+      }
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/custom/models/model_12ac3a6e-8596-4804-8b16-7564a101df6a.pt",
+    "details": {
+      "training_mode": "normal",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.8441978733240869,
+      "cm": "[[3494   67]\n [1281 3810]]"
+    },
+    "epochs": {
+      "epoch_1": 0.01128209475427866,
+      "epoch_2": 0.012220042757689953,
+      "epoch_3": 0.016903743147850037,
+      "epoch_4": 0.015628019347786903,
+      "epoch_5": 0.009495926089584827,
+      "epoch_6": 0.01652243174612522,
+      "epoch_7": 0.010795282199978828,
+      "epoch_8": 0.004880464635789394,
+      "epoch_9": 0.0038705766201019287,
+      "epoch_10": 0.0013699569972231984,
+      "epoch_11": 0.0015730143059045076,
+      "epoch_12": 0.0017280378378927708,
+      "epoch_13": 0.0014749201945960522,
+      "epoch_14": 0.0014847700949758291,
+      "epoch_15": 0.0012861480936408043,
+      "epoch_16": 0.001549253356643021,
+      "epoch_17": 0.0013776711421087384,
+      "epoch_18": 0.0014552287757396698,
+      "epoch_19": 0.0015735713532194495,
+      "epoch_20": 0.0014442336978390813
+    },
+    "best_model": {
+      "loss": 0.0012861480936408043,
+      "epoch_id": 15,
+      "model": "model_CNR-CAMERA-9.pt"
+    },
+    "metrics": {
+      "auc": 1.0,
+      "eer": 0.0,
+      "threshold": 0.14594881236553192
+    },
+    "pos_refinement": {
+      "accuracy": 0.9224456773000462,
+      "cm": "[[3526   35]\n [ 636 4455]]"
+    }
+  }
+}

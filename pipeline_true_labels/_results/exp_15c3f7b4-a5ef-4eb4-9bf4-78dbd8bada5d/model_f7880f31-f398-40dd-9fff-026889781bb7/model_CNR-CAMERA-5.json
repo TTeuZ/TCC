@@ -1,0 +1,73 @@
+{
+  "system_info": {
+    "pytorch_version": "2.2.1+cu121",
+    "cuda_device": "NVIDIA GeForce GTX 1660 SUPER"
+  },
+  "dataset": {
+    "dataset": "CNRParkEXTSegmented",
+    "subset": "CNR-CAMERA-5",
+    "train_val_split": 0.75,
+    "total_train": 4752,
+    "total_val": 1920,
+    "train_labels": {
+      "before_leveling": {
+        "empty": 2653,
+        "occupied": 2099
+      },
+      "after_leveling": {
+        "empty": 2099,
+        "occupied": 2099
+      }
+    }
+  },
+  "model": {
+    "initial_weights": "resources/base/small/models/model_f7880f31-f398-40dd-9fff-026889781bb7.pt",
+    "details": {
+      "training_mode": "transfer",
+      "normalize_data": true,
+      "loss": "CrossEntropyLoss",
+      "optimizer": "Adam",
+      "device": "cuda:0"
+    },
+    "pre_refinement": {
+      "accuracy": 0.9573412698412699,
+      "cm": "[[6710   64]\n [ 581 7765]]"
+    },
+    "epochs": {
+      "epoch_1": 0.030633440713437512,
+      "epoch_2": 0.0199665964620424,
+      "epoch_3": 0.017948041833989636,
+      "epoch_4": 0.021205187437426245,
+      "epoch_5": 0.020136009642696927,
+      "epoch_6": 0.017612102351308813,
+      "epoch_7": 0.020015774763674592,
+      "epoch_8": 0.01764410676788801,
+      "epoch_9": 0.01788854547186007,
+      "epoch_10": 0.016107117776877025,
+      "epoch_11": 0.01984895617064928,
+      "epoch_12": 0.015606282995423486,
+      "epoch_13": 0.015563973856919353,
+      "epoch_14": 0.014808818688091467,
+      "epoch_15": 0.01139865861221833,
+      "epoch_16": 0.01368285353380767,
+      "epoch_17": 0.012453795650901772,
+      "epoch_18": 0.013531878970983163,
+      "epoch_19": 0.013073391392974603,
+      "epoch_20": 0.015357242040434512
+    },
+    "best_model": {
+      "loss": 0.01139865861221833,
+      "epoch_id": 15,
+      "model": "model_CNR-CAMERA-5.pt"
+    },
+    "metrics": {
+      "auc": 0.9998822158301924,
+      "eer": 0.0017605633802817433,
+      "threshold": 0.5423562526702881
+    },
+    "pos_refinement": {
+      "accuracy": 0.9768518518518519,
+      "cm": "[[6757   17]\n [ 333 8013]]"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+    "fathers": {
+        "trained_at": "/tmp/pmla20/PKLotSegmented",
+        "module": "tools.models.mobilenet_v3_large",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        },
+        "models": {
+            "path": "resources/fathers",
+            "dataset": "PKLot"
+        }
+    },
+    "initial_weights": {
+        "path": "resources/base/small",
+        "dataset": "PKLot"
+    },
+    "model": {
+        "module": "tools.models.mobilenet_v3_small",
+        "config": {
+            "training_mode": "transfer",
+            "normalize_data": true,
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cuda:0"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ]
+        }
+    },
+    "experiment": {
+        "batch_size": 3000,
+        "num_workers": 24,
+        "epochs": 20
+    },
+    "dataset": {
+        "path": "/tmp/pmla20/CNRParkEXTSegmented",
+        "train_days": 7,
+        "split": 0.75,
+        "father_thresholds": [
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9
+        ]
+    }
+}

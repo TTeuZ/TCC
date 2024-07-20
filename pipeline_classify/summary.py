@@ -1,10 +1,10 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-# from collections import defaultdict
-# from datetime import datetime
-# import numpy as np
+from collections import defaultdict
+from datetime import datetime
+import numpy as np
 import argparse
-# import json
+import json
 
 # def print_results(subset, results, file):
 #     all_images = results[0]["dataset"]["classify"]["all_images"]
@@ -108,30 +108,30 @@ def main(args):
 
     print("TBD")
 
-    # config = json.load(open(args.config, "r"))
+    config = json.load(open(args.config, "r"))
     # results_by_subset = get_results_by_subset(args.files)
 
-    # begin_date = datetime.strptime(args.begin_date, '%Y-%m-%d--%H:%M:%S')
-    # end_date = datetime.strptime(args.end_date, '%Y-%m-%d--%H:%M:%S')
-    # time_spent = end_date - begin_date
+    begin_date = datetime.strptime(args.begin_date, '%Y-%m-%d--%H:%M:%S')
+    end_date = datetime.strptime(args.end_date, '%Y-%m-%d--%H:%M:%S')
+    time_spent = end_date - begin_date
 
-    # summary_name = args.files.split("/")[1]
-    # with open(f"_summaries/{summary_name}.txt", "w") as file:
-    #     file.write(f"Begin: {args.begin_date} End: {args.end_date} -- Time spent: {time_spent} \n\n")
+    summary_name = args.files.split("/")[1]
+    with open(f"_summaries/{summary_name}.txt", "w") as file:
+        file.write(f"Begin: {args.begin_date} End: {args.end_date} -- Time spent: {time_spent} \n\n")
 
-    #     file.write(f"Details in {args.files}")
-    #     file.write("\n---------------------------------------------------------------\n\n")
+        file.write(f"Details in {args.files}")
+        file.write("\n---------------------------------------------------------------\n\n")
 
-    #     file.write(f"Father models trained with: {config['fathers']['trained_at']}\n")
-    #     file.write(f"Father models module: {config['fathers']['module']}\n")
-    #     file.write(f"Father models trained with: {config['fathers']['config']['training_mode']}\n")
-    #     file.write(f"Son models module: {config['model']['module']}\n")
-    #     file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
-    #     file.write(f"Dataset used: {config['dataset']['path']}\n")
-    #     file.write(f"Training days: {config['dataset']['train_days']}\n")
-    #     file.write(f"Split: {config['dataset']['split']}\n")
+        file.write(f"Father models trained with: {config['fathers']['trained_at']}\n")
+        file.write(f"Father models module: {config['fathers']['module']}\n")
+        file.write(f"Father models trained with: {config['fathers']['config']['training_mode']}\n")
+        file.write(f"Son models module: {config['model']['module']}\n")
+        file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
+        file.write(f"Dataset used: {config['dataset']['path']}\n")
+        file.write(f"Training days: {config['dataset']['train_days']}\n")
+        file.write(f"Split: {config['dataset']['split']}\n")
 
-    #     file.write("\n###############################################################\n\n")
+        file.write("\n###############################################################\n\n")
 
     #     print_avg_results(results_by_subset, file)
 

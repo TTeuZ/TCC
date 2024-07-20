@@ -18,8 +18,8 @@ EARLY_STOP = 5
 
 # -------------------------------------------------- HELPERS ---------------------------------------------------------
 
-def divide_dataset(dataset, train_days):
-    return (list(dataset.items())[:train_days], list(dataset.items())[train_days:])
+def divide_dataset(dataset, days_qty):
+    return (list(dataset.items())[:days_qty], list(dataset.items())[days_qty:])
 
 
 def get_train_val_datasets(train_half, split, output_json):

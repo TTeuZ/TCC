@@ -28,13 +28,13 @@ def change_transform(dataset, dl_config):
         subset.transform = transform
 
 
-def divide_dataset(dataset, train_days):
-    divider = train_days[-1]
+def divide_dataset(dataset, days_qty):
+    divider = days_qty[-1]
     return (list(dataset.items())[:divider], list(dataset.items())[divider:])
 
 
-def get_train_val_ds(train_days, days, split, dl_config, output_json, output_location):
-    targets, labels = train_days[0][:days], train_days[1][:days]
+def get_train_val_ds(train_half, days, split, dl_config, output_json, output_location):
+    targets, labels = train_half[0][:days], train_half[1][:days]
     divider = math.floor(days * split)
 
     train_ds, train_labels = targets[:divider], labels[:divider]
@@ -104,7 +104,7 @@ def get_threshold(model, val_ds, dl_config, output_json, days_str):
     return threshold
 
 
-def train(model, train_ds, val_ds, epochs, dl_config, output_json, days_str, output_name):
+def train(model, train_ds, val_ds, epochs, dl_config, output_json, days_str):
     train_loader = torch.utils.data.DataLoader(train_ds, batch_size=64, shuffle=True, num_workers=dl_config["num_workers"], pin_memory=True)
     val_loader = torch.utils.data.DataLoader(val_ds, batch_size=dl_config["batch_size"], shuffle=False, num_workers=dl_config["num_workers"], pin_memory=True)
     best_state_dict, best_loss, epoch_id, early_stop_count = None, math.inf, -1, 0
@@ -193,7 +193,7 @@ def execute(father_module, son_module, config, args):
     output_json["father_model"] = father_model.info()
 
     new_labels = classify(father_model, father_dl_config, train_half, output_json)
-    train_days = (train_half, new_labels)
+    train_half = (train_half, new_labels)
     test_ds = get_test_dataset(test_half)
 
     output_json["model"] = {}
@@ -207,12 +207,12 @@ def execute(father_module, son_module, config, args):
     for days in config["dataset"]["train_days"]:
         days_str = f"{days}_days"
         output_json["model"][days_str] = {}
-        train_ds, val_ds = get_train_val_ds(train_days, days, config["dataset"]["split"], son_dl_config, output_json, days_str)
+        train_ds, val_ds = get_train_val_ds(train_half, days, config["dataset"]["split"], son_dl_config, output_json, days_str)
 
         train_model = son_module.model(pre_trained=False, config=son_config)
         train_model.load_state_dict(torch.load(args.initial, map_location=father_config["device"]))
 
-        best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, days_str, output_name)
+        best_state_dict = train(train_model, train_ds, val_ds, config["experiment"]["epochs"], son_dl_config, output_json, days_str)
         test_model = son_module.model(pre_trained=False, config=son_config)
         test_model.load_state_dict(best_state_dict)
 

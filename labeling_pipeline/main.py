@@ -28,11 +28,11 @@ def change_transform(dataset, dl_config):
         subset.transform = transform
 
 
-def divide_dataset(dataset, train_days):
-    return (list(dataset.items())[:train_days], list(dataset.items())[train_days:])
+def divide_dataset(dataset, days_qty):
+    return (list(dataset.items())[:days_qty], list(dataset.items())[days_qty:])
 
 
-def get_train_val_datasets(train_half, new_labels, dl_config, split, days, output_json):
+def get_train_val_datasets(train_half, new_labels, dl_config, split, output_json):
     divider = math.floor(len(train_half) * split)
 
     train_ds, train_labels = train_half[:divider], new_labels[:divider]
@@ -186,7 +186,7 @@ def execute(father_module, son_module, config, args):
     output_json["father_model"] = father_model.info()
 
     new_labels = classify(father_model, father_dl_config, train_half, output_json)
-    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], config["dataset"]["train_days"], output_json)
+    train_ds, val_ds = get_train_val_datasets(train_half, new_labels, son_dl_config, config["dataset"]["split"], output_json)
     test_ds = get_test_dataset(test_half)
 
     train_model = son_module.model(pre_trained=False, config=son_config)

@@ -28,35 +28,6 @@ def main(args):
     create_folder("_results")
     create_folder(f"_results/{EXP_NAME}")
 
-    # Writing experiment README
-    print("Writing experiment README")
-    with open(f"_results/{EXP_NAME}/README.md", "w") as file:
-        file.write("# Experiment infos\n\n")
-
-        file.write("## Fathers\n")
-        file.write(f"- Model: {fathers_config['module']}\n")
-        file.write(f"- Training mode: {fathers_config['config']['training_mode']}\n")
-        file.write(f"- Trained at: {fathers_config['trained_at']}\n")
-        file.write("- Models used:\n")
-        for father in father_jsons:
-            file.write(f"    - {father['best_model']['model']}\n")
-
-        file.write("\n## Sons\n")
-        file.write(f"- Model: {config['model']['module']}\n")
-        file.write(f"- Loss: {config['model']['config']['loss']}\n")
-        file.write(f"- Optimizer: {config['model']['config']['optimizer']}\n")
-
-        file.write("\n## Experiment\n")
-        file.write(f"- Dataset: {config['dataset']['path']}\n")
-        file.write("- Subsets:\n")
-        for subset in subsets:
-            file.write(f"    - {subset}\n")
-        
-        file.write(f"- Training epocs: {config['experiment']['epochs']}\n")
-        file.write(f"- Train days: {' - '.join(str(day) for day in config['dataset']['train_days'])}\n")
-        file.write(f"- Split: {config['dataset']['split']}\n")
-        file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
-
     # Running pipeline
     for index, father in enumerate(father_jsons):
         father_model = f"{fathers_config['models']['path']}/models/{father['best_model']['model']}"

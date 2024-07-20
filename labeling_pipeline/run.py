@@ -1,7 +1,7 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from models.ensemble_generator import ensemble_generator
 from tools.utils.utils import create_folder, get_related_models_json
+from models.ensemble_generator import ensemble_generator
 import datetime
 import argparse
 import uuid
@@ -29,34 +29,6 @@ def main(args):
     create_folder("_results")
     create_folder(f"_models/{EXP_NAME}")
     create_folder(f"_results/{EXP_NAME}")
-
-    # Writing experiment README
-    print("Writing experiment README")
-    with open(f"_results/{EXP_NAME}/README.md", "w") as file:
-        file.write("# Experiment infos\n\n")
-
-        file.write("## Fathers\n")
-        file.write(f"- Model: {fathers_config['module']}\n")
-        file.write(f"- Training mode: {fathers_config['config']['training_mode']}\n")
-        file.write(f"- Trained at: {fathers_config['trained_at']}\n")
-        file.write("- Models used:\n")
-        for father in father_jsons:
-            file.write(f"    - {father['best_model']['model']}\n")
-
-        file.write("\n## Sons\n")
-        file.write(f"- Model: {config['model']['module']}\n")
-        file.write(f"- Loss: {config['model']['config']['loss']}\n")
-        file.write(f"- Optimizer: {config['model']['config']['optimizer']}\n")
-
-        file.write("\n## Experiment\n")
-        file.write(f"- Dataset: {config['dataset']['path']}\n")
-        file.write("- Subsets:\n")
-        for subset in subsets:
-            file.write(f"    - {subset}\n")
-        
-        file.write(f"- Training epocs: {config['experiment']['epochs']}\n")
-        file.write(f"- Train/Val split: {config['dataset']['split']}\n")
-        file.write(f"- Sumary: _summaries/summary_{EXP_UUID}\n")
 
     # Running pipeline
     for index, father in enumerate(father_jsons):

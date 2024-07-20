@@ -21,17 +21,6 @@ def main(args):
     create_folder(f"_models/{EXP_NAME}")
     create_folder(f"_results/{EXP_NAME}")
 
-    print("Writing experiment README")
-    with open(f"_results/{EXP_NAME}/README.md", "w") as file:
-        file.write("## Experiment infos\n")
-        file.write(f"- Cross testing type: {config['experiment']['type']}\n")
-        file.write(f"- Model: {config['model']['module']}\n")
-        file.write(f"- Train dataset: {config['datasets']['train_dataset']}\n")
-        file.write(f"- Test dataset: {config['datasets']['test_dataset']}\n")
-        file.write(f"- Training epochs: {config['experiment']['epochs']}\n")
-        file.write(f"- Train/Val split: {config['datasets']['split']}\n")
-        file.write(f"- Summary: _summaries/summary_{EXP_UUID}\n")
-
     print("\nExecuting experiment")
     os.system(f"python3 main.py -tr {config['datasets']['train_dataset']} -te {config['datasets']['test_dataset']} -c {args.config} -s {EXP_NAME}")
     os.system(f"python3 main.py -tr {config['datasets']['train_dataset']} -te {config['datasets']['test_dataset']} -c {args.config} -s {EXP_NAME}")

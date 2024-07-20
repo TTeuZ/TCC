@@ -1,6 +1,6 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from tools.utils.utils import create_folder
+from tools.utils.utils import create_folder, get_related_models_json
 import datetime
 import argparse
 import uuid
@@ -8,14 +8,6 @@ import json
 
 EXP_UUID = uuid.uuid4()
 EXP_NAME = f"exp_{EXP_UUID}"
-
-def get_related_models_json(path, dataset):
-    jsons = os.listdir(f"{path}/jsons")
-    jsons = [json.load(open(f"{path}/jsons/{file}", "r")) for file in jsons]
-    jsons = [file for file in jsons if dataset in file["dataset"]["train"]]
-
-    return jsons
-
 
 def main(args):
     assert os.path.exists(args.config), "Invalid config"

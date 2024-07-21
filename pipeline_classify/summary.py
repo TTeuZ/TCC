@@ -1,115 +1,100 @@
 import sys, os; sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
+from tools.utils.utils import get_cm
 from collections import defaultdict
 from datetime import datetime
 import numpy as np
 import argparse
 import json
 
-# def print_results(subset, results, file):
-#     all_images = results[0]["dataset"]["classify"]["all_images"]
-#     used_images = [result["dataset"]["classify"]["used_images"] for result in results]
-#     wrong_labeled = [result["dataset"]["classify"]["wrong_labels"] for result in results]
-#     empty_wrong = [result["dataset"]["classify"]["empty_wrong"] for result in results]
-#     occupied_wrong = [result["dataset"]["classify"]["occupied_wrong"] for result in results]
+def print_avg_results(results_by_experiment, file):
+    all_images, used_images, wrong_labeled = 0, defaultdict(list), defaultdict(list)
+    father_accs, pre_accs, pos_accs = [], [], defaultdict(list)
 
-#     avg_used_images = int(np.round(sum(used_images) / len(used_images)))
-#     avg_wrong_labeled = int(np.round(sum(wrong_labeled) / len(wrong_labeled)))
-#     avg_empty_wrong = int(sum(empty_wrong) / len(empty_wrong))
-#     avg_occupied_wrong = int(sum(occupied_wrong) / len(occupied_wrong))
+    dummy_results = results_by_experiment[list(results_by_experiment.keys())[0]]
+    thresholds = [value for value in dummy_results[0]["model"].keys() if "classify" in value]
 
-#     std_used_images = np.std(used_images)
-#     pct_used_images = (avg_used_images * 100) / all_images
+    for result in results_by_experiment[list(results_by_experiment.keys())[0]]:
+        all_images += result["model"][thresholds[0]]["all_images"]
 
-#     std_wrong_labeled = np.std(wrong_labeled)
-#     pct_wrong_labeled = (avg_wrong_labeled * 100) / avg_used_images
+    for _, results in results_by_experiment.items():
+        experiment_father_cm = sum([get_cm(result["father_model"]["test"]["cm"]) for result in results])
+        experiment_pre_cm = sum([get_cm(result["model"]["pre_refinement"]["cm"]) for result in results])
 
-#     file.write(f"Subset: {subset.split('_')[1]}\n")
-#     file.write("\n---------------------[IMAGES FOR TRAINING]---------------------\n")
-#     file.write(f"All: {all_images} - Used: {avg_used_images}[AVG] - {std_used_images:.2f}[STD] - {pct_used_images:.2f}[%]\n")
-#     file.write(f"Wrong Labeled: {avg_wrong_labeled}[AVG] - {std_wrong_labeled:.2f}[STD] - {pct_wrong_labeled:.2f}[%]\n")
-#     file.write(f"Empty wrong: {avg_empty_wrong}[AVG] - Occupied wrong: {avg_occupied_wrong}[AVG]\n\n")
+        experiment_father_acc = np.trace(experiment_father_cm) / np.sum(experiment_father_cm)
+        experiment_pre_acc = np.trace(experiment_pre_cm) / np.sum(experiment_pre_cm)
 
-#     file.write("\n------------------------[FATHER MODEL]-------------------------\n")
-#     father_accs = [result["father_model"]["test"]["accuracy"] for result in results]
+        experiment_used_images, experiment_wrong_labeled = dict(), dict()
+        experiment_pos_cms, experiment_pos_accs = dict(), dict()
+        for threshold in thresholds:
+            experiment_used_images[threshold] = sum([result["model"][threshold]["used_images"] for result in results])
+            experiment_wrong_labeled[threshold] = sum([result["model"][threshold]["wrong_labels"] for result in results])
+            experiment_pos_cms[threshold] = sum([get_cm(result["model"][threshold]["pos_refinement"]["cm"]) for result in results])
+            experiment_pos_accs[threshold] = np.trace(experiment_pos_cms[threshold]) / np.sum(experiment_pos_cms[threshold])
 
-#     father_avg_acc = sum(father_accs) / len(father_accs)
-#     father_std_acc = np.std(father_accs)
+        father_accs.append(experiment_father_acc)
+        pre_accs.append(experiment_pre_acc)
 
-#     file.write(" [AVG]  [STD]\n")
-#     file.write(f"{father_avg_acc:.4f} {father_std_acc:.4f} [ACCURACY]\n")
+        for threshold in thresholds:
+            used_images[threshold].append(experiment_used_images[threshold])
+            wrong_labeled[threshold].append(experiment_wrong_labeled[threshold])
+            pos_accs[threshold].append(experiment_pos_accs[threshold])
 
-#     file.write("\n-------------------[SON MODEL PRE REFINEMENT]------------------\n")
-#     pre_accs = [result["model"]["pre_refinement"]["accuracy"] for result in results]
-#     avg_pre_acc = sum(pre_accs) / len(pre_accs)
-#     std_pre_acc = np.std(pre_accs)
+    avg_father_acc, std_father_acc = np.average(father_accs), np.std(father_accs)
+    avg_pre_acc, std_pre_acc = np.average(pre_accs), np.std(pre_accs)
 
-#     file.write(" [AVG]  [STD]\n")
-#     file.write(f"{avg_pre_acc:.4f} {std_pre_acc:.4f} [ACCURACY]\n")
+    avg_used_images, std_used_images = defaultdict(float), defaultdict(float)
+    avg_wrong_labeled, std_wrong_labeled = defaultdict(float), defaultdict(float)
+    avg_pos_accs, std_pos_accs = defaultdict(float), defaultdict(float)
+    for threshold in thresholds:
+        avg_used_images[threshold] = np.average(used_images[threshold])
+        std_used_images[threshold] = np.std(used_images[threshold])
 
-#     file.write("\n-------------------[SON MODEL POS REFINEMENT]------------------\n")
-#     days = [value for value in results[0]["model"].keys() if "days" in value]
+        avg_wrong_labeled[threshold] = np.average(wrong_labeled[threshold])
+        std_wrong_labeled[threshold] = np.std(wrong_labeled[threshold])
+
+        avg_pos_accs[threshold] = np.average(pos_accs[threshold])
+        std_pos_accs[threshold] = np.std(pos_accs[threshold])
+
+    file.write(f"AVG of all results:\n")
+
+    file.write("\n------------------------[FATHER MODEL]-------------------------\n")
+    file.write(" [AVG]  [STD]\n")
+    file.write(f"{avg_father_acc:.4f} {std_father_acc:.4f} [ACCURACY]\n")
+
+    file.write("\n-------------------[SON MODEL PRE REFINEMENT]------------------\n")
+    file.write(" [AVG]  [STD]\n")
+    file.write(f"{avg_pre_acc:.4f} {std_pre_acc:.4f} [ACCURACY]\n")
+
+    file.write("\n-----------------------[CLASSIFY CHECK]------------------------\n")
+
+    file.write("  [ACCURACY]".ljust(21) + "[USED]".ljust(15) + "[WRONG]\n")
+
+    for threshold in thresholds:
+        file.write(f"{avg_pos_accs[threshold]:.4f} ({std_pos_accs[threshold]:.4f})".ljust(18))
+        file.write(f"{avg_used_images[threshold]:.0f} ({std_used_images[threshold]:.0f})".ljust(15))
+        file.write(f"{avg_wrong_labeled[threshold]:.0f} ({std_wrong_labeled[threshold]:.2f})".ljust(16))
+        file.write(f"[{threshold.upper()}]\n")
+
+
+def get_results_by_experiment(path):
+    models_results = [folder for folder in os.listdir(path) if "model" in folder]
     
-#     file.write(" [AVG]  [STD]\n")
-#     for day in days:
-#         pos_accs = [result["model"][day]["pos_refinement"]["accuracy"] for result in results]
-#         avg_pos_acc = sum(pos_accs) / len(pos_accs)
-#         std_pos_acc = np.std(pos_accs)
+    results_by_experiment = dict()
+    for model in models_results:
+        jsons = sorted(os.listdir(f"{path}/{model}"))
+        results = [json.load(open(f"{path}/{model}/{file}", "r")) for file in jsons]
+        results_by_experiment[model] = results
 
-#         file.write(f"{avg_pos_acc:.4f} {std_pos_acc:.4f} [ACCURACY {day.upper()}]\n")
-
-#     file.write(f"\n")
-
-
-# def print_avg_results(results_by_subset, file):
-#     all_images, used_images = 0, defaultdict(list)
-#     wrong_labeled, empty_wrong, occupied_wrong = defaultdict(list), defaultdict(list), defaultdict(list)
-#     father_accs, pre_accs, pos_accs = [], [], defaultdict(list)
-
-#     for subset, results in results_by_subset.items():
-#         thresholds = [value for value in results[0]["model"].keys() if "classify" in value]
-        
-#         all_images += results_by_subset[subset][0]["model"][thresholds[0]]["all_images"]
-#         subset_used_images = defaultdict(list)
-
-#         for result in results:
-#             father_accs.append(result["father_model"]["test"]["accuracy"])
-#             pre_accs.append(result["model"]["pre_refinement"]["accuracy"])
-
-#             for threshold in thresholds:
-#                 subset_used_images[threshold].append(result["model"][threshold]["used_images"])
-#                 wrong_labeled[threshold].append(result["model"][threshold]["wrong_labels"])
-#                 empty_wrong[threshold].append(result["model"][threshold]["empty_wrong"])
-#                 occupied_wrong[threshold].append(result["model"][threshold]["occupied_wrong"])
-#                 pos_accs[threshold].append(result["model"][threshold]["pos_refinement"]["accuracy"])
-
-#         for threshold in thresholds:
-#             subset_used_images[threshold] = int(np.round(sum(subset_used_images[threshold]) / len(subset_used_images[threshold])))
-#             used_images[threshold].append(subset_used_images[threshold])
-
-
-# def get_results_by_subset(path):
-#     models_results = [folder for folder in os.listdir(path) if "model" in folder]
-
-#     results_by_subset = defaultdict(list)
-#     for model in models_results:
-#         jsons = os.listdir(f"{path}/{model}")
-#         results = [json.load(open(f"{path}/{model}/{file}", "r")) for file in jsons]
-#         for result in results:
-#             results_by_subset[f"model_{result['dataset']['subset']}"].append(result)
-
-#     results_by_subset = dict(results_by_subset)
-#     return dict(sorted(results_by_subset.items()))
+    return results_by_experiment
 
 
 def main(args):
     assert os.path.exists(args.files), "Invalid results files path"
     assert os.path.exists(args.config), "Invalid config"
 
-    print("TBD")
-
     config = json.load(open(args.config, "r"))
-    # results_by_subset = get_results_by_subset(args.files)
+    results_by_experiment = get_results_by_experiment(args.files)
 
     begin_date = datetime.strptime(args.begin_date, '%Y-%m-%d--%H:%M:%S')
     end_date = datetime.strptime(args.end_date, '%Y-%m-%d--%H:%M:%S')
@@ -122,23 +107,20 @@ def main(args):
         file.write(f"Details in {args.files}")
         file.write("\n---------------------------------------------------------------\n\n")
 
-        file.write(f"Father models trained with: {config['fathers']['trained_at']}\n")
+        file.write(f"Father models trained with: {config['fathers']['trained_at'].split('/')[-1]}\n")
         file.write(f"Father models module: {config['fathers']['module']}\n")
         file.write(f"Father models trained with: {config['fathers']['config']['training_mode']}\n")
         file.write(f"Son models module: {config['model']['module']}\n")
         file.write(f"Son models trained with: {config['model']['config']['training_mode']}\n")
-        file.write(f"Dataset used: {config['dataset']['path']}\n")
+        file.write(f"Dataset used: {config['dataset']['path'].split('/')[-1]}\n")
         file.write(f"Training days: {config['dataset']['train_days']}\n")
         file.write(f"Split: {config['dataset']['split']}\n")
 
         file.write("\n###############################################################\n\n")
 
-    #     print_avg_results(results_by_subset, file)
+        print_avg_results(results_by_experiment, file)
 
-    #     file.write("\n###############################################################\n\n")
-    #     for subset, results in results_by_subset.items():
-    #         print_results(subset, results, file)
-    #         file.write("###############################################################\n\n")
+        file.write("\n###############################################################\n\n")
 
 
 if __name__ == "__main__":

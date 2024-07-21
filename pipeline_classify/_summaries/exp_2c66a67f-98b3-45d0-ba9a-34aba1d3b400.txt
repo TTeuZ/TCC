@@ -3,14 +3,34 @@ Begin: 2024-07-20--20:46:08 End: 2024-07-21--04:10:30 -- Time spent: 7:24:22
 Details in _results/exp_2c66a67f-98b3-45d0-ba9a-34aba1d3b400
 ---------------------------------------------------------------
 
-Father models trained with: /tmp/pmla20/PKLotSegmented
+Father models trained with: PKLotSegmented
 Father models module: tools.models.mobilenet_v3_large
 Father models trained with: transfer
 Son models module: tools.models.custom_3_layer
 Son models trained with: normal
-Dataset used: /tmp/pmla20/CNRParkEXTSegmented
+Dataset used: CNRParkEXTSegmented
 Training days: 7
 Split: 0.75
+
+###############################################################
+
+AVG of all results:
+
+------------------------[FATHER MODEL]-------------------------
+ [AVG]  [STD]
+0.9636 0.0013 [ACCURACY]
+
+-------------------[SON MODEL PRE REFINEMENT]------------------
+ [AVG]  [STD]
+0.8996 0.0104 [ACCURACY]
+
+-----------------------[CLASSIFY CHECK]------------------------
+  [ACCURACY]         [USED]         [WRONG]
+0.9011 (0.0072)   45467 (12)     1276 (58.41)    [0.5_CLASSIFY]
+0.9031 (0.0085)   44667 (59)     934 (70.73)     [0.6_CLASSIFY]
+0.9095 (0.0063)   43591 (114)    627 (62.71)     [0.7_CLASSIFY]
+0.9114 (0.0062)   41915 (208)    363 (60.47)     [0.8_CLASSIFY]
+0.9165 (0.0050)   38709 (380)    166 (37.10)     [0.9_CLASSIFY]
 
 ###############################################################
 

@@ -16,7 +16,7 @@ import copy
 EARLY_STOP = 5
 
 def test(model, test_ds, dl_config, threshold, output_json):
-    average_accuracy, final_cm = 0.0, [[0, 0], [0, 0]]
+    final_cm = [[0, 0], [0, 0]]
     output_json["test"] = { "subsets": {} }
 
     print(f"Testing model")
@@ -26,13 +26,11 @@ def test(model, test_ds, dl_config, threshold, output_json):
 
         accuracy = accuracy_score(labels, preds)
         cm = confusion_matrix(labels, preds)
-
-        average_accuracy += accuracy
         final_cm += cm
 
         output_json["test"]["subsets"][test] = {"accuracy": accuracy, "cm": str(cm)}
 
-    output_json["test"]["average"] = {"accuracy": (average_accuracy / len(test_ds)), "cm": str(final_cm)}
+    output_json["test"]["average"] = {"accuracy": (np.trace(final_cm) / np.sum(final_cm)), "cm": str(final_cm)}
 
 
 def get_threshold(model, val_ds, dl_config, output_json):

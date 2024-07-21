@@ -3,12 +3,12 @@ Begin: 2024-07-14--09:39:50 End: 2024-07-14--16:31:01 -- Time spent: 6:51:11
 Details in _results/exp_d48f86a3-ceaf-45ca-abdf-c2e85f7b27be
 ---------------------------------------------------------------
 
-Father models trained with: /tmp/pmla20/CNRParkEXTSegmented
+Father models trained with: CNRParkEXTSegmented
 Father models module: tools.models.mobilenet_v3_large
 Father models trained with: transfer
 Son models module: tools.models.residual_net
 Son models trained with: normal
-Dataset used: /tmp/pmla20/PKLotSegmented
+Dataset used: PKLotSegmented
 Training days: 7
 
 ###############################################################
@@ -16,139 +16,24 @@ Training days: 7
 AVG of all results:
 
 ---------------------[IMAGES FOR TRAINING]---------------------
-All: 225782 - Used: 143181[AVG] - 0.63[%]
-All wrong: 96 - Empty wrong: 44 - Occupied wrong: 51
-Train Labels before leveling: 32905[EMPTY] - 64212[OCCUPIED]
-Train Labels before leveling: 32905[EMPTY] - 32905[OCCUPIED]
+All: 225782 - Used: 143181.2[AVG] | 3881.10[STD] - 0.63[%]
+All wrong: 289.2[AVG] - 45.51[STD]
+Empty wrong: 134.8[AVG] - 12.75[STD]
+Occupied wrong: 154.4[AVG] - 37.47[STD]
 
 ------------------------[FATHER MODEL]-------------------------
  [AVG]  [STD]                        Confusion matrix - Rounded
-0.9464 0.0175 [ACCURACY]                       421960     18051
+0.9550 0.0011 [ACCURACY]                       421960     18051
                                                 25437    500438
 
 -------------------[SON MODEL PRE REFINEMENT]------------------
  [AVG]  [STD]                        Confusion matrix - Rounded
-0.7747 0.0912 [ACCURACY]                       433806      6205
+0.8388 0.0188 [ACCURACY]                       433807      6204
                                                149539    376336
 
 -------------------[SON MODEL POS REFINEMENT]------------------
  [AVG]  [STD]                        Confusion matrix - Rounded
-0.9647 0.0141 [ACCURACY]                       431416      8595
+0.9685 0.0033 [ACCURACY]                       431417      8594
                                                 21833    504042
 
 ###############################################################
-
-Subset: PUCPR
-
----------------------[IMAGES FOR TRAINING]---------------------
-All: 165555 - Used: 103831[AVG] - 3065.69[STD] - 62.72[%]
-Wrong Labeled: 156[AVG] - 17.62[STD] - 0.15[%]
-Empty wrong: 88[AVG] - Occupied wrong: 67[AVG]
-
-Train Labels before leveling: 23601[EMPTY] - 44370[OCCUPIED]
-Train Labels before leveling: 23601[EMPTY] - 23601[OCCUPIED]
-
--------------------------[ALL RESULTS]-------------------------
-1.0000 - 0.9999 - 0.9999 - 0.9999 - 0.9999 [AUCS]
-0.0000 - 0.0002 - 0.0001 - 0.0000 - 0.0000 [EERS]
-0.3926 - 0.3289 - 0.6117 - 0.4557 - 0.4100 [THRESHOLDS]
-0.0041 - 0.0075 - 0.0059 - 0.0053 - 0.0064 [VAL LOSS]
-     1 -      2 -      1 -      2 -      3 [EPOCHS]
-0.8691 - 0.8630 - 0.9021 - 0.8983 - 0.8577 [PRE ACC]
-0.9619 - 0.9683 - 0.9686 - 0.9746 - 0.9755 [POS ACC]
-
--------------------------[AVG RESULT]--------------------------
- [AVG]  [STD]                    Pre Confusion matrix - Rounded
-0.9999 0.0000 [AUC]                            293982      4772
-0.0001 0.0001 [EER]                             81456    326665
-0.4398 0.0951 [THRESHOLD]
-0.0058 0.0011 [VAL LOSS]         Pos Confusion matrix - Rounded
-     1 0.7483 [EPOCH]                          293496      5258
-0.8780 0.0185 [PRE ACC]                         16106    392015
-0.9698 0.0049 [POS ACC]
-
-------------------------[FATHER MODEL]-------------------------
-0.9606 - 0.9587 - 0.9587 - 0.9594 - 0.9575 [ACCURACY]
-
- [AVG]  [STD]                        Confusion matrix - Rounded
-0.9590 0.0010 [ACCURACY]                       283735     15019
-                                                13978    394143
-
-###############################################################
-
-Subset: UFPR04
-
----------------------[IMAGES FOR TRAINING]---------------------
-All: 27935 - Used: 20950[AVG] - 261.31[STD] - 75.00[%]
-Wrong Labeled: 101[AVG] - 25.89[STD] - 0.48[%]
-Empty wrong: 14[AVG] - Occupied wrong: 85[AVG]
-
-Train Labels before leveling: 3404[EMPTY] - 10998[OCCUPIED]
-Train Labels before leveling: 3404[EMPTY] - 3404[OCCUPIED]
-
--------------------------[ALL RESULTS]-------------------------
-0.9994 - 0.9993 - 0.9996 - 0.9999 - 0.9994 [AUCS]
-0.0010 - 0.0000 - 0.0018 - 0.0004 - 0.0010 [EERS]
-0.4925 - 0.5638 - 0.6507 - 0.5023 - 0.2977 [THRESHOLDS]
-0.0156 - 0.0181 - 0.0145 - 0.0084 - 0.0127 [VAL LOSS]
-     1 -      1 -      2 -      5 -      3 [EPOCHS]
-0.6687 - 0.6366 - 0.6214 - 0.8212 - 0.6717 [PRE ACC]
-0.9286 - 0.9438 - 0.9513 - 0.9590 - 0.9630 [POS ACC]
-
--------------------------[AVG RESULT]--------------------------
- [AVG]  [STD]                    Pre Confusion matrix - Rounded
-0.9995 0.0002 [AUC]                             42761       466
-0.0008 0.0006 [EER]                             31487     26379
-0.5014 0.1164 [THRESHOLD]
-0.0139 0.0032 [VAL LOSS]         Pos Confusion matrix - Rounded
-     2 1.4967 [EPOCH]                           41361      1866
-0.6839 0.0713 [PRE ACC]                          3275     54591
-0.9491 0.0122 [POS ACC]
-
-------------------------[FATHER MODEL]-------------------------
-0.9198 - 0.9234 - 0.9128 - 0.9258 - 0.9299 [ACCURACY]
-
- [AVG]  [STD]                        Confusion matrix - Rounded
-0.9223 0.0058 [ACCURACY]                        40869      2358
-                                                 5494     52372
-
-###############################################################
-
-Subset: UFPR05
-
----------------------[IMAGES FOR TRAINING]---------------------
-All: 32292 - Used: 18400[AVG] - 944.48[STD] - 56.98[%]
-Wrong Labeled: 33[AVG] - 6.48[STD] - 0.18[%]
-Empty wrong: 31[AVG] - Occupied wrong: 1[AVG]
-
-Train Labels before leveling: 5900[EMPTY] - 8844[OCCUPIED]
-Train Labels before leveling: 5900[EMPTY] - 5900[OCCUPIED]
-
--------------------------[ALL RESULTS]-------------------------
-0.9974 - 0.9972 - 0.9986 - 0.9981 - 0.9973 [AUCS]
-0.0000 - 0.0009 - 0.0009 - 0.0000 - 0.0000 [EERS]
-0.4543 - 0.4438 - 0.2656 - 0.3922 - 0.4819 [THRESHOLDS]
-0.0660 - 0.0465 - 0.0496 - 0.0537 - 0.0642 [VAL LOSS]
-     2 -      1 -      2 -      4 -      3 [EPOCHS]
-0.7449 - 0.7359 - 0.8001 - 0.7650 - 0.7648 [PRE ACC]
-0.9662 - 0.9720 - 0.9736 - 0.9769 - 0.9870 [POS ACC]
-
--------------------------[AVG RESULT]--------------------------
- [AVG]  [STD]                    Pre Confusion matrix - Rounded
-0.9977 0.0005 [AUC]                             97063       967
-0.0003 0.0004 [EER]                             36596     23292
-0.4076 0.0767 [THRESHOLD]
-0.0560 0.0078 [VAL LOSS]         Pos Confusion matrix - Rounded
-     2 1.0198 [EPOCH]                           96559      1471
-0.7621 0.0221 [PRE ACC]                          2452     57436
-0.9752 0.0069 [POS ACC]
-
-------------------------[FATHER MODEL]-------------------------
-0.9590 - 0.9537 - 0.9618 - 0.9528 - 0.9624 [ACCURACY]
-
- [AVG]  [STD]                        Confusion matrix - Rounded
-0.9580 0.0040 [ACCURACY]                        97356       674
-                                                 5965     53923
-
-###############################################################
-

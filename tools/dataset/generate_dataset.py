@@ -104,7 +104,7 @@ def get_images(artifacts, root_path, save_path, subset, offset):
     for image in images:
         cv_image = cv.imread(f"{root_path}/{image['file_name']}")
 
-        if cv_image is not None and is_complete(image, ["id", "date", "time", "subset"]):
+        if cv_image is not None:
             date = '-'.join([str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["date"]])
             time = '_'.join([str(item).zfill(2) if isinstance(item, int) else str(item) for item in image["time"]])
             annotations_rectangle = image["annotationsRectangle"]

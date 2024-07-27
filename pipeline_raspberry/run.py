@@ -23,7 +23,7 @@ def main(args):
     
     # Writing summary
     print("\nWriting summary")
-    print(f"python3 summary.py -f _results/{EXP_NAME} -c {args.config}")
+    os.system(f"python3 summary.py -f _results/{EXP_NAME} -c {args.config}")
 
 
 if __name__ == "__main__":

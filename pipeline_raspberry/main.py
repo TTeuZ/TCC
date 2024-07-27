@@ -177,11 +177,13 @@ def execute(model_module, config, args):
     start_global_time = time.time()
 
     model_config, model_dl_config = config["models"]["config"], config["models"]["dl_config"]
-    torch.cuda.set_device(torch.device(model_config["device"]))
 
     models = get_models(model_module, args.base, model_config)
     datasets = get_datasets(config)
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(model_dl_config["img_size"], antialias=True)])
+
+    transform = transforms.Compose([transforms.ToTensor(), 
+                                    transforms.Resize(model_dl_config["img_size"], antialias=True), 
+                                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
     output_json["metrics"] = {}
     dataset_total_times, dataset_crop_images_times, dataset_classify_images_times = [], [], []

@@ -54,8 +54,8 @@ def print_avg_results(experiments, file):
         subset_total_per_spot = [result["metrics"][subset]["total_per_spot"]["average"] for result in experiments]
         subset_crop = [result["metrics"][subset]["crop"]["average"] for result in experiments]
         subset_crop_per_spot = [result["metrics"][subset]["crop_per_spot"]["average"] for result in experiments]
-        subset_classify = [result["metrics"]["average"]["classify"]["average"] for result in experiments]
-        subset_classify_per_spot = [result["metrics"]["average"]["classify_per_spot"]["average"] for result in experiments]
+        subset_classify = [result["metrics"][subset]["classify"]["average"] for result in experiments]
+        subset_classify_per_spot = [result["metrics"][subset]["classify_per_spot"]["average"] for result in experiments]
 
         avg_subset_global_time, std_subset_global_time = np.average(subset_global_time), np.std(subset_global_time)
 

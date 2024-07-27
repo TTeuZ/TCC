@@ -39,10 +39,10 @@ def get_datasets(config):
         subset = file.split("_")[0].upper()
         images, annotations = get_crop_artifacts(f"{root_path}/{file}")
 
-        dates = sorted(set(image["file_name"].split("/")[1] for image in images))
+        dates = sorted(set(image["file_name"].split("/")[-1].split("_")[0] for image in images))
         days_to_exclude = dates[:config["dataset"]["exclude_days"]]
 
-        final_images = [image for image in images if image["file_name"].split("/")[1] not in days_to_exclude]
+        final_images = [image for image in images if image["file_name"].split("/")[-1].split("_")[0] not in days_to_exclude]
         datasets[subset] = {"images": final_images, "annotations": annotations}
 
     return datasets

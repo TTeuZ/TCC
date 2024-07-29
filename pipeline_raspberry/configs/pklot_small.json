@@ -1,0 +1,26 @@
+{
+    "models": {
+        "trained_at": "PKLotSegmented",
+        "module": "tools.models.mobilenet_v3_small_PI",
+        "config": {
+            "training_mode": "transfer",
+            "loss": "CrossEntropyLoss",
+            "optimizer": "Adam",
+            "device": "cpu"
+        },
+        "dl_config": {
+            "img_size": [
+                128,
+                128
+            ],
+            "num_workers": 1
+        },
+        "weights": {
+            "path": "resources/small/PKLot"
+        }
+    },
+    "dataset": {
+        "path": "/home/tteuz/Desktop/datasets/Organized/PKLot",
+        "exclude_days": 7
+    }
+}

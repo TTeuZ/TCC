@@ -7,11 +7,6 @@ The flow is the same as the labeling pipeline, but it runs one time for each qua
 
 This version was created seeking better performance in the experiment run.
 
-## Diferences from the labeling pipeline
-The mandatory changes in this pipeline are:
-- it uses the first days as validation.
-- Only the images from the 15th day and beyond are used for the test, no matter how many train days.
-
 ## Ensemble training
 Each father model from the fathers array in the config gains its own ensemble. The other N models that compose the ensemble are trained in the following way:
 - Given the train dataset;
@@ -28,7 +23,7 @@ For example, given the PKLot dataset:
 - For each subset;
     - for each days quantity in the training days array:
         - Classify this days with the father ensemble;
-            - Select only the ones that the model is more than 95% sure that the label is correct;
+            - Select only the ones that the model is more than 90% sure that the label is correct;
             - Flatten the data by the smallest class (in qty).
         - Use these images to train a new model;
             - The train model(son) has its initial weights from one model already trained in the PKLot or CNRPark;
